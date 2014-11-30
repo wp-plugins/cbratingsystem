@@ -36,16 +36,15 @@ class CBRatingSystemFrontReiview extends CBRatingSystemFront {
 	 * @return string
 	 */
 	public function rating_reviews_shorttag( $ratingFormArray = array(), $postid, $start = 0 ) {
-		//var_dump($postid);
+
 		if ( empty( $ratingFormArray ) ) {
+
 			$defaultFormId  = get_option( 'cbratingsystem_defaultratingForm' );
 			$form_id        = apply_filters( 'rating_form_array', $defaultFormId );
-
 			$ratingFormArray = CBRatingSystemData::get_ratingForm( $form_id );
 		}
 
 		$offset = ( $start + $ratingFormArray['review']['review_limit'] );
-
 		//$theme_key = get_option('cbratingsystem_theme_key');
 
 		$reviewOptions['limit']['start']  = $start;
@@ -56,7 +55,6 @@ class CBRatingSystemFrontReiview extends CBRatingSystemFront {
 		$reviewOptions['form_id']         = $ratingFormArray['id'];
 
 		$output = self::build_user_rating_review( $reviewOptions, $ratingFormArray );
-
 		return $output;
 	}
 
@@ -219,9 +217,9 @@ class CBRatingSystemFrontReiview extends CBRatingSystemFront {
 
 			$reviews = CBRatingSystemData::get_user_ratings_with_ratingForm( array( $form_id ), array( $postID ), array(), '', 'time', 'DESC', array(), true );
 		}
-		//echo '<pre>'; print_r( get_option('cbratingsystem_defaultratingForm') ); echo '</pre>'; //die();
-		//echo '<pre>'; print_r($reviews); echo '</pre>'; //die();
+
 		$output = $mainContent = '';
+
 		if ( ! empty( $reviews[0] ) ) {//var_dump($reviews);
 			$output .= '<h3 id="cbratingfrom_reviews_title" class="cbratingfrom_reviews_title">' . __( "Reviews", 'cbratingsystem' ) . '</h3>';
 			$output .= '<div id="reviews_container_' . $postID . '" data-post-id="' . $postID . '" data-form-id="' . $form_id . '" class="reviews_container_' . $theme_key . '_theme reviews_container reviews_container_post-' . $postID . '_form-' . $form_id . ' ">';
@@ -237,13 +235,7 @@ class CBRatingSystemFrontReiview extends CBRatingSystemFront {
                     $show_reviews_user = self::check_permission( $ratingFormArray['comment_view_allowed_users'], $review->user_session, $review->user_ip );
 
 					if ( $show_reviews_user &&  $comment_status) {
-                       /* if($review->comment_status == 'unverified' &&  $review->comment_hash != ''){
-                            $subject = 'hello there';
-                            $message = get_site_url().'?cbratingemailverify='.$review->comment_hash;
-                            $from = 'email.rothy@gmail.com';
-                            wp_mail( 'rothy@codeboxr.com', $subject, $message );
-                            mail("rothy@codeboxr.com",$subject,$message,"From: $from\n");
-                        }*/
+
                         //$output .= '<a name="cbrating-'.$form_id.'-review-'.$review->id.'" id="cbrating-'.$form_id.'-review-'.$review->id.'"></a>';
 						$mainContent .= '<div id="cbrating-' . $form_id . '-review-' . $review->id . '" data-review-id="' . $review->id . '" data-post-id="' . $postID . '" data-form-id="' . $form_id . '" class="reviews_wrapper_' . $theme_key . '_theme review_wrapper review_wrapper_post-' . $postID . '_form-' . $form_id . ' review_wrapper_post-' . $postID . '_form-' . $form_id . '_review-' . $review->id . '">';
 						$mainContent .= '    <div class="reviews_rating_' . $theme_key . '_theme review_rating review_rating_review-' . $review->id . '">';
@@ -254,31 +246,42 @@ class CBRatingSystemFrontReiview extends CBRatingSystemFront {
 
                                     $user_url = get_author_posts_url( $review->user_id );
                                     $name     = get_the_author_meta( 'display_name', $review->user_id );
-                                    $gravatar = get_avatar( $review->user_id, 36 );
-                                    $user_html ='  <p class="cbrating_user_name">' . ( ! empty( $user_url ) ? '<a target="_blank" href="' . $user_url . '"><span class="user_gravatar">' . $gravatar . $name . '</span></a>' : '<span class="user_gravatar">' . $gravatar . $name . '</span>' ) . '</p>';
+
+                                    if(!empty($user_url) && $ratingFormArray ['show_user_link_in_review']  == '1' ){
+                                        $name = '<a target="_blank" href="' . $user_url . '">'.$name .'</a>';
+                                    }
+                                    //finally check the settings
+                                    if($ratingFormArray ['show_user_avatar_in_review']  == '1'){
+                                        $gravatar = get_avatar( $review->user_id, 36 );
+                                    }
+                                    else{
+                                        $gravatar = '';
+                                    }
+                                    $name        = apply_filters('cbrating_edit_review_user_link' , $name ,  $review->user_id);
+                                    $gravatar    = apply_filters('cbrating_edit_review_user_avatar' , $gravatar ,   $review->user_id);
+
+                                    $user_html ='  <p class="cbrating_user_name">' . ( ! empty( $user_url ) ? '<span class="user_gravatar">' . $gravatar . $name. '</span>' : '<span class="user_gravatar">' . $gravatar . $name . '</span>' ) . '</p>';
 
                                     if($ratingFormArray['buddypress_active'] == '1'){
                                         if(function_exists('bp_is_active')){
 
-                                            $rating_review_filtered_authorlink = apply_filters('cbratingsystem_buddypress_authorlink',array('review_user_id'=>$review->user_id,'user_html'=>$user_html));
+                                            $rating_review_filtered_authorlink = apply_filters('cbratingsystem_buddypress_authorlink',array('show_image' => $ratingFormArray['show_user_avatar_in_review'] , 'show_link' => $ratingFormArray['show_user_link_in_review'] ,'review_user_id'=>$review->user_id,'user_html'=>$user_html));
                                             $user_html = $rating_review_filtered_authorlink['user_html'];
-
-
                                         }
-
                                     }
-
-
-                                   // var_dump($ratingFormArray['buddypress_active']);
-
-                                    //var_dump(function_exists('bp_is_active'));
-
                                 } else {
                                     $user_url  = '';
-                                    $name      = ( ! empty( $review->user_name ) ? $review->user_name : 'Anonymous' );
-                                    $gravatar  = get_avatar( 0, 36, 'gravatar_default' );
-                                    $user_html ='  <p class="cbrating_user_name">' . ( ! empty( $user_url ) ? '<a target="_blank" href="' . $user_url . '"><span class="user_gravatar">' . $gravatar . $name . '</span></a>' : '<span class="user_gravatar">' . $gravatar . $name . '</span>' ) . '</p>';
+                                    $name      = ( ! empty( $review->user_name  ) ? $review->user_name : 'Anonymous' );
+                                    if($ratingFormArray ['show_user_avatar_in_review']  == '1'){
+                                        $gravatar  = get_avatar( 0, 36, 'gravatar_default' );
+                                    }
+                                    else{
+                                        $gravatar = '';
+                                    }
+
+                                    $user_html ='  <p class="cbrating_user_name">' . ( ! empty( $user_url ) ? '<span class="user_gravatar">' . $gravatar . $name . '</span>' : '<span class="user_gravatar">' . $gravatar . $name . '</span>' ) . '</p>';
                                 }
+                                    $user_html =  apply_filters(  'cbrating_edit_review_user_info' , $user_html ,  $review->user_id );
 							
                                     $mainContent .= '    <div class="reviews_user_details_' . $theme_key . '_theme review_user_details">
                                                            '.$user_html.'
@@ -286,7 +289,9 @@ class CBRatingSystemFrontReiview extends CBRatingSystemFront {
                                                         </div>
                                                         <div class="clear" style="clear:both;"></div> ';
                                    $mainContent .= '    <div data-form-id="' . $form_id . '" class="all_criteria_warpper_' . $theme_key . '_theme all-criteria-wrapper all-criteria-wrapper-form-' . $form_id . '">';
-							foreach ( $review->rating as $criteriId => $value ) {
+
+
+                            foreach ( $review->rating as $criteriId => $value ) {
 
 								if ( is_numeric( $criteriId ) ) {
 									$value                                                                                                            = ( ( $value / 100 ) * $review->rating[$criteriId . '_starCount'] );

@@ -12,3 +12,12 @@ div.checker {
     font-size: xx-small!important;
     float: right;
 }
+table.cbrp-top-rated-wpanel tr td{
+    padding: 4px;
+}
+.cbrap-top-user-rating li{
+    display: inline!important;
+}
+.cbrp-top-rated-userlist{
+    list-style: none;
+}

@@ -125,8 +125,17 @@ class CBRatingSystemFunctions{
 
         return "{$difference} {$period} {$tense} ";
     } //end of codeboxr_time_elapsed_string
+    /**
+     * @param $date
+     *
+     * @return bool|string
+     */
+    public static   function get_calculated_date( $date ) {
 
-
+    if ( is_numeric( $date ) ) {
+        return date( 'Y-m-d H:i:s', strtotime( "-$date days" ) );
+        }
+    }
 }// end of class
 
 

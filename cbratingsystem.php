@@ -3,13 +3,13 @@
   Plugin Name: CodeBoxr Rating System
   Plugin URI: http://codeboxr.com/product/multi-criteria-flexible-rating-system-for-wordpress
   Description: Rating system for Posts and Pages from CodeBoxr.
-  Version: 3.2.24
+  Version: 3.2.25
   Author: Codeboxr
   Author URI: mailto:info@codeboxr.com
  */
 
 //define the constants
-define( 'CB_RATINGSYSTEM_PLUGIN_VERSION', '3.2.24' ); //need for checking verson
+define( 'CB_RATINGSYSTEM_PLUGIN_VERSION', '3.2.25' ); //need for checking verson
 define( 'CB_RATINGSYSTEM_FILE', __FILE__ );
 define( 'CB_RATINGSYSTEM_PLUGIN_BASE_NAME', plugin_basename( __FILE__ ) );
 define( 'CB_RATINGSYSTEM_PATH', WP_PLUGIN_DIR . '/' . basename( dirname( CB_RATINGSYSTEM_FILE ) ) );
@@ -134,6 +134,7 @@ class CBRatingSystem {
 
             add_shortcode( 'cbratingsystem', array( 'CBRatingSystem', 'cbratingsystem_shorttag' ) );
 			add_shortcode( 'cbratingavg', array( 'CBRatingSystem', 'cbratingsystem_avg' ) );
+            add_shortcode( 'cbratingtoprateduser', array( 'CBRatingSystem', 'cbratingsystem_top_rated_user' ) );
 			/* Add rating form to Page/Post according to form settings */
 			add_filter( 'the_content', array( 'CBRatingSystem', 'main_content_with_rating_form' ) );
 
@@ -178,7 +179,7 @@ class CBRatingSystem {
 	 */
 	public static function initWidgets() {
 		register_widget( 'CBRatingSystemWidget' );
-		//register_widget( 'CBRatingSystemStandaloneWidget' );
+		register_widget( 'CBRatingSystemUserWidget' );
 	}
 
     /**
@@ -369,12 +370,19 @@ class CBRatingSystem {
 			array(
 				'form_id'   	=> '',
 				'post_id'   	=> $post->ID, //if post id missing then take from loop
-				'theme_key' 	=> get_option( 'cbratingsystem_theme_key' ), // set the default theme
+				'theme_key' 	=> get_option('cbratingsystem_theme_key'), // set the default theme
 				'showreview' 	=> 1
 			), $atts
 		);
 
 
+        if( $options['theme_key'] == ''){
+            $options['theme_key'] = 'basic';
+        }
+        if( $options['post_id'] == ''){
+            $options['post_id'] = $post->ID;
+        }
+       // var_dump($options);
 		$output = self::cbratingsystem_shorttag_output( $options );
 
 		return $output;
@@ -418,6 +426,78 @@ class CBRatingSystem {
 
 		return $output;
 	}
+    // top rated user shortcode
+    /**
+     * @param $atts
+     *
+     * @return string
+     */
+    public static function cbratingsystem_top_rated_user($atts){
+
+        global $post;
+        if ( ! is_object( $post ) ) {
+            return '';
+        }
+        //Example: [cbratingsystem rating_form_id=1]
+        $options = shortcode_atts(
+            array(
+                'post_id'       => '', // comma separate post id
+                'form_id'       => '', // one form id
+                'user_id'       => '', // set comma separate user id
+                'post_time'     => '0', //if post time not exit this date takes  //array( 1 => '24 hours', 7 => 'Week', 15 => '15 Days', 30 => 'Month', 0 => 'All' ); one of this value
+                'limit'         => 10, // data  limit
+                'posttype'      => '0', // one post type
+                'post_filter'   => '',// post_id or post_type
+                'title'         => __('Top Rated Users', 'cbratingsystem')
+            ), $atts
+        );
+        //var_dump($options);
+        $limit = $options['limit'];
+        if ( $options['post_time'] != 0 ) {
+
+            $date = CBRatingSystemFunctions::get_calculated_date(  $options['post_time'] );
+            $options['post_date'] = $date;
+        }
+        $data = CBRatingSystemData::get_top_rated_post( $options , false, $limit );
+        //var_dump($data);
+        $cbrp_output = '<ul class="cbrp-top-rated-wpanel" style="">';
+          if ( ! empty( $data ) ) :
+
+        foreach ( $data as $newdata ) :
+
+            $cbrp_output .=  '<li class="cbrp-top-rated-userlist">';
+
+                    $author_info = get_userdata( (int) $newdata['post_author']);
+
+            $cbrp_output .=  '<div style=""> <a style="" href="'. get_author_posts_url((int) $newdata['post_author']).' ">'. $author_info->display_name.' </a></div>
+                    <div style=""> '. $newdata['post_count'].' Posts</div>';
+
+                    $rating = ( ( $newdata['rating']/ 100 ) *  5);
+                   ?>
+                    <script>
+                        jQuery(document).ready(function ($) {
+                            $('#cbrp-top-rated<?php echo $newdata['post_author'].'_'.$post->ID; ?>').raty({
+                                half    : true,
+                                path    : '<?php echo CB_RATINGSYSTEM_PLUGIN_DIR_IMG ; ?>',
+                                score   : <?php echo number_format($rating, 2, '.', ''); ?>,
+                                readOnly: true,
+                                hintList: ['', '', '', '', '']
+                            });
+                        });
+                    </script>
+                    <?php $cbrp_output .=  ' <strong>'. number_format($rating, 2, '.', '') . '/5</strong> ';
+
+            $cbrp_output .=  '<div id ="cbrp-top-rated'. $newdata['post_author'].'_'.$post->ID .'" style=""></div>
+
+                </li>';
+            endforeach;
+         else:
+             $cbrp_output .=  ' <li class="cbrp-top-rated-userlist">'.__('No Results found','cbratingsystem').' </li>';
+        endif;
+        $cbrp_output .=  '</ul>';
+        return $cbrp_output;
+
+    }
 
     /**
      * @param $options

@@ -265,6 +265,11 @@ class CBRatingSystemAdmin {
                 $formSavableData['comment_required']    = ( isset( $ratingFormData['comment_required'] ) and ( ( $ratingFormData['comment_required'] == 1 ) ) ) ? 1 : 0;
                 $formSavableData['buddypress_active']   = ( isset( $ratingFormData['buddypress_active'] ) and ( ( $ratingFormData['buddypress_active'] == 1 ) ) ) ? 1 : 0;
                 $formSavableData['buddypress_post']     = ( isset( $ratingFormData['buddypress_post'] ) and ( ( $ratingFormData['buddypress_post'] == 1 ) ) ) ? 1 : 0;
+
+                $formSavableData['show_user_avatar_in_review']      = ( isset( $ratingFormData['show_user_avatar_in_review'] ) and ( ( $ratingFormData['show_user_avatar_in_review'] == 1 ) ) ) ? 1 : 0;
+                $formSavableData['show_user_link_in_review']        = ( isset( $ratingFormData['show_user_link_in_review'] ) and ( ( $ratingFormData['show_user_link_in_review'] == 1 ) ) ) ? 1 : 0;
+                $formSavableData['show_editor_rating']              = ( isset( $ratingFormData['show_editor_rating'] ) and ( ( $ratingFormData['show_editor_rating'] == 1 ) ) ) ? 1 : 0;
+
 				//show_chedit_to_codeboxr
                 $formSavableData['show_chedit_to_codeboxr']     = ( isset( $ratingFormData['show_chedit_to_codeboxr'] ) and ( ( $ratingFormData['show_chedit_to_codeboxr'] == 1 ) ) ) ? 1 : 0;
                 if ( isset( $ratingFormData['name'] ) and ! empty( $ratingFormData['name'] ) ) {
@@ -731,6 +736,26 @@ class CBRatingSystemAdmin {
                                     <label class="option" for="edit-show_chedit_to_codeboxr">Show Credit to codeboxr</label>
                                     <div class="description add_left_margin">This will show credit to codeboxr</div>
                                 </div>
+
+
+                                 <div class="form-item form-type-checkbox form-item-show_user_avatar_in_review" id="show_user_avatar_in_review">
+                                    <input type="checkbox" id="edit-show_user_avatar_in_review" name="ratingForm[show_user_avatar_in_review]" value="1" ' . ( ( $post['show_user_avatar_in_review'] ) ? ( ( $post['show_user_avatar_in_review'] == 1 ) ? 'checked ' : '' ) : ( ( $ratingForm->show_user_avatar_in_review ) ? 'checked ' : ( ( $ratingForm->show_user_avatar_in_review == '' || $ratingForm->show_user_avatar_in_review == '0' ) ? '' : 'checked ' ) ) ) . 'class="form-checkbox">
+                                    <label class="option" for="edit-show_user_avatar_in_review">Show User Avatar In Review</label>
+                                    <div class="description add_left_margin">This will show avatar in user comment review</div>
+                                </div>
+
+                                <div class="form-item form-type-checkbox form-item-show_user_link_in_review" id="show_user_link_in_review">
+                                    <input type="checkbox" id="edit-show_user_link_in_review" name="ratingForm[show_user_link_in_review]" value="1" ' . ( ( $post['show_user_link_in_review'] ) ? ( ( $post['show_user_link_in_review'] == 1 ) ? 'checked ' : '' ) : ( ( $ratingForm->show_user_link_in_review ) ? 'checked ' : ( ( $ratingForm->show_user_link_in_review == '' || $ratingForm->show_user_link_in_review == '0' ) ? '' : 'checked ' ) ) ) . 'class="form-checkbox">
+                                    <label class="option" for="edit-show_user_link_in_review">Show User Link In Review</label>
+                                    <div class="description add_left_margin">This will link user name in comment review</div>
+                                </div>
+
+                                <div class="form-item form-type-checkbox form-item-show_editor_rating" id="show_editor_rating">
+                                    <input type="checkbox" id="edit-show_editor_rating" name="ratingForm[show_editor_rating]" value="1" ' . ( ( $post['show_editor_rating'] ) ? ( ( $post['show_editor_rating'] == 1 ) ? 'checked ' : '' ) : ( ( $ratingForm->show_editor_rating ) ? 'checked ' : ( ( $ratingForm->show_editor_rating == '' || $ratingForm->show_editor_rating == '0' ) ? '' : 'checked ' ) ) ) . 'class="form-checkbox">
+                                    <label class="option" for="edit-show_editor_rating">Show Editor Group Rating</label>
+                                    <div class="description add_left_margin">This will show editpr group rating </div>
+                                </div>
+
                                 <div class="form-item form-type-radios form-item-position" id="position">
                                     <label for="edit-position">Position <span class="form-required" title="This field is required.">*</span></label>
                                     <div id="edit-position" class="form-radios">
@@ -906,7 +931,7 @@ class CBRatingSystemAdmin {
 								   
 								   <!--- view moderation group -->
 								   	 <div class="form-item form-type-checkboxes form-item-comment-moderation-users" id="comment-moderation-users">
-	                                    <label for="edit-comment-moderation-users">Enable rating moderation for group<span class="form-required" title="This field is required.">*</span></label>
+	                                    <label for="edit-comment-moderation-users">Enable Rating Moderation for Group<span class="form-required" title="This field is required.">*</span></label>
 	                                    <select id="edit-comment-moderation-users" multiple="yes" data-placeholder="Choose user role(s)..." name="ratingForm[comment_moderation_users][]" class="form-select form-item-select-post-type required add_left_margin">
 
 									            ';

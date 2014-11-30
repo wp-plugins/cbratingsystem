@@ -52,7 +52,7 @@ class CBRatingSystemFront {
 	 * @return string
 	 */
 	public static function add_ratingForm_to_content( $ratingFormArray ) {
-
+        //var_dump($ratingFormArray);
 		global $post, $wpdb;
 		global $wp_roles;
 		$user_type    = ( CBRatingSystem::current_user_can_use_ratingsystem( $ratingFormArray['allowed_users'] ) ) ? 'registered' : 'guest';
@@ -192,7 +192,7 @@ class CBRatingSystemFront {
 						                                    </div>
 						                                    <div data-form-id="' . $ratingFormArray['id'] . '" data-label-id="' . $cId . '" class="criteria-star-hint readonly-criteria-star-hint-form-' . $ratingFormArray['id'] . '-id-' . $cId . ' criteria-star-hint-id-' . $cId . '"></div>
 						                                    <div class="criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $cId . '-postid-' . $post_id . ' readonly_criteria_average_label_' . $theme_key . '_theme readonly-criteria-average-label criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $cId . ' ">
-						                                        <span>' . __( 'Avg', cbratingsystem ) . ':  </span>
+						                                        <span>' . __( 'Avg', 'cbratingsystem' ) . ':  </span>
 						                                        <span class="rating">' . ( number_format( ( ( $criteria['value'] / 100 ) * count( $ratingFormArray['custom_criteria'][$cId]['stars'] ) ), 2 ) ) . '/' . ( count( $ratingFormArray['custom_criteria'][$cId]['stars'] ) ) . '</span>
 						                                    </div>
 						                                </div>
@@ -229,46 +229,47 @@ class CBRatingSystemFront {
 							                                </div>';
 																	
 								$display .='</div>';//end of  <div class="allUser_criteria user_criteria">
-								if ( ! empty( $customPerCriteriaAverageRating['editor'] ) ) {
-									$display .= '<div class="editor_criteria user_criteria">
+                                if($ratingFormArray ['show_editor_rating'] == '1'){
+                                    if ( ! empty( $customPerCriteriaAverageRating['editor'] ) ) {
+                                        $display .= '<div class="editor_criteria user_criteria">
 				                        		<div class="report-title" id="cbrp-report-title">
-				                                    <span style="line-height: 30px;">' . __( 'Editors Average Rating ', cbratingsystem ) . '</span>
+				                                    <span style="line-height: 30px;">' . __( 'Editors Average Rating ', 'cbratingsystem' ) . '</span>
 				                                </div>
-				                                <div class="clear" style="clear:both"></div>				                                
+				                                <div class="clear" style="clear:both"></div>
 				                                    <div class="criteria-container">';
-														foreach ( $customPerCriteriaAverageRating['editor'] as $cId => $criteria ) {
-															$cCriteria['editor-readonly-criteria-label-' . $ratingFormArray['id'] . '-stars-' . $cId . '-count']       = count( $ratingFormArray['custom_criteria'][$cId]['stars'] );
-															$cCriteria['editor-readonly-criteria-label-' . $ratingFormArray['id'] . '-stars-' . $cId . '-value']       = $criteria['value'];
-															$cCriteria['editor-readonly-criteria-label-' . $ratingFormArray['id'] . '-post-' . $post_id . '-avgvalue'] = $perPostAverageRating;
-															$display .= '
+                                        foreach ( $customPerCriteriaAverageRating['editor'] as $cId => $criteria ) {
+                                            $cCriteria['editor-readonly-criteria-label-' . $ratingFormArray['id'] . '-stars-' . $cId . '-count']       = count( $ratingFormArray['custom_criteria'][$cId]['stars'] );
+                                            $cCriteria['editor-readonly-criteria-label-' . $ratingFormArray['id'] . '-stars-' . $cId . '-value']       = $criteria['value'];
+                                            $cCriteria['editor-readonly-criteria-label-' . $ratingFormArray['id'] . '-post-' . $post_id . '-avgvalue'] = $perPostAverageRating;
+                                            $display .= '
 																	<div data-form-id="' . $ratingFormArray['id'] . '" data-label-id="' . $cId . '" class="readonly_criteria_wrapper_' . $theme_key . '_theme readonly-criteria-wrapper readonly-criteria-id-wrapper-' . $cId . ' readonly-criteria-wrapper-form-' . $ratingFormArray['id'] . '">
 																		<div class="readonly_criteria_label_wrapper_' . $theme_key . '_theme readonly-criteria-label-wrapper readonly-criteria-label-wrapper-form-' . $ratingFormArray['id'] . '" data-form-id="' . $ratingFormArray['id'] . '">
 																			<span class="readonly-criteria-label criteria-label-form-' . $ratingFormArray['id'] . ' readonly-criteria-label-id-' . $cId . '" >' . __( $ratingFormArray['custom_criteria'][$cId]['label'], cbratingsystem ) . '</span>
 																		</div>
 																		<div data-form-id="' . $ratingFormArray['id'] . '" data-label-id="' . $cId . '" class="editor-criteria-star-wrapper readonly-criteria-star-wrapper-id-' . $cId . '-form-' . $ratingFormArray['id'] . ' readonly-criteria-star-wrapper-id-' . $cId . ' criteria-star-wrapper-form-' . $ratingFormArray['id'] . '" id="criteria-star-wrapper">
-				
+
 																		</div>
 																		<div data-form-id="' . $ratingFormArray['id'] . '" data-label-id="' . $cId . '" class="criteria-star-hint readonly-criteria-star-hint-form-' . $ratingFormArray['id'] . '-id-' . $cId . ' criteria-star-hint-id-' . $cId . '"></div>
 																		<div class="editor-criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $cId . '-postid-' . $post_id . ' readonly_criteria_average_label_' . $theme_key . '_theme readonly-criteria-average-label editor-criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $cId . '">
-																			<span>' . __( 'Avg ', cbratingsystem ) . ': </span>
+																			<span>' . __( 'Avg ', 'cbratingsystem' ) . ': </span>
 																			<span class="rating">' . ( number_format( ( ( $criteria['value'] / 100 ) * count( $ratingFormArray['custom_criteria'][$cId]['stars'] ) ), 2 ) ) . '/' . ( count( $ratingFormArray['custom_criteria'][$cId]['stars'] ) ) . '</span>
 																		</div>
 																	</div>
 																	';
-														}//end foreach
-								} else {
-                                    $display .= '<div class="editor_criteria user_criteria">
+                                        }//end foreach
+                                    } else {
+                                        $display .= '<div class="editor_criteria user_criteria">
                                                  <div class="report-title" id="cbrp-report-title">
                                                      <span style="line-height: 30px;">' . __( 'Editors Average Rating', 'cbratingsystem' ) . '</span>
                                                 </div>
                                                  <div class="clear" style="clear:both"></div>
 
                                                  <div class="criteria-container">';
-									foreach ( $ratingFormArray['custom_criteria'] as $firstLabel => $firstLabelArray ) {
-										$cCriteria['editor-criteria-label-' . $ratingFormArray['id'] . '-stars-' . $firstLabel]            = array_values( $firstLabelArray['stars'] );
-										$cCriteria['criteria-stars-' . $firstLabel]                                                        = json_encode( array_values( $firstLabelArray['stars'] ) );
-										$cCriteria['editor-criteria-label-' . $ratingFormArray['id'] . '-stars-' . $firstLabel . '-count'] = count( $firstLabelArray['stars'] );
-										$display .= '
+                                        foreach ( $ratingFormArray['custom_criteria'] as $firstLabel => $firstLabelArray ) {
+                                            $cCriteria['editor-criteria-label-' . $ratingFormArray['id'] . '-stars-' . $firstLabel]            = array_values( $firstLabelArray['stars'] );
+                                            $cCriteria['criteria-stars-' . $firstLabel]                                                        = json_encode( array_values( $firstLabelArray['stars'] ) );
+                                            $cCriteria['editor-criteria-label-' . $ratingFormArray['id'] . '-stars-' . $firstLabel . '-count'] = count( $firstLabelArray['stars'] );
+                                            $display .= '
 				                                <div data-form-id="' . $ratingFormArray['id'] . '" data-label-id="' . $firstLabel . '" class="criteria_wrapper_' . $theme_key . '_theme criteria-wrapper criteria-id-wrapper-' . $firstLabel . ' criteria-id-wrapper-' . $firstLabel . '-form-' . $ratingFormArray['id'] . ' criteria-wrapper-form-' . $ratingFormArray['id'] . '">
 				                                    <div class="criteria_label_wrapper_' . $theme_key . '_theme criteria-label-wrapper">
 				                                        <span class="criteria-label criteria-label-id-' . $firstLabel . '" >' . __( $firstLabelArray['label'], 'cbratingsystem' ) . '</span>
@@ -282,9 +283,11 @@ class CBRatingSystemFront {
 				                                    </div>
 				                                </div>
 				                                    ';
-									}
-							}//end of else for editor
-								$display .='</div>';//end of editor editor_criteria
+                                        }
+                                    }//end of else for editor
+                                    $display .='</div>';//end of editor editor_criteria
+
+
 								
 								$display .=' <div class="clear" style="clear:both"></div>
                                 			<div class="editor-rating-average-label-form-' . $ratingFormArray['id'] . '-postid-' . $post_id . ' readonly_criteria_average_label_form_' . $theme_key . '_theme readonly-criteria-average-label-form editor-rating-average-label-form-' . $ratingFormArray['id'] . '">
@@ -293,6 +296,7 @@ class CBRatingSystemFront {
                                     			<span class="total_rates">  ' . __( 'based on', 'cbratingsystem' ) . ' <span class="total_rates_count">' . ( ! empty( $customPerPostRateCount['editor'] ) ? (integer) $customPerPostRateCount['editor'] : '0' ) . '</span> rating(s) </span>
                                 			</div>';
 								$display .='</div>';//end of editor editor_criteria_container
+                                }// end of if show editor rating
 								
 							$display .='</div>';//end of <div cbrp_switch_report_
 							
@@ -474,13 +478,13 @@ class CBRatingSystemFront {
 					
 					$display     = '<div class="cbrp_front_content">';
 					$display    .= '<!--RatingForm Content-->
-                    <h3 id="cbratingfrom_title" class="cbratingfrom_title"> ' . __( 'Ratings', cbratingsystem ) . '</h3>
+                    <h3 id="cbratingfrom_title" class="cbratingfrom_title"> ' . __( 'Ratings', 'cbratingsystem' ) . '</h3>
                     <div id="cbrp_container_' . $post_id . '" class="cbrp_container_' . $theme_key . '_theme cbrp-content-container cbrp-content-container-form-' . $ratingFormArray['id'] . '-post-' . $post_id . '" data-form-id="' . $ratingFormArray['id'] . '" data-post-id="' . $post_id . '"  data-count= "' . $count . '" style="display:bock;">
                         <div class="cbrp_wrapper_' . $theme_key . '_theme cbrp-content-wprapper cbrp-content-wprapper-form-' . $ratingFormArray['id'] . '-post-' . $post_id . '" data-form-id="' . $ratingFormArray['id'] . '">
                             <div class="cbrp_switch_report_' . $theme_key . '_theme cbrp-switch-report cbrp-switch-report-form-' . $ratingFormArray['id'] . '" style="' . ( ( ! empty( $isUserSubmittedRating ) ) ? 'display:block;' : '' ) . '" data-form-id="' . $ratingFormArray['id'] . '">
                                 <div class="allUser_criteria user_criteria">
                                     <div class="report-title" id="cbrp-report-title">
-                                        <span style="line-height: 30px;">' . __( 'Current Average Ratings', cbratingsystem ) . '</span>
+                                        <span style="line-height: 30px;">' . __( 'Current Average Ratings', 'cbratingsystem' ) . '</span>
                                     </div>
                                     <div class="clear" style="clear:both"></div>
 
@@ -500,7 +504,7 @@ class CBRatingSystemFront {
 					                                    </div>
 					                                    <div data-form-id="' . $ratingFormArray['id'] . '" data-label-id="' . $cId . '" class="criteria-star-hint readonly-criteria-star-hint-form-' . $ratingFormArray['id'] . '-id-' . $cId . ' criteria-star-hint-id-' . $cId . '"></div>
 					                                    <div class="criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $cId . '-postid-' . $post_id . ' readonly_criteria_average_label_' . $theme_key . '_theme readonly-criteria-average-label criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $cId . '">
-					                                        <span>' . __( 'Avg', cbratingsystem ) . ': </span>
+					                                        <span>' . __( 'Avg', 'cbratingsystem' ) . ': </span>
 					                                        <span class="rating">' . ( number_format( ( ( $criteria['value'] / 100 ) * count( $ratingFormArray['custom_criteria'][$cId]['stars'] ) ), 2 ) ) . '/' . ( count( $ratingFormArray['custom_criteria'][$cId]['stars'] ) ) . '</span>
 					                                    </div>
 					                                </div>
@@ -520,7 +524,7 @@ class CBRatingSystemFront {
 				                                        <!--input data-label-id="' . $firstLabel . '" class="criteria-star criteria-star-label-id-' . $firstLabel . '-currentScore" type="hidden" id="criteria-star" name="criteria[' . $firstLabel . '][value]" value="" /-->
 				                                    </div>
 				                                    <div class="criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $firstLabel . '-postid-' . $post_id . ' readonly_criteria_average_label_' . $theme_key . '_theme readonly-criteria-average-label criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $firstLabel . '">
-				                                        <span>' . __( 'Avg', cbratingsystem ) . ': </span>
+				                                        <span>' . __( 'Avg', 'cbratingsystem' ) . ': </span>
 				                                        <span class="rating">0/' . ( count( $firstLabelArray['stars'] ) ) . '</span>
 				                                    </div>
 				                                </div>
@@ -531,32 +535,35 @@ class CBRatingSystemFront {
 					                 $display.='</div>';// end of criteria-container
 					                 $display .= '<div class="clear" style="clear:both"></div>
 			                                <div class="rating-average-label-form-' . $ratingFormArray['id'] . '-postid-' . $post_id . ' readonly_criteria_average_label_form_' . $theme_key . '_theme readonly-criteria-average-label-form rating-average-label-form-' . $ratingFormArray['id'] . '">
-			                                    <span>' . __( 'Total Avg Rating', cbratingsystem ) . ': </span>
+			                                    <span>' . __( 'Total Avg Rating', 'cbratingsystem' ) . ': </span>
 			                                    <span class="rating">' . ( number_format( ( $perPostAverageRating / 100 ) * 5, 2 ) ) . '/5' . '</span>
-			                                    <span class="total_rates">  ' . __( 'based on', cbratingsystem ) . ' <span class="total_rates_count">' . ( ! empty( $avgRatingData[0]['per_post_rating_count'] ) ? (integer) $avgRatingData[0]['per_post_rating_count'] : '0' ) . '</span> rating(s) </span>
+			                                    <span class="total_rates">  ' . __( 'based on', 'cbratingsystem' ) . ' <span class="total_rates_count">' . ( ! empty( $avgRatingData[0]['per_post_rating_count'] ) ? (integer) $avgRatingData[0]['per_post_rating_count'] : '0' ) . '</span> rating(s) </span>
 			                                </div>';
 					                    
 					                    
 									$display.='</div>';//end of allUser_criteria user_criteria
-				if ( ! empty( $customPerCriteriaAverageRating['editor'] ) ) {
-						$display .= '<div class="editor_criteria user_criteria">
+
+                    if($ratingFormArray ['show_editor_rating'] == '1'){
+
+                        if ( ! empty( $customPerCriteriaAverageRating['editor'] ) ) {
+                            $display .= '<div class="editor_criteria user_criteria">
                                 <div class="report-title" id="cbrp-report-title">
                                     <span style="line-height: 30px;">' . __( 'Editors Average Rating', cbratingsystem ) . '</span>
                                 </div>
                                 <div class="clear" style="clear:both"></div>
 
                                   <div class="criteria-container">';
-									foreach ( $customPerCriteriaAverageRating['editor'] as $cId => $criteria ) {
-										$cCriteria['editor-readonly-criteria-label-' . $ratingFormArray['id'] . '-stars-' . $cId . '-count']       = count( $ratingFormArray['custom_criteria'][$cId]['stars'] );
-										$cCriteria['editor-readonly-criteria-label-' . $ratingFormArray['id'] . '-stars-' . $cId . '-value']       = $criteria['value'];
-										$cCriteria['editor-readonly-criteria-label-' . $ratingFormArray['id'] . '-post-' . $post_id . '-avgvalue'] = $perPostAverageRating;
-										$display .= '
+                            foreach ( $customPerCriteriaAverageRating['editor'] as $cId => $criteria ) {
+                                $cCriteria['editor-readonly-criteria-label-' . $ratingFormArray['id'] . '-stars-' . $cId . '-count']       = count( $ratingFormArray['custom_criteria'][$cId]['stars'] );
+                                $cCriteria['editor-readonly-criteria-label-' . $ratingFormArray['id'] . '-stars-' . $cId . '-value']       = $criteria['value'];
+                                $cCriteria['editor-readonly-criteria-label-' . $ratingFormArray['id'] . '-post-' . $post_id . '-avgvalue'] = $perPostAverageRating;
+                                $display .= '
 			                                <div data-form-id="' . $ratingFormArray['id'] . '" data-label-id="' . $cId . '" class="readonly_criteria_wrapper_' . $theme_key . '_theme readonly-criteria-wrapper readonly-criteria-id-wrapper-' . $cId . ' readonly-criteria-wrapper-form-' . $ratingFormArray['id'] . '">
 			                                    <div class="readonly_criteria_label_wrapper_' . $theme_key . '_theme readonly-criteria-label-wrapper readonly-criteria-label-wrapper-form-' . $ratingFormArray['id'] . '" data-form-id="' . $ratingFormArray['id'] . '">
 			                                        <span class="readonly-criteria-label criteria-label-form-' . $ratingFormArray['id'] . ' readonly-criteria-label-id-' . $cId . '" >' . __( $ratingFormArray['custom_criteria'][$cId]['label'], cbratingsystem ) . '</span>
 			                                    </div>
 			                                    <div data-form-id="' . $ratingFormArray['id'] . '" data-label-id="' . $cId . '" class="editor-criteria-star-wrapper readonly-criteria-star-wrapper-id-' . $cId . '-form-' . $ratingFormArray['id'] . ' readonly-criteria-star-wrapper-id-' . $cId . ' criteria-star-wrapper-form-' . $ratingFormArray['id'] . '" id="criteria-star-wrapper">
-			                                        
+
 			                                    </div>
 			                                    <div data-form-id="' . $ratingFormArray['id'] . '" data-label-id="' . $cId . '" class="criteria-star-hint readonly-criteria-star-hint-form-' . $ratingFormArray['id'] . '-id-' . $cId . ' criteria-star-hint-id-' . $cId . '"></div>
 			                                    <div class="editor-criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $cId . '"-postid-' . $post_id . ' readonly_criteria_average_label_' . $theme_key . '_theme readonly-criteria-average-label editor-criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $cId . '">
@@ -565,50 +572,53 @@ class CBRatingSystemFront {
 			                                    </div>
 			                                </div>
 			                                ';
-									}
-					} else {
-						$display .= '<div class="editor_criteria user_criteria">
+                            }
+                        } else {
+                            $display .= '<div class="editor_criteria user_criteria">
                                <div class="report-title" id="cbrp-report-title">
-                                    <span style="line-height: 30px;">' . __( 'Editors Average Rating', cbratingsystem ) . '</span>
+                                    <span style="line-height: 30px;">' . __( 'Editors Average Rating', 'cbratingsystem' ) . '</span>
                                 </div>
                                 <div class="clear" style="clear:both"></div>
 
                                     <div class="criteria-container">';
-									foreach ( $ratingFormArray['custom_criteria'] as $firstLabel => $firstLabelArray ) {
-										$cCriteria['editor-criteria-label-' . $ratingFormArray['id'] . '-stars-' . $firstLabel]            = array_values( $firstLabelArray['stars'] );
-										$cCriteria['criteria-stars-' . $firstLabel]                                                        = json_encode( array_values( $firstLabelArray['stars'] ) );
-										$cCriteria['editor-criteria-label-' . $ratingFormArray['id'] . '-stars-' . $firstLabel . '-count'] = count( $firstLabelArray['stars'] );
-										$display .= '
+                            foreach ( $ratingFormArray['custom_criteria'] as $firstLabel => $firstLabelArray ) {
+                                $cCriteria['editor-criteria-label-' . $ratingFormArray['id'] . '-stars-' . $firstLabel]            = array_values( $firstLabelArray['stars'] );
+                                $cCriteria['criteria-stars-' . $firstLabel]                                                        = json_encode( array_values( $firstLabelArray['stars'] ) );
+                                $cCriteria['editor-criteria-label-' . $ratingFormArray['id'] . '-stars-' . $firstLabel . '-count'] = count( $firstLabelArray['stars'] );
+                                $display .= '
 			                                <div data-form-id="' . $ratingFormArray['id'] . '" data-label-id="' . $firstLabel . '" class="criteria_wrapper_' . $theme_key . '_theme criteria-wrapper criteria-id-wrapper-' . $firstLabel . ' criteria-id-wrapper-' . $firstLabel . '-form-' . $ratingFormArray['id'] . ' criteria-wrapper-form-' . $ratingFormArray['id'] . '">
 			                                    <div class="criteria_label_wrapper_' . $theme_key . '_theme criteria-label-wrapper">
 			                                        <span class="criteria-label criteria-label-id-' . $firstLabel . '" >' . __( $firstLabelArray['label'], cbratingsystem ) . '</span>
 			                                    </div>
 			                                    <div data-form-id="' . $ratingFormArray['id'] . '" data-label-id="' . $firstLabel . '" class="editor-criteria-star-wrapper criteria-star-wrapper-id-' . $firstLabel . ' criteria-star-wrapper-id-' . $firstLabel . '-form-' . $ratingFormArray['id'] . '" id="criteria-star-wrapper">
-			                                        
+
 			                                    </div>
 			                                    <div class="editor-criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $firstLabel . '"-postid-' . $post_id . ' readonly_criteria_average_label_' . $theme_key . '_theme readonly-criteria-average-label editor-criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $firstLabel . '">
-			                                        <span>' . __( 'Avg', cbratingsystem ) . ': </span>
+			                                        <span>' . __( 'Avg', 'cbratingsystem' ) . ': </span>
 			                                        <span class="rating">0/' . ( count( $firstLabelArray['stars'] ) ) . '</span>
 			                                    </div>
 			                                </div>
 			                                    ';
-									}
-					}
-								
-				$display .= ' </div>';	//end of editor critaria_container			
+                            }
+                        }
+
+                        $display .= ' </div>';	//end of editor critaria_container
+
+
 				$display .= '
                                    
                                 <div class="clear" style="clear:both"></div>
                                 <div class="editor-rating-average-label-form-' . $ratingFormArray['id'] . '-postid-' . $post_id . ' readonly_criteria_average_label_form_' . $theme_key . '_theme readonly-criteria-average-label-form editor-rating-average-label-form-' . $ratingFormArray['id'] . '">
-                                    <span>' . __( 'Total Avg Rating', cbratingsystem ) . ': </span>
+                                    <span>' . __( 'Total Avg Rating', 'cbratingsystem' ) . ': </span>
                                     <span class="rating">' . ( number_format( ( $customPerPostAverageRating['editor'] / 100 ) * 5, 2 ) ) . '/5' . '</span>
-                                    <span class="total_rates"> ' . __( 'based on', cbratingsystem ) . '<span class="total_rates_count">' . ( ! empty( $customPerPostRateCount['editor'] ) ? (integer) $customPerPostRateCount['editor'] : '0' ) . '</span> rating(s) </span>
+                                    <span class="total_rates"> ' . __( 'based on', 'cbratingsystem' ) . '<span class="total_rates_count">' . ( ! empty( $customPerPostRateCount['editor'] ) ? (integer) $customPerPostRateCount['editor'] : '0' ) . '</span> rating(s) </span>
                                 </div>';
                                
 
                           
                         
-				$display .= ' </div>';	//end of editor critaria_		
+				$display .= ' </div>';	//end of editor critaria_
+                    }// end of if show editor rating part
 									
 			$display.='</div>';// end of cbrp_switch_report
 			if ( empty( $isUserSubmittedRating ) ) {
@@ -749,13 +759,13 @@ class CBRatingSystemFront {
 				}
 				$display = '<div class="cbrp_front_content">';
 				$display .= '<!--RatingForm Content-->
-                    <h3 id="cbratingfrom_title" class="cbratingfrom_title" data-home="' . $nothome . '">' . __( 'Rating', cbratingsystem ) . ' </h3>
+                    <h3 id="cbratingfrom_title" class="cbratingfrom_title" data-home="' . $nothome . '">' . __( 'Rating', 'cbratingsystem' ) . ' </h3>
                     <div id="cbrp_container_' . $post_id . '" class="cbrp_container_' . $theme_key . '_theme cbrp-content-container cbrp-content-container-form-' . $ratingFormArray['id'] . '-post-' . $post_id . '" data-form-id="' . $ratingFormArray['id'] . '" data-post-id="' . $post_id . '">
                         <div class="cbrp_wrapper_' . $theme_key . '_theme cbrp-content-wprapper cbrp-content-wprapper-form-' . $ratingFormArray['id'] . '-post-' . $post_id . '" data-form-id="' . $ratingFormArray['id'] . '">
                             <div class="show_cbrp_switch_report_' . $theme_key . '_theme all_cbrp-switch-report cbrp-switch-report-form-' . $ratingFormArray['id'] . ' all_cbrp-switch-report-form-' . $ratingFormArray['id'] . '-post-' . $post_id . '" style="' . ( ( ! empty( $isUserSubmittedRating ) ) ? 'display:block;' : '' ) . '" data-form-id="' . $ratingFormArray['id'] . '" data-post-id="' . $post_id . '">
                                 <div class="User_criteria user_criteria">
                                     <div class="report-title" id="cbrp-report-title">
-                                        <span style="line-height: 30px;">' . __( 'Current Average Ratings', cbratingsystem ) . '</span>
+                                        <span style="line-height: 30px;">' . __( 'Current Average Ratings', 'cbratingsystem' ) . '</span>
                                     </div>
                                     <div class="clear" style="clear:both"></div>
 
@@ -778,7 +788,7 @@ class CBRatingSystemFront {
                                     <div data-form-id="' . $ratingFormArray['id'] . '" data-label-id="' . $cId . '" class="criteria-star-hint readonly-criteria-star-hint-form-' . $ratingFormArray['id'] . '-id-' . $cId . ' criteria-star-hint-id-' . $cId . '"></div>
                                      
                                     <div class="criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $cId . '-postid-' . $post_id . ' readonly_criteria_average_label_' . $theme_key . '_theme readonly-criteria-average-label criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $cId . ' ">
-                                        <span>' . __( 'Avg', cbratingsystem ) . ':  </span>
+                                        <span>' . __( 'Avg', 'cbratingsystem' ) . ':  </span>
                                         <span class="rating">' . ( number_format( ( ( $criteria['value'] / 100 ) * count( $ratingFormArray['custom_criteria'][$cId]['stars'] ) ), 2 ) ) . '/' . ( count( $ratingFormArray['custom_criteria'][$cId]['stars'] ) ) . '</span>
                                     </div>
                                 </div>
@@ -799,7 +809,7 @@ class CBRatingSystemFront {
                                    		
                                     </div>
                                     <div class="criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $firstLabel . '-postid-' . $post_id . ' readonly_criteria_average_label_' . $theme_key . '_theme readonly-criteria-average-label criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $firstLabel . '">
-                                        <span>' . __( 'Avg', cbratingsystem ) . ': </span>
+                                        <span>' . __( 'Avg', 'cbratingsystem' ) . ': </span>
                                         <span class="rating">0/' . ( count( $firstLabelArray['stars'] ) ) . '</span>
                                     </div>
                                 </div>
@@ -809,17 +819,21 @@ class CBRatingSystemFront {
 
 				$display .= '</div><div class="clear" style="clear:both"></div>
                                 <div class="rating-average-label-form-' . $ratingFormArray['id'] . '-postid-' . $post_id . ' readonly_criteria_average_label_form_' . $theme_key . '_theme readonly-criteria-average-label-form rating-average-label-form-' . $ratingFormArray['id'] . '">
-                                    <span>' . __( 'Total Avg Rating', cbratingsystem ) . ': </span>
+                                    <span>' . __( 'Total Avg Rating', 'cbratingsystem' ) . ': </span>
                                     <span class="rating">' . ( number_format( ( $perPostAverageRating / 100 ) * 5, 2 ) ) . '/5' . '</span>
-                                    <span class="total_rates">  ' . __( 'based on', cbratingsystem ) . ' <span class="total_rates_count">' . ( ! empty( $avgRatingData[0]['per_post_rating_count'] ) ? (integer) $avgRatingData[0]['per_post_rating_count'] : '0' ) . '</span> rating(s) </span>
-                                </div>';
+                                    <span class="total_rates">  ' . __( 'based on', 'cbratingsystem' ) . ' <span class="total_rates_count">' . ( ! empty( $avgRatingData[0]['per_post_rating_count'] ) ? (integer) $avgRatingData[0]['per_post_rating_count'] : '0' ) . '</span> rating(s) </span>
+                                </div></div>';
 
 
 				//for editor
+                if($ratingFormArray ['show_editor_rating'] == '1'){
+
+
 				if ( ! empty( $customPerCriteriaAverageRating['editor'] ) ) {
-					$display .= '</div><div class="editor_criteria user_criteria">
+
+					$display .= '<div class="editor_criteria user_criteria">
                         		<div class="report-title" id="cbrp-report-title">
-                                    <span style="line-height: 30px;">' . __( 'Editors Average Rating ', cbratingsystem ) . '</span>
+                                    <span style="line-height: 30px;">' . __( 'Editors Average Rating ', 'cbratingsystem' ) . '</span>
                                 </div>
                                 <div class="clear" style="clear:both"></div>
                                 
@@ -838,16 +852,16 @@ class CBRatingSystemFront {
 				                                    </div>
 				                                    <div data-form-id="' . $ratingFormArray['id'] . '" data-label-id="' . $cId . '" class="criteria-star-hint readonly-criteria-star-hint-form-' . $ratingFormArray['id'] . '-id-' . $cId . ' criteria-star-hint-id-' . $cId . '"></div>
 				                                    <div class="editor-criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $cId . '-postid-' . $post_id . ' readonly_criteria_average_label_' . $theme_key . '_theme readonly-criteria-average-label editor-criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $cId . '">
-				                                        <span>' . __( 'Avg ', cbratingsystem ) . ': </span>
+				                                        <span>' . __( 'Avg ', 'cbratingsystem' ) . ': </span>
 				                                        <span class="rating">' . ( number_format( ( ( $criteria['value'] / 100 ) * count( $ratingFormArray['custom_criteria'][$cId]['stars'] ) ), 2 ) ) . '/' . ( count( $ratingFormArray['custom_criteria'][$cId]['stars'] ) ) . '</span>
 				                                    </div>
 				                                </div>
 				                                ';
 									}
 				} else {
-					$display .= '</div><div class="editor_criteria user_criteria">
-                        <div class="report-title" id="cbrp-report-title">
-                                    <span style="line-height: 30px;">' . __( 'Editors Average Rating', cbratingsystem ) . '</span>
+					$display .= '<div class="editor_criteria user_criteria">
+                                 <div class="report-title" id="cbrp-report-title">
+                                    <span style="line-height: 30px;">' . __( 'Editors Average Rating', 'cbratingsystem' ) . '</span>
                                 </div>
                                 <div class="clear" style="clear:both"></div>
                                 
@@ -866,7 +880,7 @@ class CBRatingSystemFront {
 				                                    </div>
 				                                    <div class="editor-criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $firstLabel . '-postid-' . $post_id . ' readonly_criteria_average_label_' . $theme_key . '_theme readonly-criteria-average-label editor-criteria-average-label-form-' . $ratingFormArray['id'] . '-label-' . $firstLabel . '">
 				                                        
-				                                        <span>' . __( 'Avg ', cbratingsystem ) . ': </span>
+				                                        <span>' . __( 'Avg ', 'cbratingsystem' ) . ': </span>
 				                                        <span class="rating">0/' . ( count( $firstLabelArray['stars'] ) ) . '</span>
 				                                    </div>
 				                                </div>
@@ -874,13 +888,13 @@ class CBRatingSystemFront {
 									}
 				}
 
-				$display .= '                                  
+				$display .= '
                            
                                 <div class="clear" style="clear:both"></div>
                                 <div class="editor-rating-average-label-form-' . $ratingFormArray['id'] . '-postid-' . $post_id . ' readonly_criteria_average_label_form_' . $theme_key . '_theme readonly-criteria-average-label-form editor-rating-average-label-form-' . $ratingFormArray['id'] . '">
-                                    <span>' . __( 'Total Avg Rating ', cbratingsystem ) . ': </span>
+                                    <span>' . __( 'Total Avg Rating ', 'cbratingsystem' ) . ': </span>
                                     <span class="rating">' . ( number_format( ( $customPerPostAverageRating['editor'] / 100 ) * 5, 2 ) ) . '/5' . '</span>
-                                    <span class="total_rates">  ' . __( 'basedon', cbratingsystem ) . ' <span class="total_rates_count">' . ( ! empty( $customPerPostRateCount['editor'] ) ? (integer) $customPerPostRateCount['editor'] : '0' ) . '</span> rating(s) </span>
+                                    <span class="total_rates">  ' . __( 'basedon', 'cbratingsystem' ) . ' <span class="total_rates_count">' . ( ! empty( $customPerPostRateCount['editor'] ) ? (integer) $customPerPostRateCount['editor'] : '0' ) . '</span> rating(s) </span>
                                 </div>
                                 </div>                                
                             </div>
@@ -888,7 +902,7 @@ class CBRatingSystemFront {
 				$display .= '                      
                     </div>';
 
-
+                }
 				$jsSettings = self::front_end_js_settings( $ratingFormArray, $cCriteria, $post_id );
 				$display .= '<script type="text/javascript">' . $jsSettings . '</script>';
                 if($ratingFormArray['show_chedit_to_codeboxr'] == '1'){
@@ -1325,32 +1339,49 @@ class CBRatingSystemFront {
 							// User Details part.
 								if ( $review->user_id != 0 ) {
 
-                                    $user_url = get_author_posts_url( $review->user_id );
                                     $name     = get_the_author_meta( 'display_name', $review->user_id );
-                                    $gravatar = get_avatar( $review->user_id, 36 );
-                                    $user_html ='  <p class="cbrating_user_name">' . ( ! empty( $user_url ) ? '<a target="_blank" href="' . $user_url . '"><span class="user_gravatar">' . $gravatar . $name . '</span></a>' : '<span class="user_gravatar">' . $gravatar . $name . '</span>' ) . '</p>';
+                                    if(!empty($user_url) && $ratingFormArray ['show_user_link_in_review']  == '1' ){
+                                        $name = '<a target="_blank" href="' . $user_url . '">'.$name .'</a>';
+                                    }
+                                    $name      = apply_filters('cbrating_edit_review_user_link' , $name ,  $review->user_id);
+
+                                    //finally check the settings
+                                    if($ratingFormArray ['show_user_avatar_in_review']  == '1'){
+                                        $gravatar = get_avatar( $review->user_id, 36 );
+                                    }
+                                    else{
+                                        $gravatar = '';
+                                    }
+
+                                    $gravatar    = apply_filters('cbrating_edit_review_user_avatar' , $gravatar ,   $review->user_id);
+
+                                    $user_html ='  <p class="cbrating_user_name">' . ( ! empty( $user_url ) ? '<span class="user_gravatar">' . $gravatar . $name. '</span>' : '<span class="user_gravatar">' . $gravatar . $name . '</span>' ) . '</p>';
 
                                     if($ratingFormArray['buddypress_active'] == '1'){
+
                                         if(function_exists('bp_is_active')){
 
-                                            $rating_review_filtered_authorlink = apply_filters('cbratingsystem_buddypress_authorlink',array('review_user_id'=>$review->user_id,'user_html'=>$user_html));
+                                            $rating_review_filtered_authorlink = apply_filters('cbratingsystem_buddypress_authorlink',array('show_image' => $ratingFormArray['show_user_avatar_in_review'] , 'show_link' => $ratingFormArray['show_user_link_in_review'] ,'review_user_id'=>$review->user_id,'user_html'=>$user_html));
                                             $user_html = $rating_review_filtered_authorlink['user_html'];
 
                                         }
 
                                     }
 
-                                   /* $user_url = get_author_posts_url( $review->user_id );
-									$name     = get_the_author_meta( 'display_name', $review->user_id );
-									$gravatar = get_avatar( $review->user_id, 36 );*/
 								} else {
 
 									$user_url = '';
 									$name     = ( ! empty( $review->user_name ) ? $review->user_name : 'Anonymous' );
-									$gravatar = get_avatar( 0, 36, 'gravatar_default' );
-                                    $user_html ='  <p class="cbrating_user_name">' . ( ! empty( $user_url ) ? '<a target="_blank" href="' . $user_url . '"><span class="user_gravatar">' . $gravatar . $name . '</span></a>' : '<span class="user_gravatar">' . $gravatar . $name . '</span>' ) . '</p>';
+                                    if($ratingFormArray ['show_user_avatar_in_review']  == '1'){
+                                        $gravatar  = get_avatar( 0, 36, 'gravatar_default' );
+                                    }
+                                    else{
+                                        $gravatar = '';
+                                    }
+                                    $user_html ='  <p class="cbrating_user_name">' . ( ! empty( $user_url ) ? '<span class="user_gravatar">' . $gravatar . $name . '</span>' : '<span class="user_gravatar">' . $gravatar . $name . '</span>' ) . '</p>';
 								}
-								
+                                $user_html =  apply_filters(  'cbrating_edit_review_user_info' , $user_html ,  $review->user_id );
+
 								$mainContent .= '    <div class="reviews_user_details_' . $theme_key . '_theme review_user_details">
                                             			'.$user_html.'
                                             			<span class="user_rate_time"><a title="' . date( 'l, F d, Y \a\t j:ia', $review->created ) . '" href="' . get_permalink( $post_id ) . '#cbrating-' . $ratingFormId . '-review-' . $review->id . '">' . CBRatingSystemFunctions :: codeboxr_time_elapsed_string( $review->created ) . '</a></span>

@@ -48,6 +48,9 @@ class CBRatingSystemData {
                         buddypress_active INT( 1 ) NOT NULL DEFAULT  '1',
                         buddypress_post INT( 1 ) NOT NULL DEFAULT  '1',
                         show_chedit_to_codeboxr INT( 1 ) NOT NULL DEFAULT  '1',
+                        show_user_avatar_in_review INT( 1 ) NOT NULL DEFAULT  '1',
+                        show_user_link_in_review INT( 1 ) NOT NULL DEFAULT  '1',
+                        show_editor_rating INT( 1 ) NOT NULL DEFAULT  '1',
                         PRIMARY KEY  (id)
             ) $charset_collate;";
         //here we nedd charset
@@ -1032,6 +1035,80 @@ class CBRatingSystemData {
         global $wpdb;
 
         return $wpdb->prefix . "cbratingsystem_ratings_summary";
+    }
+    // get top rated post function added 27-11-14
+    /*
+   *
+   */
+    public static function get_top_rated_post( array $whereOptions = array(), $is_object = false, $limit = '' ) {
+
+        global $wpdb;
+        //making the options
+        $active_clause = '';
+
+        if($whereOptions ['post_filter'] == 'post_id'){
+            if($whereOptions ['post_id'] != '' && $whereOptions ['post_id'] != '0'){
+                $active_clause .= 'AND post.ID IN ('.($whereOptions['post_id']).') ';
+                //var_dump(explode( ',' ,$whereOptions['post_id']));
+            }
+        }
+        else if ($whereOptions ['post_filter'] == 'post_type'){
+            //var_dump('i am here');
+            if($whereOptions ['post_type'] != '' && $whereOptions ['post_type'] != '0'){
+                $active_clause .= 'AND post.post_type ="'.$whereOptions['post_type'].'"';
+            }
+
+        }
+        if($whereOptions ['user_id'] != ''){
+            if($whereOptions ['user_id'] != '' && $whereOptions ['user_id'] != '0'){
+                $active_clause .= 'AND post.post_author IN ('.($whereOptions['user_id']).') ';
+                //var_dump(explode( ',' ,$whereOptions['user_id']));
+            }
+        }
+       // var_dump($whereOptions ['form_id']);
+        if($whereOptions ['form_id'] != '' && $whereOptions ['form_id'] != '0'){
+            $active_clause .= 'AND summary.form_id ="'.(int)$whereOptions ['form_id'].'"';
+        }
+        if(array_key_exists('post_date' , $whereOptions) ){
+            $active_clause .= 'AND post.post_date >"'.$whereOptions['post_date'].'"';
+        }
+
+
+        if (  $limit != ''  ) {
+            $limit = (int) (preg_replace("/[^0-9]/","",$limit) ) ;
+            //var_dump($limit);
+            $limit = 'LIMIT ' . $limit;
+        }
+
+        $posttable     =  $wpdb->prefix . "posts";
+        $summarytable  =  self::get_user_ratings_summury_table_name();
+        $usertable     =  $wpdb->prefix . "users";
+        //$table_name1 =
+        $formtable     = self::get_ratingForm_settings_table_name();
+
+        $sql     =   $wpdb->prepare( "SELECT SUM(summary.per_post_rating_summary)/count(summary.post_id) as rating, count(summary.post_id) as post_count,post.post_author  FROM $posttable as post  LEFT JOIN $summarytable as summary ON summary.post_id = post.ID  WHERE post.post_status = 'publish' $active_clause GROUP BY post.post_author ORDER BY rating DESC $limit" , $limit) ;
+       // $results = $wpdb->get_results( $sql,ARRAY_A);
+
+
+        if ( ! $is_object ) {
+            $results = $wpdb->get_results( $sql, ARRAY_A );
+
+            if ( empty( $results ) ) {
+                return array();
+            }
+
+
+        } else {
+            $results = $wpdb->get_results( $sql, OBJECT );
+
+            if ( empty( $results ) ) {
+                return array();
+            }
+
+        }
+
+        //var_dump($results);
+        return $results;
     }
 
 }// end of class

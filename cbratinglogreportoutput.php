@@ -253,9 +253,7 @@ class Cbratingavglog extends WP_List_Table{
                         //console.log(value);
                         $('.cbwdchkbox-'+value).parent().parent().hide();
 
-
                     });
-
                     setTimeout(function() {   //calls click event after a certain time
                         $('#message').hide();
                     }, 2000);
@@ -263,7 +261,6 @@ class Cbratingavglog extends WP_List_Table{
                 });
 
             </script>
-
 <?php
     }
   }
