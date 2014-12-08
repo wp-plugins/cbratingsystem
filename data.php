@@ -1073,7 +1073,12 @@ class CBRatingSystemData {
             $active_clause .= 'AND post.post_date >"'.$whereOptions['post_date'].'"';
         }
 
-
+        if($whereOptions ['order'] != ''){
+            $order_by = $whereOptions ['order'];
+        }
+        else{
+            $order_by = 'DESC';
+        }
         if (  $limit != ''  ) {
             $limit = (int) (preg_replace("/[^0-9]/","",$limit) ) ;
             //var_dump($limit);
@@ -1086,7 +1091,7 @@ class CBRatingSystemData {
         //$table_name1 =
         $formtable     = self::get_ratingForm_settings_table_name();
 
-        $sql     =   $wpdb->prepare( "SELECT SUM(summary.per_post_rating_summary)/count(summary.post_id) as rating, count(summary.post_id) as post_count,post.post_author  FROM $posttable as post  LEFT JOIN $summarytable as summary ON summary.post_id = post.ID  WHERE post.post_status = 'publish' $active_clause GROUP BY post.post_author ORDER BY rating DESC $limit" , $limit) ;
+        $sql     =   $wpdb->prepare( "SELECT SUM(summary.per_post_rating_summary)/count(summary.post_id) as rating, count(summary.post_id) as post_count,post.post_author  FROM $posttable as post  LEFT JOIN $summarytable as summary ON summary.post_id = post.ID  WHERE  post.post_status = 'publish' $active_clause GROUP BY post.post_author ORDER BY rating $order_by ,post_count  $order_by $limit" , $limit) ;
        // $results = $wpdb->get_results( $sql,ARRAY_A);
 
 

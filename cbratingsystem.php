@@ -447,7 +447,8 @@ class CBRatingSystem {
                 'post_time'     => '0', //if post time not exit this date takes  //array( 1 => '24 hours', 7 => 'Week', 15 => '15 Days', 30 => 'Month', 0 => 'All' ); one of this value
                 'limit'         => 10, // data  limit
                 'posttype'      => '0', // one post type
-                'post_filter'   => '',// post_id or post_type
+                'post_filter'   => '',// post_id or post_type,
+                'order'         => 'DESC',
                 'title'         => __('Top Rated Users', 'cbratingsystem')
             ), $atts
         );
