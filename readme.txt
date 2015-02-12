@@ -45,6 +45,10 @@ To buy the pro version please check here http://codeboxr.com/installation-multi-
 
 == Installation ==
 
+Please note: if you are updating to 3.3 from any other version you need to reset the rating tables. Go to Rating System from
+left menu, then tools -> click reset all. It will give a fresh rating system that works. We needed to change the database tables for this plugin and changed a log
+and couldn't keep the previous data to move for any better future of this plugin.
+
 How to install the plugin and get it working.
 
 
@@ -106,6 +110,8 @@ Please visit our site for detail tutorial step by step http://codeboxr.com/insta
 
 
 == Changelog ==
+= 3.3 =
+* 50% revamp of code, please go to tools of this plugin and reset
 = 3.2.26 =
 * Bug fix
 
