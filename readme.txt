@@ -3,8 +3,8 @@ Contributors: manchumahara, codeboxr
 Donate link: http://codeboxr.com
 Tags: widget,shortcodes,rating,comment,reviews, multi criteria
 Requires at least: 3.0
-Tested up to: 4.0
-Stable tag: 3.2.25
+Tested up to: 4.1
+Stable tag: 3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -106,6 +106,8 @@ Please visit our site for detail tutorial step by step http://codeboxr.com/insta
 
 
 == Changelog ==
+= 3.2.26 =
+* Bug fix
 
 = 3.2.24 =
 * Maintenance Release

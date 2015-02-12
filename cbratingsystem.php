@@ -1,41 +1,51 @@
 <?php
 /*
-  Plugin Name: CodeBoxr Rating System
+  Plugin Name: CodeBoxr Multi Criteria Rating System
   Plugin URI: http://codeboxr.com/product/multi-criteria-flexible-rating-system-for-wordpress
   Description: Rating system for Posts and Pages from CodeBoxr.
-  Version: 3.2.25
+  Version: 3.3.0
   Author: Codeboxr
   Author URI: mailto:info@codeboxr.com
  */
+defined( 'ABSPATH' ) OR exit;
 
 //define the constants
-define( 'CB_RATINGSYSTEM_PLUGIN_VERSION', '3.2.25' ); //need for checking verson
+define( 'CB_RATINGSYSTEM_PLUGIN_VERSION', '3.3.0' ); //need for checking verson
 define( 'CB_RATINGSYSTEM_FILE', __FILE__ );
 define( 'CB_RATINGSYSTEM_PLUGIN_BASE_NAME', plugin_basename( __FILE__ ) );
 define( 'CB_RATINGSYSTEM_PATH', WP_PLUGIN_DIR . '/' . basename( dirname( CB_RATINGSYSTEM_FILE ) ) );
 define( 'CB_RATINGSYSTEM_PLUGIN_NAME', 'Rating System' );
 define( 'CB_RATINGSYSTEM_PLUGIN_SLUG_NAME', 'cbratingsystem' );
-define( 'CB_RATINGSYSTEM_PLUGIN_DIR', plugin_dir_url( __FILE__ ) );
+define( 'CB_RATINGSYSTEM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'CB_RATINGSYSTEM_PLUGIN_DIR_URL', plugin_dir_url( __FILE__ ) );
 define( 'CB_RATINGSYSTEM_PLUGIN_DIR_IMG', plugin_dir_url( __FILE__ ) . 'images/' );
 define( 'CB_RATINGSYSTEM_RAND_MIN', 0 );
 define( 'CB_RATINGSYSTEM_RAND_MAX', 999999 );
 define( 'CB_RATINGSYSTEM_COOKIE_EXPIRATION_14DAYS', time() + 1209600 ); //Expiration of 14 days.
 define( 'CB_RATINGSYSTEM_COOKIE_EXPIRATION_7DAYS', time() + 604800 ); //Expiration of 7 days.
 define( 'CB_RATINGSYSTEM_COOKIE_NAME', 'cbrating-cookie-session' );
-//var_dump(CB_RATINGSYSTEM_PATH);
-//all datebase in data.php
+
+//to handle multibyte
+mb_internal_encoding('utf-8');
+
+//require_once ABSPATH . 'wp-admin/includes/user.php';
+//used for maximum database related operations
 require_once( CB_RATINGSYSTEM_PATH . '/data.php' );
-//all widget in this page
+
+//used for core widgets
 require_once( CB_RATINGSYSTEM_PATH . '/class.CBRatingSystemWidget.php' );
 
 //bootstrap the rating plugin
 add_action( 'init', array( 'CBRatingSystem', 'init' ) );
 
 //actions on install and on uninstall/delete
-//while activating a plugin
-register_activation_hook( __FILE__, array( 'CBRatingSystem', 'install_plugin' ) );
-//while deleting a plugin
-register_uninstall_hook( __FILE__, array( 'CBRatingSystem', 'uninstall_plugin' ) );
+//plugin activation hook
+register_activation_hook( __FILE__, array( 'CBRatingSystem', 'cbratingsystem_activation' ) );
+//plugin deactivation hook
+//register_deactivation_hook( __FILE__, array( 'CBRatingSystem', 'cbratingsystem_deactivation' ) ); //we are not using it still now
+
+//plugin uninstall/delete hook
+register_uninstall_hook( __FILE__, array( 'CBRatingSystem', 'cbratingsystem_uninstall' ) );
 
 //init widgets
 add_action( 'widgets_init', array( 'CBRatingSystem', 'initWidgets' ) );
@@ -83,20 +93,19 @@ class CBRatingSystem {
 				CBRatingSystemAdmin::init();
 			}
 
+            //ajax request to save review
 			add_action( 'wp_ajax_nopriv_cbRatingAjaxFunction', array( 'CBRatingSystemFront', 'cbRatingAjaxFunction' ) );
 			add_action( 'wp_ajax_cbRatingAjaxFunction', array( 'CBRatingSystemFront', 'cbRatingAjaxFunction' ) );
 
-            // added later for comment modaretion
+            // ajax request  for comment moderation
             add_action( 'wp_ajax_nopriv_cbCommentAjaxFunction', array( 'CBRatingSystemAdminReport', 'cbCommentAjaxFunction' ) );
             add_action( 'wp_ajax_cbCommentAjaxFunction', array( 'CBRatingSystemAdminReport', 'cbCommentAjaxFunction' ) );
 
-            // to edit comment
-            add_action( 'wp_ajax_nopriv_cbCommentEditAjaxFunction', array( 'CBRatingSystemAdminReport', 'cbCommentEditAjaxFunction' ) );
-            add_action( 'wp_ajax_cbCommentEditAjaxFunction', array( 'CBRatingSystemAdminReport', 'cbCommentEditAjaxFunction' ) );
 
 
-            add_action( 'wp_ajax_nopriv_cbReviewAjaxFunction', array( 'CBRatingSystemFrontReiview', 'cbReviewAjaxFunction' ) );
-			add_action( 'wp_ajax_cbReviewAjaxFunction', array( 'CBRatingSystemFrontReiview', 'cbReviewAjaxFunction' ) );
+
+            add_action( 'wp_ajax_nopriv_cbReviewAjaxFunction', array( 'CBRatingSystemFrontReview', 'cbReviewAjaxFunction' ) );
+			add_action( 'wp_ajax_cbReviewAjaxFunction', array( 'CBRatingSystemFrontReview', 'cbReviewAjaxFunction' ) );
 
 			add_action( 'wp_ajax_nopriv_cbAdminRatingFormListingAjaxFunction', array( 'CBRatingSystemAdmin', 'cbAdminRatingFormListingAjaxFunction' ) );
 			add_action( 'wp_ajax_cbAdminRatingFormListingAjaxFunction', array( 'CBRatingSystemAdmin', 'cbAdminRatingFormListingAjaxFunction' ) );
@@ -124,17 +133,20 @@ class CBRatingSystem {
 			add_action( 'load-post-new.php', array( 'CBRatingSystem', 'post_meta_boxes_setup' ) );
 
         } else {
+            //fontend
 			/* Load JS and CSS at the front-end */
 			//add_action('wp_head', array('CBRatingSystemTheme', 'build_custom_theme_css'));
 			//add_action('wp_enqueue_scripts', array('CBRatingSystem', 'load_scripts_and_styles'));
 
-			/* Add ShortTag functionanlity */
+
             add_filter('query_vars', array('CBRatingSystem', 'email_verify_var'));
             add_action('template_redirect', array('CBRatingSystem', 'email_verify'), 0);
 
+            //shortcodes
             add_shortcode( 'cbratingsystem', array( 'CBRatingSystem', 'cbratingsystem_shorttag' ) );
 			add_shortcode( 'cbratingavg', array( 'CBRatingSystem', 'cbratingsystem_avg' ) );
             add_shortcode( 'cbratingtoprateduser', array( 'CBRatingSystem', 'cbratingsystem_top_rated_user' ) );
+
 			/* Add rating form to Page/Post according to form settings */
 			add_filter( 'the_content', array( 'CBRatingSystem', 'main_content_with_rating_form' ) );
 
@@ -142,6 +154,25 @@ class CBRatingSystem {
 			CBRatingSystem::init_cookie();
 		}
 
+	}
+
+	public  static function redirect($url){
+
+
+		if(headers_sent())
+		{
+			$string = '<script type="text/javascript">';
+			$string .= 'window.location = "' .$url . '"';
+			$string .= '</script>';
+
+			echo $string;
+		}
+		else
+		{
+			wp_safe_redirect($url);
+
+		}
+		exit;
 	}
 
     /**
@@ -159,16 +190,16 @@ class CBRatingSystem {
     }
 
     /**
-     * Verify Email
+     * Verify Guest User Email
      */
 
     public static function email_verify(){
-            $email_verify   = get_query_var('cbratingemailverify');
-            //var_dump($email_verify);exit(1);
-            if($email_verify !=''){
-                $rating['comment_status'] = $email_verify;
-                CBRatingSystemData::update_rating_hash( $rating );
-            }
+        $email_verify   = get_query_var('cbratingemailverify');
+        //var_dump($email_verify);exit(1);
+        if($email_verify !=''){
+            $rating['comment_status'] = $email_verify;
+            CBRatingSystemData::update_rating_hash( $rating );
+        }
 
         	//sql
     }
@@ -185,9 +216,13 @@ class CBRatingSystem {
     /**
      * called when plugin is installed
      */
-    public static function install_plugin() {
-		//First delete all the existing tables (like previously installed) and remove all existing variable options.
-		//self::uninstall_plugin();
+    public static function cbratingsystem_activation() {
+
+        if ( ! current_user_can( 'activate_plugins' ) )
+            return;
+        $plugin = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : '';
+        check_admin_referer( "activate-plugin_{$plugin}" );
+
 
 		$previous_version = get_site_option( 'cbratingsystem_plugin_version' );
 
@@ -210,12 +245,23 @@ class CBRatingSystem {
 
 	}
 
+    public static function cbratingsystem_deactivation()
+    {
+        if ( ! current_user_can( 'activate_plugins' ) )
+            return;
+        $plugin = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : '';
+        check_admin_referer( "deactivate-plugin_{$plugin}" );
+
+        # Uncomment the following line to see the function in action
+        # exit( var_dump( $_GET ) );
+    }
+
     /**
-     * called when plugin uninstalled
+     * called when plugin uninstalled/delete
      * delete all options if delete all saved from tools page
      */
 
-    public static function uninstall_plugin() {
+    public static function cbratingsystem_uninstall() {
 
 
         if ( ! current_user_can( 'activate_plugins' ) ) {
@@ -224,7 +270,17 @@ class CBRatingSystem {
 
         check_admin_referer( 'bulk-plugins' );
 
+        // Important: Check if the file is the one
+        // that was registered during the uninstall hook.
+        if ( __FILE__ != WP_UNINSTALL_PLUGIN )
+            return;
+
+        # Uncomment the following line to see the function in action
+        # exit( var_dump( $_GET ) );
+
+
         $checkuninstall = intval( get_option( 'cbratingsystem_deleteonuninstall' ) );
+
         if ( $checkuninstall == 1 ) {
 
             CBRatingSystemData::delete_tables();
@@ -239,15 +295,17 @@ class CBRatingSystem {
      */
     public static function add_common_styles_scripts() {
 
-		wp_enqueue_script( 'cbrp-common-script', CB_RATINGSYSTEM_PLUGIN_DIR . 'js/cbrating.common.script.js', array( 'jquery' ), self::$version );
-		wp_enqueue_script( 'jquery-uniform', CB_RATINGSYSTEM_PLUGIN_DIR . 'js/jquery.uniform.js', array( 'jquery' ), self::$version );
-		wp_enqueue_script( 'jquery-chosen', CB_RATINGSYSTEM_PLUGIN_DIR . 'js/chosen.jquery.js', array( 'jquery' ), self::$version );
-		wp_enqueue_script( 'jquery-selectize', CB_RATINGSYSTEM_PLUGIN_DIR . 'js/jquery.selectize.min.js', array( 'jquery' ), self::$version );
+        wp_enqueue_style( 'cbrp-common-style', CB_RATINGSYSTEM_PLUGIN_DIR_URL . 'css/cbrating.common.style.css', array(), self::$version );
+        //wp_enqueue_style( 'jquery-uniform-style', CB_RATINGSYSTEM_PLUGIN_DIR_URL . 'css/uniform.aristo.min.css', array(), self::$version );
+        wp_enqueue_style( 'jquery-chosen-style', CB_RATINGSYSTEM_PLUGIN_DIR_URL . 'css/chosen.min.css', array(), self::$version );
+        wp_enqueue_style( 'jquery-selectize-style', CB_RATINGSYSTEM_PLUGIN_DIR_URL . 'css/jquery.selectize.css', array(), self::$version );
 
-		wp_enqueue_style( 'cbrp-common-style', CB_RATINGSYSTEM_PLUGIN_DIR . 'css/cbrating.common.style.css', array(), self::$version );
-		wp_enqueue_style( 'jquery-uniform-style', CB_RATINGSYSTEM_PLUGIN_DIR . 'css/uniform.aristo.min.css', array(), self::$version );
-		wp_enqueue_style( 'jquery-chosen-style', CB_RATINGSYSTEM_PLUGIN_DIR . 'css/chosen.min.css', array(), self::$version );
-		wp_enqueue_style( 'jquery-selectize-style', CB_RATINGSYSTEM_PLUGIN_DIR . 'css/jquery.selectize.css', array(), self::$version );
+		wp_enqueue_script( 'cbrp-common-script', CB_RATINGSYSTEM_PLUGIN_DIR_URL . 'js/cbrating.common.script.js', array( 'jquery' ), self::$version );
+		//wp_enqueue_script( 'jquery-uniform', CB_RATINGSYSTEM_PLUGIN_DIR_URL . 'js/jquery.uniform.js', array( 'jquery' ), self::$version );
+		wp_enqueue_script( 'jquery-chosen', CB_RATINGSYSTEM_PLUGIN_DIR_URL . 'js/chosen.jquery.js', array( 'jquery' ), self::$version );
+		wp_enqueue_script( 'jquery-selectize', CB_RATINGSYSTEM_PLUGIN_DIR_URL . 'js/jquery.selectize.min.js', array( 'jquery' ), self::$version );
+
+
 
 	}
 
@@ -259,7 +317,7 @@ class CBRatingSystem {
     public static function get_language_strings() {
 
 		$strings = array(
-			'string_prefix'  => __( 'You Have', 'cbratingsystem' ),
+			'string_prefix'  => __( '', 'cbratingsystem' ),
 			'string_postfix' => __( 'characters', 'cbratingsystem' ),
 
 		);
@@ -272,17 +330,21 @@ class CBRatingSystem {
      */
     public static function load_scripts_and_styles() {
 
-		wp_enqueue_script( 'jquery-raty-min', CB_RATINGSYSTEM_PLUGIN_DIR . 'js/jquery.raty.min.js', array( 'jquery' ) );
+		wp_enqueue_script( 'jquery-raty-min', CB_RATINGSYSTEM_PLUGIN_DIR_URL . 'js/jquery.raty.min.js', array( 'jquery' ) );
 		//wp_enqueue_script('jquery-progressbar', RTP_PLUGIN_DIR_JS . 'external/jquery.ui.progressbar.min.js', array('jquery', 'jquery-ui-widget', 'jquery-ui-core'));
-		wp_enqueue_script( 'cbrp-front-js', CB_RATINGSYSTEM_PLUGIN_DIR . 'js/cbratingsystem.front.js', array( 'jquery' ), self::$version, true );
-		wp_enqueue_script( 'cbrp-front-review-js', CB_RATINGSYSTEM_PLUGIN_DIR . 'js/cbratingsystem.front.review.js', array( 'jquery' ), self::$version, true );
-		wp_enqueue_script( 'cbrp-ajax-request', CB_RATINGSYSTEM_PLUGIN_DIR . 'js/cbratingsystem.front.ajax.js', array( 'jquery' ), self::$version, true );
-		wp_enqueue_style( 'cbrp-basic-style', CB_RATINGSYSTEM_PLUGIN_DIR . 'css/basic.style.css', array(), self::$version );
-		wp_enqueue_style( 'cbrp-basic-review-style', CB_RATINGSYSTEM_PLUGIN_DIR . 'css/basic.review.style.css', array(), self::$version );
+		wp_enqueue_script( 'cbrp-front-js', CB_RATINGSYSTEM_PLUGIN_DIR_URL . 'js/cbratingsystem.front.js', array( 'jquery' ), self::$version, true );
+		wp_enqueue_script( 'cbrp-front-review-js', CB_RATINGSYSTEM_PLUGIN_DIR_URL . 'js/cbratingsystem.front.review.js', array( 'jquery' ), self::$version, true );
+
+
+
+        wp_enqueue_style( 'dashicons' );
+
+        wp_enqueue_style( 'cbrp-basic-style', CB_RATINGSYSTEM_PLUGIN_DIR_URL . 'css/basic.style.css', array('dashicons'), self::$version );
+		wp_enqueue_style( 'cbrp-basic-review-style', CB_RATINGSYSTEM_PLUGIN_DIR_URL . 'css/basic.review.style.css', array(), self::$version );
 
 		$theme_key = get_option( 'cbratingsystem_theme_key' );
 		if ( is_string( $theme_key ) and ! empty( $theme_key ) ) {
-			wp_enqueue_style( 'cbrp-extra-theme-style', CB_RATINGSYSTEM_PLUGIN_DIR . 'css/extra.theme.style.css', array(), self::$version );
+			wp_enqueue_style( 'cbrp-extra-theme-style', CB_RATINGSYSTEM_PLUGIN_DIR_URL . 'css/extra.theme.style.css', array(), self::$version );
 		}
 		wp_localize_script(
 			'cbrp-front-js',
@@ -305,7 +367,7 @@ class CBRatingSystem {
 	public static function add_rating_column( $columns ) {
 		return array_merge(
 			$columns,
-			array( 'rating' => __( 'Average Rating', cbratingsystem ) )
+			array( 'rating' => __( 'Average Rating', 'cbratingsystem') )
 		);
 	}
 
@@ -331,7 +393,7 @@ class CBRatingSystem {
 
 			$log_average .= '</ul>';
 		} else {
-			$log_average = __( 'No avegare rating', 'cbratingsystem' );
+			$log_average = __( 'No average rating', 'cbratingsystem' );
 
 		}
 
@@ -382,7 +444,9 @@ class CBRatingSystem {
         if( $options['post_id'] == ''){
             $options['post_id'] = $post->ID;
         }
-       // var_dump($options);
+
+	    //var_dump($options);
+
 		$output = self::cbratingsystem_shorttag_output( $options );
 
 		return $output;
@@ -460,7 +524,7 @@ class CBRatingSystem {
             $options['post_date'] = $date;
         }
         $data = CBRatingSystemData::get_top_rated_post( $options , false, $limit );
-        //var_dump($data);
+
         $cbrp_output = '<ul class="cbrp-top-rated-wpanel" style="">';
           if ( ! empty( $data ) ) :
 
@@ -522,19 +586,21 @@ class CBRatingSystem {
 				$ratingFormArray['form_id']   = $options['form_id'];
 				$ratingFormArray['post_id']   = $options['post_id'];
 				$ratingFormArray['theme_key'] = $options['theme_key'];
-				$showreview                   = intval($options['showreview']);
+				$show_review                   = intval($options['showreview']);
 
 				$post_id = $ratingFormArray['post_id'];
-				//var_dump($post_id);
+
 				if ( class_exists( 'CBRatingSystemFront' ) && ( $ratingFormArray['is_active'] == 1 ) && ( ( $ratingFormArray['enable_shorttag'] == 1 ) ) ) {
 
 					//get the rating form
 					$form = CBRatingSystemFront::add_ratingForm_to_content( $ratingFormArray );
 
+					//cbxdump($ratingFormArray);
+
 					//get the review list
-					if ( class_exists( 'CBRatingSystemFrontReiview' ) && ( $ratingFormArray['review']['review_enabled'] == 1 ) && $showreview ) {
+					if ( class_exists( 'CBRatingSystemFrontReview' ) && ( isset($ratingFormArray['review_enabled']) && $ratingFormArray['review_enabled'] == 1 ) && $show_review ) {
 						if ( is_singular() ) {
-							$review .= CBRatingSystemFrontReiview::rating_reviews_shorttag( $ratingFormArray, $post_id );
+							$review = CBRatingSystemFrontReview::rating_reviews_shorttag( $ratingFormArray, $post_id );
 
 							if ( ! empty( $review ) ) {
 								CBRatingSystemTheme::build_custom_theme_css();
@@ -563,18 +629,21 @@ class CBRatingSystem {
 
 		$defaultFormId = get_option( 'cbratingsystem_defaultratingForm' );
 		//$form_id = apply_filters('rating_form_array', $defaultFormId);
-		$form_id = apply_filters( 'rating_form_array', $defaultFormId );
+		$form_id = (int)apply_filters( 'rating_form_array', $defaultFormId );
+
 		$post_id = get_the_ID();
 
 		$form   = '';
 		$review = '';
 
-		//echo '<pre>'; print_r( $form_id ); echo '</pre>'; //die();
 
-		if ( is_int( $form_id ) || is_numeric( $form_id ) ) {
+
+		if ( $form_id > 0 ) {
 			$ratingFormArray            = CBRatingSystemData::get_ratingForm( $form_id );
 			$ratingFormArray['form_id'] = $form_id;
 			$ratingFormArray['post_id'] = $post_id;
+
+
 
 			if ( class_exists( 'CBRatingSystemFront' ) and ( $ratingFormArray['is_active'] == 1 ) ) {
 				$theme_key = get_option( 'cbratingsystem_theme_key' );
@@ -601,9 +670,9 @@ class CBRatingSystem {
 				$output = $content;
 			}
 
-			if ( class_exists( 'CBRatingSystemFrontReiview' ) and ( $ratingFormArray['review']['review_enabled'] == 1 ) and ( ! ( $ratingFormArray['position'] == 'none' ) ) ) {
+			if ( class_exists( 'CBRatingSystemFrontReview' ) and ( $ratingFormArray['review_enabled'] == 1 ) and ( ! ( $ratingFormArray['position'] == 'none' ) ) ) {
 				if ( is_single() or is_page() ) {
-					$review .= CBRatingSystemFrontReiview::rating_reviews( $ratingFormArray, $post_id );
+					$review .= CBRatingSystemFrontReview::rating_reviews( $ratingFormArray, $post_id );
 
 					if ( ! empty( $review ) ) {
 						CBRatingSystemTheme::build_custom_theme_css();
@@ -640,7 +709,7 @@ class CBRatingSystem {
 
 		$form_id = apply_filters( 'rating_form_array', $form_id );
 
-		//echo '<pre>'; print_r( $form_id ); echo '</pre>'; //die();
+
 		if ( is_int( $form_id ) || is_numeric( $form_id ) ) {
 			$ratingFormArray = CBRatingSystemData::get_ratingForm( $form_id );
 
@@ -651,6 +720,7 @@ class CBRatingSystem {
 				//$theme_key = get_option('cbratingsystem_theme_key');
 
 				$ratingFormArray['theme_key'] = $theme_key;
+                $ratingFormArray = apply_filters('cbratingsystem_change_options' ,$ratingFormArray );
 
 
 				$form .= CBRatingSystemFront::add_ratingForm_to_content( $ratingFormArray );
@@ -662,11 +732,11 @@ class CBRatingSystem {
 				$output = $form;
 
 			}
-
-			if ( class_exists( 'CBRatingSystemFrontReiview' ) && ( $ratingFormArray['review']['review_enabled'] == 1 ) && $showreview ) {
+            //var_dump($ratingFormArray);
+			if ( class_exists( 'CBRatingSystemFrontReview' ) && ( $ratingFormArray['review']['review_enabled'] == 1 ) && $showreview ) {
 				//if(is_single() || is_page()){
 				if ( is_singular() ) {
-					$review .= CBRatingSystemFrontReiview::rating_reviews_shorttag( $ratingFormArray, $post_id, 0 );
+					$review .= CBRatingSystemFrontReview::rating_reviews_shorttag( $ratingFormArray, $post_id, 0 );
 
 					if ( ! empty( $review ) ) {
 						CBRatingSystemTheme::build_custom_theme_css();
@@ -747,11 +817,475 @@ class CBRatingSystem {
 		return esc_attr( $ip_address );
 	}
 
+	public static function form_default_criteria(){
+		$form_criteria = array(
+			'custom_criteria'   => array
+			(
+				'0' => array
+				(
+					'enabled' => 1,
+					'label' => __('Criteria 1', 'cbratingsystem'),
+					'stars' => array
+					(
+						'0' => array('enabled' => 1,'title' => __('Worst','cbratingsystem')),
+						'1' => array('enabled' => 1,'title' => __('Bad','cbratingsystem')),
+						'2' => array('enabled' => 1,'title' => __('Not Bad','cbratingsystem')),
+						'3' => array('enabled' => 1,'title' => __('Good','cbratingsystem')),
+						'4' => array('enabled' => 1,'title' => __('Best','cbratingsystem'))
+					)
+
+				),
+				'1' => array
+				(
+					'enabled' => 1,
+					'label' => __('Criteria 2','cbratingsystem'),
+					'stars' => array
+					(
+						'0' => array('enabled' => 1,'title' => __('Worst','cbratingsystem')),
+						'1' => array('enabled' => 1,'title' => __('Bad','cbratingsystem')),
+						'2' => array('enabled' => 1,'title' => __('Not Bad','cbratingsystem')),
+						'3' => array('enabled' => 1,'title' => __('Good','cbratingsystem')),
+						'4' => array('enabled' => 1,'title' => __('Best','cbratingsystem'))
+					)
+
+				),
+				'2' => array
+				(
+					'enabled'   => 1,
+					'label'     => __('Criteria 3', 'cbratingsystem'),
+					'stars' => array
+					(
+						'0' => array('enabled' => 1,'title' => __('Worst','cbratingsystem')),
+						'1' => array('enabled' => 1,'title' => __('Bad','cbratingsystem')),
+						'2' => array('enabled' => 1,'title' => __('Not Bad','cbratingsystem')),
+						'3' => array('enabled' => 1,'title' => __('Good','cbratingsystem')),
+						'4' => array('enabled' => 1,'title' => __('Best','cbratingsystem'))
+					)
+
+				)
+
+
+			)
+		);
+
+		return $form_criteria;
+	}
+
+	public static function form_default_question(){
+		$form_question = array(
+
+			'custom_question'       => array(
+				'0' => array(
+					'title'         => __('Sample question title 1','cbratingsystem'),
+					'required'      => 0,
+					'enabled'       => 0,
+					'field'         => array(
+						'type'          => 'checkbox',
+						'checkbox'      => array(
+							'seperated' => 0,
+							'count'     => 2,
+							'0'         => array('text' => __('Yes','cbratingsystem')),
+							'1'         => array('text' => __('No','cbratingsystem')),
+							'2'         => array('text' => __('Correct','cbratingsystem')),
+							'3'         => array('text' => __('Incorrect','cbratingsystem')),
+							'4'         => array('text' => __('None','cbratingsystem'))
+						),
+						'radio'      => array(
+							'count'     => 2,
+							'0'         => array('text' => __('Yes','cbratingsystem')),
+							'1'         => array('text' => __('No','cbratingsystem')),
+							'2'         => array('text' => __('Correct','cbratingsystem')),
+							'3'         => array('text' => __('Incorrect','cbratingsystem')),
+							//'4'         => array('text' => __('None','cbratingsystem'))
+						)
+
+
+					)
+				)
+			)
+
+	);
+		return $form_question;
+	}
+
+	/**
+	 * @return array|mixed|void
+	 */
+	public static function form_default_extra_fields(){
+		$postTypes          = CBRatingSystem::post_types();
+		$userRoles          = CBRatingSystem::user_roles();
+		$editorUserRoles    = CBRatingSystem::editor_user_roles();
+
+		// 9 default extra fields  //note review field is now separeated
+		$default_extra_fields = array(
+			'view_allowed_users'            => array(
+				'label'                 => __('Allowed User Roles Who Can View Rating','cbratingsytem'),
+				'desc'                  => __( 'Which user group can view rating', 'cbratingsystem' ),
+				'type'                  => 'multiselect',
+				'user_types'            => true,
+				'multiple'              => true,
+				'placeholder'           => __('Choose User Group ...','cbratingsystem'),
+				'default'               => array('guest','administrator','editor'),
+				'required'              => true,
+				'options'               => $userRoles,
+				'extrafield'            => true,
+				'errormsg'              => __('You must give access to at least one User Group who can View Rating','cbratingsystem')
+			), //view allowed user
+
+			'comment_view_allowed_users'        => array(
+				'label'                 => __('Allowed User Roles Who Can View Rating Review','cbratingsytem'),
+				'desc'                  => __( 'Which user group can view rating', 'cbratingsystem' ),
+				'type'                  => 'multiselect',
+				'user_types'            => true,
+				'multiple'              => true,
+				'placeholder'           => __('Choose User Group ...','cbratingsystem'),
+				'default'               => array('guest','administrator','editor'),
+				'required'              => true,
+				'options'               => $userRoles,
+				'extrafield'            => true,
+				'errormsg'              => __('You must give access to at least one User Group who can View Comment','cbratingsystem')
+			),//review view allowed user
+
+			'comment_moderation_users'          => array(
+				'label'                 => __('Enable Rating Moderation for User Group','cbratingsytem'),
+				'desc'                  => __( 'Which user groups comments will be reviewed.', 'cbratingsystem' ),
+				'type'                  => 'multiselect',
+				'user_types'            => true,
+				'multiple'              => true,
+				'placeholder'           => __('Choose User Group ...','cbratingsystem'),
+				'default'               => array('guest'),
+				'required'              => false,
+				'options'               => $userRoles,
+				'extrafield'            => true
+			), // which user group's comment will be moderated
+
+			'comment_required'                  => array(
+				'label'         => __('Comment required', 'cbratingsystem'),
+				'desc'          => __( 'This option will make the comment box required', 'cbratingsystem' ),
+				'type'          => 'radio',
+				'default'       => 0,
+				'required'      => false,
+				'options' => array(
+					'1' => __('Yes','cbratingsystem'),
+					'0' => __('No','cbratingsystem')
+				),
+				'extrafield'    => true,
+
+			), //comment box while rating required
+			'show_user_avatar_in_review'        => array(
+				'label'         => __('Author Avatar in Review', 'cbratingsystem'),
+				'desc'          => __( 'Show/hide reviewer\'s profile picture or avatar in review', 'cbratingsystem' ),
+				'type'          => 'radio',
+				'default'       => 0,
+				'tooltip'       => __('Control reviewers\'s avatar','cbratingsystem'),
+
+				'required'      => false,
+				'options' => array(
+					'1' => __('Yes','cbratingsystem'),
+					'0' => __('No','cbratingsystem')
+				),
+				'extrafield'    => true,
+
+			), // show user's avater or profile picture in review
+			'show_user_link_in_review'          => array(
+				'label'         => __('Show Author Link in Review', 'cbratingsystem'),
+				'desc'          => __( 'Link user to their author page in each review', 'cbratingsystem' ),
+				'type'          => 'radio',
+				'default'       => 0,
+				'tooltip'       => __('Control reviewers\'s link  ','cbratingsystem'),
+
+				'required'      => false,
+				'options' => array(
+					'1' => __('Yes','cbratingsystem'),
+					'0' => __('No','cbratingsystem')
+				),
+				'extrafield'    => true
+			),  //show user's link/profile/author link in review
+			'show_editor_rating'            => array(
+				'label'         => __('Show Editor Rating', 'cbratingsystem'),
+				'desc'          => __( 'Show/hide rating editor user group rating', 'cbratingsystem' ),
+				'type'          => 'radio',
+				'default'       => 0,
+				'tooltip'       => __('Which user group is rating editor is selectable ','cbratingsystem'),
+
+				'required'      => false,
+				'options' => array(
+					'1' => __('Yes','cbratingsystem'),
+					'0' => __('No','cbratingsystem')
+				),
+				'extrafield'    => true
+			),  // show editor rating on frontend yes/no
+			'review_enabled'                =>  array(
+				'label'         => __('Show/Hide Reviews', 'cbratingsystem'),
+				'desc'          => __( 'Control showing reviews on frontend', 'cbratingsystem' ),
+				'type'          => 'radio',
+				'default'       => 1,
+				'tooltip'       => __('Enabled by default','cbratingsystem'),
+
+				'required'      => false,
+				'options' => array(
+					'1' => __('Yes','cbratingsystem'),
+					'0' => __('No','cbratingsystem')
+				),
+				'extrafield'    => true
+			), // show hide reviews
+			'review_limit'                  => array(
+				'label'         => __('Review Limit Per Page', 'cbratingsystem'),
+				'desc'          => __( 'How many reviews will be shown per page or in ajax request', 'cbratingsystem' ),
+				'type'          => 'text',
+				'numeric'       => true,
+				'default'       => 10,
+				'tooltip'       => __('Review Limit','cbratingsystem'),
+				'placeholder'   => __('Review Limit', 'cbratingsystem'),
+				'required'      => true,
+				'extrafield'    => true,
+				'errormsg'      => __('Review Limit is required, must be numeric value','cbratingsystem')
+			) //default per page reviews limit
+
+
+		);
+
+
+
+		$default_extra_fields = apply_filters('cbratingsystem_default_extra_fields', $default_extra_fields);
+		return $default_extra_fields;
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function form_default_fields(){
+
+		$postTypes          = CBRatingSystem::post_types();
+		$userRoles          = CBRatingSystem::user_roles();
+		$editorUserRoles    = CBRatingSystem::editor_user_roles();
+
+		$form_default = array(
+
+			'id'                => array(
+									'type'          => 'hidden',
+									'default'       => 0
+									) ,
+			'name'              => array(
+				'label'         => __('Form Title', 'cbratingsystem'),
+				'desc'          => __( 'Write form name', 'cardselectbox' ),
+				'type'          => 'text',
+				'default'       => __('Example Rating Form', 'cbratingsystem'),
+				'tooltip'       => __('Form Name','cbratingsystem'),
+				'placeholder'   => __('Rating Form Name', 'cbratingsystem'),
+				'required'      => true,
+				'min'           => 5,
+				'max'           => 500,
+				'errormsg'      => __('Form title missing or empty, maximum length 500, minimum length 5','cbratingsystem')
+			) ,
+
+			'is_active'         => array(
+				'label'         => __('Form Status', 'cbratingsystem'),
+				'desc'          => __( 'Enable disable the form', 'cbratingsystem' ),
+				'type'          => 'radio',
+				'default'       => 1,
+				'tooltip'       => __('Enabled by default','cbratingsystem'),
+
+				'required'      => false,
+				'options'       => array(
+										'1' => __('Enabled','cbratingsystem'),
+										'0' => __('Disabled','cbratingsystem')
+									)
+
+			),  // create the form but will be active or inactive
+
+			'post_types'        =>  array(
+				'label'                 => __('Post Type Selection','cbratingsytem'),
+				'desc'                  => __( 'This form will work for the selected post types', 'cbratingsystem' ),
+				'type'                  => 'multiselect',
+				'multiple'              => true,
+				'post_types'            => true,
+				'default'               => array('post', 'page'),
+				'tooltip'               => __('Post type selection, works with builtin or custom post types','cbratingsystem'),
+				'placeholder'           => __('Choose post type(s)...','cbratingsystem'),
+
+				'required'              => true,
+				'options'               => $postTypes,
+				'errormsg'              => __('Post type is missing or at least one post type must be selected','cbratingsystem')
+			),  // post type supports
+
+			'show_on_single'    => array(
+				'label'         => __('Show on single post/page', 'cbratingsystem'),
+				'desc'          => __( 'Enable disable for single article', 'cbratingsystem' ),
+				'type'          => 'radio',
+				'default'       => 1,
+				'tooltip'       => __('Enabled by default','cbratingsystem'),
+
+				'required'      => false,
+				'options' => array(
+					'1' => __('Yes','cbratingsystem'),
+					'0' => __('No','cbratingsystem')
+				)
+			),  // show hide on single article pages
+
+			'show_on_home'      => array(
+				'label'         => __('Show on Home/Frontpage', 'cbratingsystem'),
+				'desc'          => __( 'Enable disable for home/frontpage', 'cbratingsystem' ),
+				'type'          => 'radio',
+				'default'       => 1,
+				'tooltip'       => __('Enabled by default','cbratingsystem'),
+
+				'required'      => false,
+				'options' => array(
+					'1' => __('Yes','cbratingsystem'),
+					'0' => __('No','cbratingsystem')
+				)
+			), //show on home or frontpage
+			'show_on_arcv'          => array(
+				'label'         => __('Show on Archives', 'cbratingsystem'),
+				'desc'          => __( 'Enable disable for archive pages', 'cardselectbox' ),
+				'type'          => 'radio',
+				'default'       => 1,
+				'tooltip'       => __('Enabled by default','cbratingsystem'),
+
+				'required'      => false,
+				'options' => array(
+					'1' => __('Yes','cbratingsystem'),
+					'0' => __('No','cbratingsystem')
+				)
+			),    //show on any kind of archive
+			'position'          =>  array(
+				'label'         => __('Auto Integration', 'cbratingsystem'),
+				'desc'          => __( 'Enable disable for shortcode', 'cbratingsystem' ),
+				'type'          => 'radio',
+				'default'       => 'bottom',
+				'tooltip'       => __('Enabled by default','cbratingsystem'),
+
+				'required'      => false,
+				'options' => array(
+					'top'       => __('Top (Before Content)','cbratingsystem'),
+					'bottom'    => __('Bottom (After Content)','cbratingsystem'),
+					'none'      => __('Disable Auto Integration','cbratingsystem')
+				)
+			),  //other possible, top and none
+			'enable_shorttag'   => array(
+				'label'         => __('Enable Shortcode', 'cbratingsystem'),
+				'desc'          => __( 'Enable disable for shortcode', 'cbratingsystem' ),
+				'type'          => 'radio',
+				'default'       => 1,
+				'tooltip'       => __('Enabled by default','cbratingsystem'),
+
+				'required'      => false,
+				'options' => array(
+					'1' => __('Yes','cbratingsystem'),
+					'0' => __('No','cbratingsystem')
+				)
+			), //enable disable shortcode
+			'logging_method'    => array(
+										'label'                 => __('Loggin Method','cbratingsytem'),
+										'desc'                  => __( 'Log user rating by ip or cookie or both to protect multiple rating, useful for guest rating', 'cardselectbox' ),
+										'type'                  => 'multiselect',
+										'multiple'              => 'yes',
+
+										'default'               => array('ip','cookie'),
+										'tooltip'               => __('Log user rating for guest using ip and cookie','cbratingsystem'),
+										'placeholder'           => __('Choose logging method...','cbratingsystem'),
+
+										'required'              => true,
+										'options'               => array(
+																		'ip' => __('IP','cbratingsystem'),
+																		'cookie' => __('Cookie','cbratingsystem')
+																	),
+										'errormsg'              => __('At least one logging method should be enabled','cbratingsystem')
+										),  // Logging method
+
+			'allowed_users'     =>  array(
+				'label'                 => __('Allowed User Roles Who Can Rate','cbratingsytem'),
+				'desc'                  => __( 'Which user group can rate article with this Rating Form', 'cbratingsystem' ),
+				'type'                  => 'multiselect',
+				'user_types'            => true,
+				'placeholder'           => __('Choose User Group ...','cbratingsystem'),
+				'multiple'              => true,
+				'default'               => array('administrator','editor'),
+				'required'              => true,
+				'options'               => $userRoles,
+				'errormsg'              => __('You must select one user group for Rating Editor user','cbratingsystem')
+			),
+
+			'editor_group'      => array(
+				'label'                 => __('Rating Editor User Group','cbratingsytem'),
+				'desc'                  => __( 'Which group of user will be Rating Editor', 'cbratingsystem' ),
+				'type'                  => 'multiselect',
+				'user_types'            => true,
+				'placeholder'           => __('Choose Rating Editor User Group ...','cbratingsystem'),
+				'multiple'              => false,
+				'default'               => 'administrator',
+				'required'              => true,
+				'options'               => $editorUserRoles,
+				'errormsg'              => __('You must select one user group for Rating Editor user','cbratingsystem')
+			), //which group of users will be treated as editor  //administrator'
+
+			'enable_comment'        => array(
+				'label'         => __('Enable Comment', 'cbratingsystem'),
+				'desc'          => __( 'Enable Comment with Rating', 'cbratingsystem' ),
+				'type'          => 'radio',
+				'default'       => 1,
+				'tooltip'       => __('Enabled by default','cbratingsystem'),
+
+				'required'      => false,
+				'options' => array(
+					'1' => __('Yes','cbratingsystem'),
+					'0' => __('No','cbratingsystem')
+				)
+			),  //enable comment box
+			'comment_limit'         => array(
+				'label'         => __('Comment Limit Length', 'cbratingsystem'),
+				'desc'          => __( 'Comment limit length prevents user from submitting long comment', 'cardselectbox' ),
+				'type'          => 'text',
+				'default'       => 200,
+				'numeric'       => true,
+				'tooltip'       => __('Comment text length limit','cbratingsystem'),
+				'placeholder'   => __('Comment Length', 'cbratingsystem'),
+				'required'      => true,
+				'errormsg'      => __('Comment limit can not empty or must be numeric','cbratingsystem')
+			) , //limit comment box char limit
+			'enable_question'       => array(
+				'label'         => __('Enable Question', 'cbratingsystem'),
+				'desc'          => __( 'Enable Question with Rating', 'cbratingsystem' ),
+				'type'          => 'radio',
+				'default'       => 1,
+				'tooltip'       => __('Enabled by default','cbratingsystem'),
+				'required'      => true,
+				'options' => array(
+					'1' => __('Yes','cbratingsystem'),
+					'0' => __('No','cbratingsystem')
+				),
+				'errormsg'      => __('Enable question field is missing or value must be 0 or 1','cbratingsystem')
+
+			), // Enable Questions
+			'show_credit_to_codeboxr'   => array(
+				'label'         => __('Show Credit', 'cbratingsystem'),
+				'desc'          => __( 'This will show a small link under rating form to codeboxr.com', 'cardselectbox' ),
+				'type'          => 'radio',
+				'default'       => 1,
+				'tooltip'       => __('Enabled by default','cbratingsystem'),
+
+				'required'      => false,
+				'options' => array(
+					'1' => __('Yes','cbratingsystem'),
+					'0' => __('No','cbratingsystem')
+				)
+			), //spelling mistake in field name
+			//'extrafields'               => $default_extra_fields,
+
+		);
+
+		$default_extra_fields = CBRatingSystem::form_default_extra_fields();
+		$form_default = array_merge($form_default, $default_extra_fields);
+
+		return $form_default;
+	}
+
     /**
      * @return array
      */
     public static function post_types() {
-		$args      = array(
+		$post_type_args      = array(
 			'builtin' => array(
 				'options' => array(
 					'public'   => true,
@@ -759,20 +1293,17 @@ class CBRatingSystem {
 					'show_ui'  => true,
 				),
 				'label'   => __( 'Built in post types', 'cbratingsystem' ),
-			),
-			'custom'  => array(
-				'options' => array(
-					'public'   => true,
-					'_builtin' => false,
-				),
-				'label'   => __( 'Custom post types', 'cbratingsystem' ),
-			),
+			)
+
 		);
+
+	    $post_type_args = apply_filters('cbratingsystem_post_types', $post_type_args);
+
 		$output    = 'objects'; // names or objects, note names is the default
 		$operator  = 'and'; // 'and' or 'or'
 		$postTypes = array();
 
-		foreach ( $args as $postArgType => $postArgTypeArr ) {
+		foreach ( $post_type_args as $postArgType => $postArgTypeArr ) {
 			$types = get_post_types( $postArgTypeArr['options'], $output, $operator );
 
 			if ( ! empty( $types ) ) {
@@ -797,6 +1328,11 @@ class CBRatingSystem {
 	public static function user_roles( $useCase = 'admin' ) {
 		global $wp_roles;
 
+		if ( ! function_exists( 'get_editable_roles' ) ) {
+			require_once( ABSPATH . '/wp-admin/includes/user.php' );
+
+		}
+
 		$userRoles = array();
 
 		switch ( $useCase ) {
@@ -819,7 +1355,7 @@ class CBRatingSystem {
 				$userRoles['guest'] = __( "Guest", 'cbratingsystem' );
 				break;
 		}
-		//echo '<pre>'; print_r($userRoles); echo '</pre>'; die();
+
 		return $userRoles;
 	}
 	/**
@@ -849,7 +1385,7 @@ class CBRatingSystem {
 				break;
 		}
 
-		//echo '<pre>'; print_r($userRoles); echo '</pre>'; die();
+
 
 		return $userRoles;
 
@@ -877,10 +1413,9 @@ class CBRatingSystem {
 			if ( ! empty( $user->roles ) && is_array( $user->roles ) ) {
 
 				$user->roles[] = 'guest';
-				// echo "<pre>"; print_r($user->roles); echo "</pre>";
-				// echo "<pre>"; print_r(explode('',$roles)); echo "</pre>";
+
 				$intersectedRoles = array_intersect( $roles, $user->roles );
-				//var_dump($intersectedRoles); //exit;
+
 			}
 		} else {
 			if ( in_array( 'guest', $roles ) ) {
@@ -919,10 +1454,9 @@ class CBRatingSystem {
 			if ( ! empty( $user->roles ) && is_array( $user->roles ) ) {
 
 				$user->roles[] = 'guest';
-				// echo "<pre>"; print_r($user->roles); echo "</pre>";
-				// echo "<pre>"; print_r(explode('',$roles)); echo "</pre>";
+
 				$intersectedRoles = array_intersect( $roles, $user->roles );
-				//var_dump($intersectedRoles); //exit;
+
 			}
 		} else {
 			if ( in_array( 'guest', $roles ) ) {
@@ -940,13 +1474,17 @@ class CBRatingSystem {
 	}
 
     /**
+     * Can this form be marked as default form
+     *
      * @param $formId
      * @return bool
      */
-    public function can_automatically_make_deafult_form( $formId ) {
+    public static function can_automatically_make_deafult_form( $formId ) {
 		global $wpdb;
 		$table_name = CBRatingSystemData::get_ratingForm_settings_table_name();
-		$sql        =  $wpdb->prepare( "SELECT COUNT(id) AS count FROM $table_name", null );
+
+		$sql        =  "SELECT COUNT(id) AS count FROM $table_name";
+
 		$return     = false;
 
 		$count = $wpdb->get_var( $sql );
@@ -986,7 +1524,7 @@ class CBRatingSystem {
 	 *
 	 * @return mixed|void
 	 */
-	function get_default_ratingFormId() {
+	public  static function get_default_ratingFormId() {
 		$defaultFormId = get_option( 'cbratingsystem_defaultratingForm' );
 		$form_id       = apply_filters( 'rating_form_array', $defaultFormId );
 
@@ -1029,11 +1567,9 @@ class CBRatingSystem {
 			$option['form_id'] = array($form_ids[0]);
 
 			$average_rating = CBRatingSystemData::get_ratings_summary( $option );
-			//var_dump(sizeof($average_rating));
 
-//			echo '<pre>';
-//			print_r($average_rating);
-//			echo '</pre>';
+
+
 
 			if(!sizeof($average_rating)){
 				$average_rating['form_id'] 					= $form_ids[0];
@@ -1067,7 +1603,7 @@ class CBRatingSystem {
 				?>
 				<script>
 					jQuery(document).ready(function ($) {
-						$('#cbrp-alone-rated<?php echo $average_rating['post_id']; ?>').raty({
+						$('.cbrp-alone-rated<?php echo $average_rating['post_id']; ?>').raty({
 							half    : true,
 							path    : '<?php echo CB_RATINGSYSTEM_PLUGIN_DIR_IMG; ?>',
 							score   : <?php echo ( ($average_rating['per_post_rating_summary']/100)*5); ?>,
@@ -1077,7 +1613,7 @@ class CBRatingSystem {
 					});
 				</script>
 				<?php
-				$show .= '  <div id="cbrp-alone-rated' . $average_rating['post_id'] . '" style="margin: 0;"></div>';
+				$show .= '  <div class="cbrp-alone-rated cbrp-alone-rated' . $average_rating['post_id'] . '" id="cbrp-alone-rated' . $average_rating['post_id'] . '" style="margin: 0;"></div>';
 			}
 			$show .= '</div>';
 
@@ -1118,8 +1654,7 @@ class CBRatingSystem {
 						$average_rating['found']  					= 1;
 					}
 
-					//var_dump($average_rating);
-					//var_dump($whrOpt);
+
 					$show .= '<div class="cbratingavgratelist" style="position:relative;">';
 					if ( $show_title == 1 ) {
 						$show .= '<p>'.__('Post: ','cbratingsystem') . $average_rating['post_title'] . '</p>';
@@ -1131,13 +1666,14 @@ class CBRatingSystem {
 					if ( $show_text == 1 ) {
 						$show .= '<p>'.$text_label.'' . number_format( ( ( $average_rating['per_post_rating_summary'] / 100 ) * 5 ), 2 ) . '/5<p>';
 					}
+
 					$clip_back        = 120;
 					$star_clip_amount = number_format( ( ( $average_rating['per_post_rating_summary'] / 100 ) * 120 ), 2 );
 					if ( $show_star == 1 ) {
 						?>
 						<script>
 							jQuery(document).ready(function ($) {
-								$('#cbrp-alone-rated<?php echo $post_id; ?>').raty({
+								$('.cbrp-alone-rated<?php echo $post_id; ?>').raty({
 									half    : true,
 									path    : '<?php echo CB_RATINGSYSTEM_PLUGIN_DIR_IMG; ?>',
 									score   : <?php echo (($average_rating['per_post_rating_summary']/100)*5); ?>,
@@ -1147,7 +1683,7 @@ class CBRatingSystem {
 							});
 						</script>
 						<?php
-						$show .= '  <div id="cbrp-alone-rated' . $post_id . '" style="margin: 0;"></div>';
+						$show .= '  <div class="cbrp-alone-rated cbrp-alone-rated' . $average_rating['post_id'] . '" id="cbrp-alone-rated' . $post_id . '" style="margin: 0;"></div>';
 					}
 					$show .= '</div>';
 					//$position += 30;
@@ -1201,9 +1737,6 @@ class CBRatingSystem {
  * @return string
  */
 function standalonePostingRatingSystem( $form_id = '', $post_id = '', $theme_key = '', $showreview = true ) {
-	//var_dump($form_id);
-	//var_dump($post_id);
-
 
 	global $post;
 
@@ -1251,4 +1784,17 @@ function standalonePostingRatingSystem( $form_id = '', $post_id = '', $theme_key
 
 function standaloneSinglePostRatingSummary($option, $show_title = 0, $show_form_id = 0, $show_text = 0, $show_star = 1, $show_single = 1 , $text_label = ''){
 	return CBRatingSystem::standalone_singlePost_rating_summary( $option, $show_title , $show_form_id, $show_text , $show_star , $show_single , $text_label );
+}
+
+if(!function_exists('cbxdump')){
+	function cbxdump($arr){
+		if(is_array($arr)):
+			echo '<pre>';
+			print_r($arr);
+			echo '</pre>';
+		else:
+			var_dump($arr);
+		endif;
+
+	}
 }

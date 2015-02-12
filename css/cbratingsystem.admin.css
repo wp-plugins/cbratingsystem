@@ -38,10 +38,8 @@
 }
 
 .admin_ratingForm_wrapper fieldset {
-	border: 1px solid #CCC;
-	padding: 2.5em 0 0 2em;
 	position: relative;
-	margin: 1em 0;
+
 }
 
 .form-item {
@@ -273,7 +271,7 @@ div.status {
 }
 
 .div_table_wrapper div[class*='c5 '] {
-	width: 25%
+	width: 37%
 }
 
 .div_table_wrapper .col-odd {
@@ -600,14 +598,140 @@ div.status {
 .cbratinguserlog a{
 
 }
-/*
-.cb-comment-label{
-    width: 100px;
-    height: 30px;
-}*/
 
-/*
-.button-addrating{
-    float: left;
+/*tab screen*/
+.ratingtabgroup{
+    padding: 10px;
 }
-*/
+#poststuff h2.nav-tab-wrapper{
+    margin-bottom: 0px !important;
+    padding-bottom: 0px !important;
+}
+.nav-tab-active{
+    background-color: #fff;
+}
+
+#wpbody-content .metabox-holder,  #wpbody-content .metabox-holder.cbcurrencyconverter-metabox-holder{
+    padding-top: 0px !important;
+}
+
+
+
+#cbrarting_dashboard_overview .inside {
+    font-size: 12px;
+    padding-top: 20px;
+}
+
+#cbrarting_dashboard_overview p.sub, #cbrarting_dashboard_overview .table, #cbrarting_dashboard_overview .versions {
+    /*margin: -12px;*/
+    text-align: left;
+}
+
+#cbrarting_dashboard_overview .table_content {
+
+    float: left;
+    width: 99%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    width: 99%;
+}
+
+#cbrarting_dashboard_overview .table_content table {
+    width: 99%;
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-top-color: #ECECEC;
+}
+
+#cbrarting_dashboard_overview .table_content table a {
+    text-decoration: none;
+}
+
+#cbrarting_dashboard_overview .versions {
+    clear: both;
+    padding: 6px 10px 12px;
+}
+
+#cbrarting_dashboard_overview table tr.first td {
+    border-top: 0 none;
+}
+
+#cbrarting_dashboard_overview td.b {
+    font-size: 14px;
+    padding-right: 6px;
+    text-align: center;
+    width: 1%;
+    font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+}
+
+#cbrarting_dashboard_overview table tr.first td {
+    border-top: 0 none;
+}
+
+#cbrarting_dashboard_overview .t {
+    color: #777777;
+    font-size: 12px;
+    padding-right: 12px;
+    padding-top: 6px;
+}
+
+#cbrarting_dashboard_overview table td {
+    padding: 3px 0;
+    white-space: nowrap;
+}
+
+#cbrarting_dashboard_overview .count {
+    font-size: 18px;
+    color: #21759B;
+    font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+    margin-right: 6px;
+}
+
+#cbrarting_dashboard_overview .count:hover {
+    color: #D54E21;
+}
+
+#cbrarting_dashboard_overview p.sub {
+    color: #8F8F8F;
+    font-size: 14px;
+
+}
+
+#cbrarting_dashboard_overview p.sub:hover {
+    color: #000000;
+}
+
+#cbrarting_dashboard_overview td p.sub {
+    color: #8F8F8F;
+    font-size: 14px;
+    left: 15px;
+    padding: 5px 0 15px;
+    position: absolute;
+    top: 0px;
+}
+
+#cbrarting_dashboard_overview .versions .b {
+    font-weight: bold;
+}
+
+#cbrartingsystem-admin-dashboard .postbox-container {
+    /* width: 74.5%; */
+}
+
+#cbrartingsystem-admin-dashboard .postbox-container-2 {
+    float: right;
+    width: 50.5%;
+}
+
+#cbrartingsystem-admin-dashboard .approved {
+    color: green;
+}
+
+#cbrartingsystem-admin-dashboard .waiting {
+    color: #E66F00;
+}
+
+#cbrarting_dashboard_overview .table_header_sub {
+    border-bottom: 1px solid #ECECEC;
+}
