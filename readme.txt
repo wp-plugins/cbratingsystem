@@ -110,11 +110,12 @@ Please visit our site for detail tutorial step by step http://codeboxr.com/insta
 
 
 == Changelog ==
-= 3.3 =
+= 3.3.1 =
+* bug fix for  extra field not array
+= 3.3.0 =
 * 50% revamp of code, please go to tools of this plugin and reset
 = 3.2.26 =
 * Bug fix
-
 = 3.2.24 =
 * Maintenance Release
 

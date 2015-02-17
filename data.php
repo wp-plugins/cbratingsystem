@@ -350,6 +350,8 @@ class CBRatingSystemData {
 	            $result                               = $results[$i];
 	            $extrafields                          = maybe_unserialize($result['extrafields']);
 
+	            $extrafields                          = (array)$extrafields;
+
 
 	            $result                               = array_merge($result, $extrafields);
 
@@ -390,6 +392,7 @@ class CBRatingSystemData {
 
 	            $result                             = $results[$i];
 	            $extrafields                        = maybe_unserialize($result->extrafields);
+	            $extrafields                        = (array)$extrafields;
 
 	            $result = array_merge((array) $result, $extrafields);
 
@@ -444,6 +447,8 @@ class CBRatingSystemData {
 
 	        $extrafields                          = maybe_unserialize($result['extrafields']);
 
+	        $extrafields                          = (array)$extrafields;
+
 
 	        $result                               = array_merge($result, $extrafields);
 	        foreach($form_default as $key => $field){
@@ -488,6 +493,7 @@ class CBRatingSystemData {
 
 
 	        $extrafields                        = maybe_unserialize($result->extrafields);
+	        $extrafields                        = (array)$extrafields;
 
 	        $result = array_merge((array) $result, $extrafields);
 
