@@ -1,0 +1,176 @@
+.postbox, .stuffbox{
+    padding: 8px !important;
+}
+#cbrarting_dashboard_overview .inside {
+	font-size: 12px;
+	padding-top: 20px;
+}
+
+#cbrarting_dashboard_overview p.sub, #cbrarting_dashboard_overview .table, #cbrarting_dashboard_overview .versions {
+	/*margin: -12px;*/
+    text-align: left;
+}
+
+#cbrarting_dashboard_overview .table_content {
+
+	float: left;
+	width: 99%;
+	margin: 0;
+	padding: 0;
+	position: relative;
+	width: 99%;
+}
+
+#cbrarting_dashboard_overview .table_content table {
+	width: 99%;
+	border-top-style: solid;
+	border-top-width: 1px;
+	border-top-color: #ECECEC;
+}
+
+#cbrarting_dashboard_overview .table_content table a {
+	text-decoration: none;
+}
+
+#cbrarting_dashboard_overview .versions {
+	clear: both;
+	padding: 6px 10px 12px;
+}
+
+#cbrarting_dashboard_overview table tr.first td {
+	border-top: 0 none;
+}
+
+#cbrarting_dashboard_overview td.b {
+	font-size: 14px;
+	padding-right: 6px;
+	text-align: center;
+	width: 1%;
+	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+}
+
+#cbrarting_dashboard_overview table tr.first td {
+	border-top: 0 none;
+}
+
+#cbrarting_dashboard_overview .t {
+	color: #777777;
+	font-size: 12px;
+	padding-right: 12px;
+	padding-top: 6px;
+}
+
+#cbrarting_dashboard_overview table td {
+	padding: 3px 0;
+	white-space: nowrap;
+}
+
+#cbrarting_dashboard_overview .count {
+	font-size: 18px;
+	color: #21759B;
+	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+	margin-right: 6px;
+}
+
+#cbrarting_dashboard_overview .count:hover {
+	color: #D54E21;
+}
+
+#cbrarting_dashboard_overview p.sub {
+	color: #8F8F8F;
+	font-size: 14px;
+    /*
+	left: 15px;
+	padding: 5px 0px 15px;
+	position: relative;
+	top: -10px;
+    */
+}
+
+#cbrarting_dashboard_overview p.sub:hover {
+	color: #000000;
+}
+
+#cbrarting_dashboard_overview td p.sub {
+	color: #8F8F8F;
+	font-size: 14px;
+	left: 15px;
+	padding: 5px 0 15px;
+	position: absolute;
+	top: 0px;
+}
+
+#cbrarting_dashboard_overview .versions .b {
+	font-weight: bold;
+}
+
+#cbrartingsystem-admin-dashboard .postbox-container {
+	/* width: 74.5%; */
+}
+
+#cbrartingsystem-admin-dashboard .postbox-container-2 {
+	float: right;
+	width: 50.5%;
+}
+
+#cbrartingsystem-admin-dashboard .approved {
+	color: green;
+}
+
+#cbrartingsystem-admin-dashboard .waiting {
+	color: #E66F00;
+}
+
+#cbrarting_dashboard_overview .table_header_sub {
+	border-bottom: 1px solid #ECECEC;
+}
+
+.add_button {
+
+	/*Step 2: Basic Button Styles*/
+	display: block;
+	height: 25px;
+	width: 150px;
+	background: #34696f;
+	border: 2px solid rgba(33, 68, 72, 0.59);
+
+	/*Step 3: Text Styles*/
+	color: #ffffff;
+	text-align: center;
+	text-decoration: none;
+	/*font: bold 3.2em/100px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;*/
+
+	/*Step 4: Fancy CSS3 Styles*/
+	background: -webkit-linear-gradient(top, #1a3563, #1a3563);
+	background: -moz-linear-gradient(top, #1a3563, #1a3563);
+	background: -o-linear-gradient(top, #1a3563, #1a3563);
+	background: -ms-linear-gradient(top, #1a3563, #1a3563);
+	background: linear-gradient(top, #1a3563, #1a3563);
+
+	-webkit-border-radius: 50px;
+	-khtml-border-radius: 50px;
+	-moz-border-radius: 50px;
+	border-radius: 50px;
+
+	/*-webkit-box-shadow: 0 8px 0 #1b383b;
+	-moz-box-shadow: 0 8px 0 #1b383b;*/
+	/* box-shadow: 0 8px 0 #1b383b;*/
+
+	/*text-shadow: 0 2px 2px rgba(255, 255, 255, 0.2);*/
+
+}
+
+/*Step 3: Link Styles*/
+a.button2 {
+	text-decoration: none;
+}
+
+/*Step 5: Hover Styles*/
+a.add_button:hover {
+	background: #3d7a80;
+	background: -webkit-linear-gradient(top, #3d7a80, #2f5f63);
+	background: -moz-linear-gradient(top, #3d7a80, #2f5f63);
+	background: -o-linear-gradient(top, #3d7a80, #2f5f63);
+	background: -ms-linear-gradient(top, #3d7a80, #2f5f63);
+	background: linear-gradient(top, #3d7a80, #2f5f63);
+}
