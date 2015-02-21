@@ -19,35 +19,34 @@ class CBRatingSystemAdminReport extends CBRatingSystemAdmin {
 
     );
 
-    /**
-     * cbCommentEditAjaxFunction
-     */
-    public static function cbCommentEditAjaxFunction(){
-        if ( isset( $_POST['cbRatingData'] ) and ! empty( $_POST['cbRatingData'] ) ) {
-            $returnedData                  = $_POST['cbRatingData'];
-            $insertArray['id']             = $returnedData['id'];
-            $insertArray['comment']        = $returnedData['cb_text'];
-            $insertArray['post_id']        = $returnedData['post_id'];
-            $insertArray['form_id']        = $returnedData['form_id'];
-            $return                        = CBRatingSystemData::update_rating_comment( $insertArray );
-        }
 
-    }
 
     /**
      * cbCommentAjaxFunction
      */
     public static function cbCommentAjaxFunction(){
 
+
+	    //cbratingsystemcomment
         if ( isset( $_POST['cbRatingData'] ) and ! empty( $_POST['cbRatingData'] ) ) {
 
+
+
             $returnedData                  = $_POST['cbRatingData'];
+
+	        //verify nonce
+	        check_ajax_referer( 'cbratingsystemcomment-'.$returnedData['id'],'nonce');
+
             $insertArray['id']             = $returnedData['id'];
-            $insertArray['form_id']        = $returnedData['form_id'];
-            $insertArray['post_id']        = $returnedData['post_id'];
-            $insertArray['form_id']        = (int) $insertArray['form_id'];
-            $insertArray['post_id']        = (int) $insertArray['post_id'];
-            $insertArray['comment_status'] = $returnedData['comment_status'];
+
+
+            $insertArray['form_id']        = (int)$returnedData['form_id'];
+	        $insertArray['post_id']        = (int)$returnedData['post_id'];
+
+            //$insertArray['form_id']        = (int) $insertArray['form_id'];
+	        //$insertArray['post_id']        = (int) $insertArray['post_id'];
+
+	        $insertArray['comment_status'] = $returnedData['comment_status'];
             $id      = array($insertArray['id']);
             $post_id = array($insertArray['post_id']);
             $form_id = array($insertArray['form_id']);
@@ -73,7 +72,7 @@ class CBRatingSystemAdminReport extends CBRatingSystemAdmin {
 
 		$path = admin_url( 'admin.php?page=rating_reports' );
 
-		if ( ! empty( $_GET['sortby'] ) and ( ! empty( $_GET['sort'] ) ) ) {
+		if ( ! empty( $_GET['sortby'] ) && ( ! empty( $_GET['sort'] ) ) ) {
 			$sorbys = array(
 				'post_id', 'post_title', 'form_id', 'avg', 'time'
 			);
@@ -94,7 +93,7 @@ class CBRatingSystemAdminReport extends CBRatingSystemAdmin {
 
 		<div class="wrap columns-2">
 		<div class="icon32 icon32_cbrp_admin icon32-cbrp-user-ratings" id="icon32-cbrp-user-ratings"><br></div>
-		<h2><?php _e( "Codeboxr Rating System User Rating Logs", 'cbratingsystem' ) ?></h2>
+		<h2><?php _e( 'Codeboxr Rating System User Rating Logs', 'cbratingsystem' ) ?></h2>
 
 		<div class="metabox-holder has-right-sidebar" id="poststuff">
 
@@ -122,7 +121,7 @@ class CBRatingSystemAdminReport extends CBRatingSystemAdmin {
 								$log_post_title = $rows->post_title;
 								$log_post_type  = $rows->post_type;
 								$log_form_id    = $rows->form_id;
-								$log_average    = ( $rows->average > 0 ) ? "<strong>" . ( ( $rows->average / 100 ) * 5 ) . " / 5</strong>" : '-';
+								$log_average    = ( $rows->average > 0 ) ? '<strong>' . ( ( $rows->average / 100 ) * 5 ) . ' / 5</strong>' : '-';
 
 								if ( ! empty( $rows->rating ) ) {
 
@@ -131,7 +130,7 @@ class CBRatingSystemAdminReport extends CBRatingSystemAdmin {
 
 										if ( is_numeric( $cId ) ) {
 
-											$log_criteria_rating .= "<li>" . $rows->custom_criteria[$cId]['label'] . ": <strong>" . number_format( ( $value / 100 ) * count( $rows->custom_criteria[$cId]['stars'] ), 2 ) . "/" . count( $rows->custom_criteria[$cId]['stars'] ) . "</strong>";
+											$log_criteria_rating .= '<li>' . $rows->custom_criteria[$cId]['label'] . ': <strong>' . number_format( ( $value / 100 ) * count( $rows->custom_criteria[$cId]['stars'] ), 2 ) . '/' . count( $rows->custom_criteria[$cId]['stars'] ) . '</strong>';
 										}
 									}
 									$log_criteria_rating .= '</ul>';
@@ -148,12 +147,15 @@ class CBRatingSystemAdminReport extends CBRatingSystemAdmin {
 									foreach ( $rows->question as $questionId => $value ) {
 
 										$ratingFormId = $rows->form_id;
-										$type         = $rows->custom_question['enabled'][$questionId]['field']['type'];
-                                        if(array_key_exists($type,$rows->custom_question['enabled'][$questionId]['field']))
-										$fieldArr     = $rows->custom_question['enabled'][$questionId]['field'][$type];
+										$type         = $rows->custom_question[$questionId]['field']['type'];
+
+                                        if(array_key_exists($type,$rows->custom_question[$questionId]['field']))
+										$fieldArr     = $rows->custom_question[$questionId]['field'][$type];
                                         else $fieldArr     = array();
-                                        if(array_key_exists('seperated',$fieldArr))
-										$seperated    = $fieldArr['seperated'];
+
+
+                                        if(array_key_exists('seperated', $fieldArr))
+											$seperated    = $fieldArr['seperated'];
                                         else $seperated  = 0;
 
 										if ( is_array( $value ) ) {
@@ -166,8 +168,8 @@ class CBRatingSystemAdminReport extends CBRatingSystemAdmin {
                                                                         <li>
                                                                             <div data-q-id="' . $questionId . '" class="question-id-wrapper-' . $questionId . ' question-id-wrapper-' . $questionId . '-form-' . $ratingFormId . ' ">
                                                                                 <div class="question-label-wrapper">
-                                                                                    <span class="question-label question-label-id-' . $questionId . '" >' . ( isset( $rows->custom_question['enabled'][$questionId] ) ? __( stripslashes( $rows->custom_question['enabled'][$questionId]['title'] ), 'cbratingsystem' ) : '' ) . '</span>
-                                                                                    <span class="question-label-hiphen">' . ( isset( $rows->custom_question['enabled'][$questionId] ) ? ' - ' : '' ) . '</span>
+                                                                                    <span class="question-label question-label-id-' . $questionId . '" >' . ( isset( $rows->custom_question[$questionId] ) ? __( stripslashes( $rows->custom_question[$questionId]['title'] ), 'cbratingsystem' ) : '' ) . '</span>
+                                                                                    <span class="question-label-hiphen">' . ( isset( $rows->custom_question[$questionId] ) ? ' - ' : '' ) . '</span>
                                                                                     <span class="answer"><strong>' . ( implode( ', ', $valuesText[$rows->form_id][$questionId] ) ) . '</strong></span>
                                                                                 </div>
                                                                             </div>
@@ -176,13 +178,13 @@ class CBRatingSystemAdminReport extends CBRatingSystemAdmin {
 											}
 										} else {
 											if ( $seperated == 0 ) {
-                                               // var_dump($value);
+
 												$log_q_a .= '
                                                                         <li>
                                                                             <div data-form-id="' . $ratingFormId . '" data-q-id="' . $questionId . '" class="question-id-wrapper-' . $questionId . ' question-id-wrapper-' . $questionId . '-form-' . $ratingFormId . ' ">
                                                                                 <div class="question-label-wrapper">
-                                                                                    <span class="question-label question-label-id-' . $questionId . '" >' . ( isset( $rows->custom_question['enabled'][$questionId] ) ? __( stripslashes( $rows->custom_question['enabled'][$questionId]['title'] ), 'cbratingsystem' ) : '' ) . '</span>
-                                                                                    <span class="question-label-hiphen">' . ( isset( $rows->custom_question['enabled'][$questionId] ) ? ' - ' : '' ) . '</span>
+                                                                                    <span class="question-label question-label-id-' . $questionId . '" >' . ( isset( $rows->custom_question[$questionId] ) ? __( stripslashes( $rows->custom_question[$questionId]['title'] ), 'cbratingsystem' ) : '' ) . '</span>
+                                                                                    <span class="question-label-hiphen">' . ( isset( $rows->custom_question[$questionId] ) ? ' - ' : '' ) . '</span>
                                                                                     <span class="answer"><strong>' . ( ( $value == 1 ) ? __( 'Yes', 'cbratingsystem' ) : __( $value, 'cbratingsystem' ) ) . '</strong></span>
                                                                                 </div>
                                                                             </div>
@@ -195,8 +197,9 @@ class CBRatingSystemAdminReport extends CBRatingSystemAdmin {
 									$log_q_a .= '</ul>';
 								}
 
-								$log_comment        = ( $rows->comment ) ? CBRatingSystemFunctions :: text_summary_mapper( $rows->comment ) : '-';
-                                $log_comment_status = $rows->comment_status;
+								//$log_comment        = ( $rows->comment ) ? CBRatingSystemFunctions :: text_summary_mapper( $rows->comment ) : '-';
+								$log_comment        = ( $rows->comment ) ? $rows->comment : '-';
+								$log_comment_status = $rows->comment_status;
 
 								$log_date = date( 'M d, Y @ H:m', $rows->created );
 								$log_host_ip = $rows->user_ip;
@@ -277,7 +280,7 @@ class Cbratinguserlog extends WP_List_Table{
 
         ) );
 
-        $this->cb_user_comment_log_data =CBRatingSystemAdminReport::$cb_user_comment_log_data;
+        $this->cb_user_comment_log_data = CBRatingSystemAdminReport::$cb_user_comment_log_data;
 
     }
 
@@ -326,8 +329,8 @@ class Cbratinguserlog extends WP_List_Table{
     public function column_id($item){
 
         $actions = array(
-            'edit'      => sprintf('<a href="?">Edit</a>',$_REQUEST['page'],'edit',$item['ID']),
-            'delete'    => sprintf('<a href="?">Delete</a>',$_REQUEST['page'],'delete',$item['ID']),
+            'edit'      => sprintf('<a href="?">'.__('Edit','cbratingsystem').'</a>',$_REQUEST['page'],'edit',$item['ID']),
+            'delete'    => sprintf('<a href="?">'.__('Delete','cbratingsystem').'</a>',$_REQUEST['page'],'delete',$item['ID']),
         );
 
         return sprintf('<span class = "user-rating-log-%1$s" style="">%1$s </span>',
@@ -341,7 +344,10 @@ class Cbratinguserlog extends WP_List_Table{
      * @param $item
      * @return string
      */
+	/*
     public function column_commentstatus($item){
+	    //this function is not used any more.
+	   // var_dump('useful');
 
         $log_comment_status     = '';
         $comment_status_list    = array('delete','unapproved','approved','spam');
@@ -350,23 +356,28 @@ class Cbratinguserlog extends WP_List_Table{
         $log_form_id            = $item['formid'];
         $log_post_id            = $item['post'];
         $log_comment_label      = '<span class = "cb-comment-label cb-'.$comment_status.'">' .ucfirst($comment_status) .'</span><br>';
-        $log_comment_status     .= '<span class="comment_status '.$comment_status_list[0].'" data-id="'.$log_id.'" data-form-id ="'.$log_form_id.'" data-post-id = "'.$log_post_id.'" data-comment-status ="'.$comment_status_list[0].'" > |Delete|</span>';
-        $log_comment_status     .= '<span ="#" class="comment_status '.$comment_status_list[1].'" data-id="'.$log_id.'" data-form-id ="'.$log_form_id.'" data-post-id = "'.$log_post_id.'" data-comment-status ="'.$comment_status_list[1].'"  >|Unapprove|</span>';
-        $log_comment_status     .= '<span ="#" class="comment_status '.$comment_status_list[2].'" data-id="'.$log_id.'" data-form-id ="'.$log_form_id.'" data-post-id = "'.$log_post_id.'" data-comment-status ="'.$comment_status_list[2].'"> |Approve|</span>';
-        $log_comment_status     .= '<span ="#" class="comment_status '.$comment_status_list[3].'" data-id="'.$log_id.'" data-form-id ="'.$log_form_id.'" data-post-id = "'.$log_post_id.'" data-comment-status ="'.$comment_status_list[3].'">|Spam|</span>';
+        $log_comment_status     .= '<a href="#" class="comment_status '.$comment_status_list[0].'" data-id="'.$log_id.'" data-form-id ="'.$log_form_id.'" data-post-id = "'.$log_post_id.'" data-comment-status ="'.$comment_status_list[0].'" > |Delete|</a>';
+        $log_comment_status     .= '<a href="#" class="comment_status '.$comment_status_list[1].'" data-id="'.$log_id.'" data-form-id ="'.$log_form_id.'" data-post-id = "'.$log_post_id.'" data-comment-status ="'.$comment_status_list[1].'"  >|Unapprove|</a>';
+        $log_comment_status     .= '<a href="#" class="comment_status '.$comment_status_list[2].'" data-id="'.$log_id.'" data-form-id ="'.$log_form_id.'" data-post-id = "'.$log_post_id.'" data-comment-status ="'.$comment_status_list[2].'"> |Approve|</a>';
+        $log_comment_status     .= '<a href="#" class="comment_status '.$comment_status_list[3].'" data-id="'.$log_id.'" data-form-id ="'.$log_form_id.'" data-post-id = "'.$log_post_id.'" data-comment-status ="'.$comment_status_list[3].'">|Spam|</a>';
         $log_comment_status_wrapper  = '';
         $log_comment_status_wrapper .= '<p  data-status = "'.$comment_status.'" class="comment_status_column  column-'.$item['commentstatus'].'">'.$log_comment_label.$log_comment_status.'</p>';
 
         return $log_comment_status_wrapper;
-    }
-
+    }//unused function, please check in addon
+	*/
     /**
      * @param $item
      * @return string
      */
     public  function column_post($item){
+        /*
+        echo '<pre>';
+        print_r($item);
+        echo '</pre>';
+        */
 
-        $output ='<a href="'.get_permalink( $item['post'] ).'"target="_blank" title ="'.$item['posttitle'].'">'.$item['post'].'</a>';
+        $output ='<a id="review-id'.$item['id'].'" href="'.get_permalink( $item['post'] ).'"target="_blank" title ="'.$item['posttitle'].'">'.$item['post'].'</a>';
         return sprintf(
           $output             //The value of the checkbox should be the record's id
         );
@@ -391,32 +402,38 @@ class Cbratinguserlog extends WP_List_Table{
      */
     public  function column_comment($item){
 
-        $output             = '';
-        $output_date        = ' <div class ="cbdate"><p><strong>On: </strong>'.$item['date'].'</p></div>';
-        $output_click       = apply_filters('cbratingsystem_commentedit_title','(Edit Option in premium version)');
-        $cb_comment_box_    = apply_filters('cbratingsystem_commentedit_class','cbcomment_noedit');
-        $cb_comment_edit_box_    = apply_filters('cbratingsystem_commenteditbox_class','cbcomment_editbox_noedit');
-           if ( is_array( $item['comment'] ) and ! empty(  $item['comment'] ['summury'] ) ) :
-               $output .= ' <div class ="cbcomment_contain comment_contain_'. $item['id']. '">
-                    <div class="'.$cb_comment_box_.' comment_'. $item['id'].'" data-id = "'.$item['id'].'" title ="'.$output_click.'">
-                        '. $item['comment']['summury'];
-                         if ( ! empty( $item['comment']['rest'] ) ) :
-                             $output .='  <span class="read_more_span disable_field">'. $item['comment']['rest'].'</span>
-                            <a href="#" class="js_read_link read_more"> ...More</a>';
-                         endif;
-               $output .='</div>';
-               $output .=' <textarea class="'.$cb_comment_edit_box_.' cbcomment_edit_'. $item['id'].'" data-form-id ="'. $item['formid'].'" data-post-id = " '.$item['post'].'" data-id = "'.$item['id'].'"></textarea>
-                </div>';
-             else:
+	    //$nonce = wp_create_nonce( 'my-action_'.$post->ID );
 
-                 $output .= '<div class ="cbcomment_contain comment_contain_'. $item['id'].'">
-                    <div class="'.$cb_comment_box_.' comment_'.$item['id'].'" data-id = "'.$item['id'].'" title ="'.$output_click.'">
-                        '.$item['comment'].'
-                    </div>
-                    <textarea class="'.$cb_comment_edit_box_.' cbcomment_edit_'.$item['id'].'" data-form-id ="'.$item['formid'].'" data-post-id = "'. $item['post'].'"  data-id = "'. $item['id'].'"></textarea>
-                </div>';
+        $output                 = '';
+        $output_date            = ' <div class ="cbratingdate"><p><strong>On: </strong>'.$item['date'].'</p></div>';
+        $output_click           = apply_filters('cbratingsystem_commentedit_title','(Edit Option in premium version)');
+        $cb_comment_box         = apply_filters('cbratingsystem_commentedit_class','cbratingcomment_noedit');
+        $cb_comment_edit_box    = apply_filters('cbratingsystem_commenteditbox_class','cbratingcomment_editbox_noedit');
 
-            endif;
+
+	    //var_dump($item['comment']);
+		/*
+        if ( is_array( $item['comment'] ) && ! empty(  $item['comment'] ['summury'] ) ) :
+           $output .= ' <div class ="cbratingcomment_container cbratingcomment_container_'. $item['id']. '">
+                <div class="'.$cb_comment_box.' cbratingcomment_'. $item['id'].'" data-id = "'.$item['id'].'" title ="'.$output_click.'">
+                    '. $item['comment']['summury'];
+                     if ( ! empty( $item['comment']['rest'] ) ) :
+                         $output .='  <span class="read_more_span disable_field">'. $item['comment']['rest'].'</span>
+                        <a href="#" class="js_read_link read_more"> ...More</a>';
+                     endif;
+           $output .='</div>';
+           $output .=' <textarea style="display:none;" class="'.$cb_comment_edit_box.' cbratingcomment_edit_'. $item['id'].'" data-form-id ="'. $item['formid'].'" data-post-id = " '.$item['post'].'" data-id = "'.$item['id'].'"></textarea>
+            </div>';
+        else:
+		*/
+             $output .= '<div class ="cbratingcomment_container cbratingcomment_container_'. $item['id'].'">
+                <div class="'.$cb_comment_box.' cbratingcomment_'.$item['id'].'" data-id = "'.$item['id'].'" title ="'.$output_click.'">
+                    '.$item['comment'].'
+                </div>
+                <textarea style="display:none;" class="'.$cb_comment_edit_box.' cbratingcomment_edit_'.$item['id'].'" data-form-id ="'.$item['formid'].'" data-post-id = "'. $item['post'].'"  data-id = "'. $item['id'].'"></textarea>
+            </div>';
+
+        //endif;
 
         $log_comment_status  = '';
         $comment_status_list = array('delete','unapproved','approved','spam');
@@ -425,15 +442,19 @@ class Cbratinguserlog extends WP_List_Table{
         $log_form_id         = $item['formid'];
         $log_post_id         = $item['post'];
         $log_comment_status_wrapper  = '';
+
+	    /*
         if(class_exists('cbratingsystemaddonfunctions')){
 
             $log_comment_status_wrapper .= cbratingsystemaddonfunctions ::cbratingsystem_comment_statuslabels($comment_status,$comment_status_list,$log_id,$log_post_id,$log_form_id);
 
-
         }// end of if class exists
 
+	    */
 
-        $output = $output_date.'<div class ="comment_wrapper">'.$output.$log_comment_status_wrapper.'</div>';
+	    $log_comment_status_wrapper = apply_filters('cbrating_comment_status_mod', $log_comment_status_wrapper, $comment_status, $comment_status_list, $log_id, $log_post_id, $log_form_id );
+
+        $output = $output_date.'<div class ="cbratingdash_comment_wrapper">'.$output.$log_comment_status_wrapper.'</div>';
 
         return sprintf($output);
 
@@ -498,17 +519,18 @@ class Cbratinguserlog extends WP_List_Table{
                         foreach($avgid as $id){
 
                             $id      = (int)$id;
-                            //var_dump($id);
+
                             $sql     = $wpdb->prepare( "SELECT post_id ,form_id FROM $table_name1 WHERE id=%d ", $id );
                             $results = $wpdb->get_results( $sql,ARRAY_A);
-                            array_push($formIds ,$results[0]['form_id']) ;
+                            array_push($formIds , $results[0]['form_id']) ;
                             array_push($postIds , $results[0]['post_id']);
                         }
 
                         $table_name1 = CBRatingSystemData::get_user_ratings_table_name();
                         $table_name  = CBRatingSystemData::get_user_ratings_summury_table_name();
                         $table_name  = CBRatingSystemData::get_user_ratings_table_name();
-                        $sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id IN (" . implode( ',', $avgid ) . ")", null );
+                        //$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id IN (" . implode( ',', $avgid ) . ")", null );
+                        $sql = "DELETE FROM $table_name WHERE id IN (" . implode( ',', $avgid ) . ")";
                         $wpdb->query( $sql );
 
                        foreach($postIds as $index=>$id){
@@ -516,6 +538,7 @@ class Cbratinguserlog extends WP_List_Table{
                            $formId = $formIds[$index];
                            $postId = $id;
                            $ratingAverage        = CBRatingSystemFront::viewPerCriteriaRatingResult( $formId, $postId );
+                           //$perPostAverageRating = isset($ratingAverage['perPost'][$postId])? $ratingAverage['perPost'][$postId] : '';
                            $perPostAverageRating = $ratingAverage['perPost'][$postId];
                            $postType             = get_post_type( $postId );
 
@@ -658,9 +681,9 @@ class Cbratinguserlog extends WP_List_Table{
         function usort_reorder($a,$b){
 
             $orderby    = (!empty($_REQUEST['orderby'])) ? $_REQUEST['orderby'] : 'id'; //If no sort, default to title
-            $order      = (!empty($_REQUEST['order'])) ? $_REQUEST['order'] : 'asc'; //If no order, default to asc
+            $order      = (!empty($_REQUEST['order'])) ? $_REQUEST['order'] : 'desc'; //If no order, default to asc
             $result     = strcmp($a[$orderby], $b[$orderby]); //Determine sort order
-            return ($order==='asc') ? $result : -$result; //Send final sort direction to usort
+            return ($order==='desc') ? $result : -$result; //Send final sort direction to usort
         }
 
         usort($data, 'usort_reorder');

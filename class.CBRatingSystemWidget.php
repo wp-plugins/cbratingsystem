@@ -7,7 +7,7 @@
 class CBRatingSystemWidget extends WP_Widget {
 
 	function CBRatingSystemWidget() {
-		parent::WP_Widget( 'cbrp_top_rated', __('Top Rated Posts','cbratingsystem'), array( 'description' => __('A widget to display top rated posts, pages or custom post types.','cbratingsystem') ) );
+		parent::WP_Widget( 'cbrp_top_rated', __('Rating: Top Rated Posts','cbratingsystem'), array( 'description' => __('A widget to display top rated posts, pages or custom post types.','cbratingsystem') ) );
 	}
 
     /**
@@ -20,6 +20,12 @@ class CBRatingSystemWidget extends WP_Widget {
 		extract( $args );
 		CBRatingSystem::load_scripts_and_styles();
 
+        $whrOptn = array();
+
+
+//        echo '<pre>';
+//        print_r($instance);
+//        echo '</pre>';
 
 		$type  		= $instance['type'];
 		$date  		= $instance['day'];
@@ -28,6 +34,8 @@ class CBRatingSystemWidget extends WP_Widget {
         $order 	    = $instance['order'];
 
         $whrOptn['order'] = $order;
+
+
 		if ( $date != 0 ) {
 
 			$date = self::get_calculated_date( $date );
@@ -37,11 +45,18 @@ class CBRatingSystemWidget extends WP_Widget {
 		$whrOptn['post_type'][] = $type;
 		$whrOptn['form_id'][] 	= $form_id;  //added from v3.2.20
 
+//        echo '<pre>';
+//        print_r($whrOptn);
+//        echo '</pre>';
+
 		$data = CBRatingSystemData::get_ratings_summary( $whrOptn, 'avg', $order, true, $limit );
 
 
+		//cbxdump($data);
+
         $title = empty($options['widget_title']) ? __('Top Rated Posts','cbratingsystem') : $instance['widget_title'];
         $title 		= apply_filters( 'widget_title', $instance['title'] );
+
         echo $before_widget;
         echo $before_title . $title . $after_title;
 		?>
@@ -79,18 +94,21 @@ class CBRatingSystemWidget extends WP_Widget {
      * @return string|void
      */
     function form( $instance ) {
+
+        $instance = wp_parse_args( (array) $instance, array( 'title' => __('Top Rated Posts','cbratingsystem'),'order' => 'DESC', 'day' => 7, 'todisplay' => 10, 'type' => 'post' ) );
+
+
+
 		if ( $instance ) {
 			$title = esc_attr( $instance['title'] );
 		} else {
 			$title = __('Top Rated Posts', 'cbratingsystem');
 		}
 
-        if(array_key_exists( 'order' ,$instance)){
-            $order = $instance['order'];
-        }
-        else{
-            $order = 'DESC';
-        }
+
+
+
+
 
         ?>
 		<p>
@@ -101,32 +119,25 @@ class CBRatingSystemWidget extends WP_Widget {
 			<label for="<?php echo $this->get_field_id( 'day' ); ?>"><?php _e( "Display Last", 'cbratingsystem' ) ?>:</label>
 			<select id="<?php echo $this->get_field_id( 'day' ); ?>" name="<?php echo $this->get_field_name( 'day' ); ?>" class="widefat" style="width:50%">
 				<?php
-				$no_of_days = array( 1 => '24 hours', 7 => 'Week', 15 => '15 Days', 30 => 'Month', 0 => 'All' );
-				foreach ( $no_of_days as $day => $day_label ) {
-					echo "<option value='$day'";
-					if ( $instance['day'] == $day ) {
-						echo "selected='selected'";
-					}
+				$no_of_days = array( 1 => __('Last 24 hours', 'cbratingsystem'), 7 => __('Last 7 Days','cbratingsystem'), 15 => __('Last 15 Days','cbratingsystem'), 30 => __('Last 30 days','cbratingsystem'), 0 => __('All Time', 'cbratingsystem') );
+				foreach ( $no_of_days as $days_count => $day_label ) {
+					echo "<option value='$days_count'";
+//					if ( $instance['day'] == $days ) {
+//						echo "selected='selected'";
+//					}
+                    selected( $instance['day'], $days_count );
+
 					echo ">$day_label</option>";
 				}
 				?>
 			</select>
 		</p>
-		<p>
-			<label for="<?php echo $this->get_field_id( 'todisplay' ); ?>">No. To Display:</label>
-			<select id="<?php echo $this->get_field_id( 'todisplay' ); ?>" name="<?php echo $this->get_field_name( 'todisplay' ); ?>" class="widefat" style="width: 25%">
-				<?php
-				$no_of_display = array( 10, 15, 20 );
-				foreach ( $no_of_display as $nod ) {
-					echo "<option value='$nod'";
-					if ( $instance['todisplay'] == $nod ) {
-						echo "selected='selected'";
-					}
-					echo ">$nod</option>";
-				}
-				?>
-			</select>
-		</p>
+        <p><?php _e('Note: Based on Post creation date','cbratingsystem') ; ?></p>
+        <p>
+            <label for="<?php echo $this->get_field_id( 'todisplay' ); ?>"><?php _e( "Count:", 'cbratingsystem' ) ?>:</label>
+            <input class="widefat" id="<?php echo $this->get_field_id( 'todisplay' ); ?>" type="text" name="<?php echo $this->get_field_name( 'todisplay' ); ?>" value="<?php echo $instance['todisplay']; ?>" />
+        </p>
+
 		<p>
 			<label for="<?php echo $this->get_field_id( 'type' ); ?>"><?php _e( "Post Type", 'cbratingsystem' ) ?>:</label>
 			<select id="<?php echo $this->get_field_id( 'type' ); ?>" name="<?php echo $this->get_field_name( 'type' ); ?>" class="widefat" style="width: 55%">
@@ -136,9 +147,10 @@ class CBRatingSystemWidget extends WP_Widget {
 					echo '<optgroup label="' . $postTypes['label'] . '">';
 					foreach ( $postTypes['types'] as $type => $typeLabel ) {
 						echo "<option value='$type'";
-						if ( $instance['type'] == $type ) {
-							echo "selected='selected'";
-						}
+//						if ( $instance['type'] == $type ) {
+//							echo "selected='selected'";
+//						}
+                        selected($instance['type'], $type);
 						echo ">" . ucfirst( $typeLabel ) . "</option>";
 					}
 					echo '</optgroup>';
@@ -152,27 +164,32 @@ class CBRatingSystemWidget extends WP_Widget {
             <label for="<?php echo $this->get_field_id( 'order' ); ?>"><?php _e( "Order", 'cbratingsystem' ) ?>:</label>
             <select id="<?php echo $this->get_field_id( 'order' ); ?>" name="<?php echo $this->get_field_name( 'order' ); ?>" class="widefat" style="width:50%">
                 <?php
-                $no_of_filter = array('ASC' => 'Ascending', 'DESC' => 'Descending' );
+                $no_of_filter = array('ASC' => __('Ascending','cbratingsystem'), 'DESC' => __('Descending','cbratingsystem') );
 
                 foreach ( $no_of_filter as $key => $label ) {
 
                     echo "<option value = '$key'";
 
-                    if ( $order == $key ) {
-                        echo "selected='selected'";
-                    }
+//                    if ( $instance['order'] == $key ) {
+//                        echo "selected='selected'";
+//                    }
+                    selected($instance['order'], $key);
                     echo "> $label </option>";
                 }
                 ?>
             </select>
         </p>
+
+
+
 		<p>
 			<label for="<?php echo $this->get_field_id( 'form_id' ); ?>"><?php _e( "Form", 'cbratingsystem' ) ?>:</label>
 			<select id="<?php echo $this->get_field_id( 'form_id' ); ?>" name="<?php echo $this->get_field_name( 'form_id' ); ?>" class="widefat" style="width: 55%">
 				<?php
 				$action      = array(
-					'is_active' => true,
-					'post_type' => $object->post_type,
+					'is_active'     => true,
+					//'post_type' => $object->post_type,
+                    'post_type'     => $instance['type']
 				);
 				$ratingForms 		= CBRatingSystemData::get_ratingForms( true, $action );
 				$ratingFormToShow 	= intval($this->get_field_id( 'form_id' ));
@@ -182,7 +199,7 @@ class CBRatingSystemWidget extends WP_Widget {
 					foreach ( $ratingForms as $ratingForm ) {
 
 						if ( $default == $ratingForm->id ) {
-							$txt = ' (' . __( 'Default Form', cbratingsystem ) . ')';
+							$txt = ' (' . __( 'Default Form', 'cbratingsystem' ) . ')';
 						} else {
 							$txt = '';
 						}
@@ -215,7 +232,7 @@ class CBRatingSystemWidget extends WP_Widget {
 		$instance['todisplay'] = strip_tags( $new_instance['todisplay'] );
 		$instance['type']      = strip_tags( $new_instance['type'] );
 		$instance['form_id']   = strip_tags( $new_instance['form_id'] );
-        $instance['order']           = strip_tags( $new_instance['order'] );
+        $instance['order']     = strip_tags( $new_instance['order'] );
 
 		return $instance;
 	}
@@ -240,7 +257,7 @@ class CBRatingSystemWidget extends WP_Widget {
 class CBRatingSystemUserWidget extends WP_Widget {
 
     function CBRatingSystemUserWidget() {
-        parent::WP_Widget( 'cbrp_top_rated_user', __('Top Rated User','cbratingsystem'), array( 'description' => __('A widget to display top rated user.','cbratingsystem') ) );
+        parent::WP_Widget( 'cbrp_top_rated_user', __('Rating: Top Rated User','cbratingsystem'), array( 'description' => __('A widget to display top rated user.','cbratingsystem') ) );
     }
 
     /**
@@ -289,12 +306,15 @@ class CBRatingSystemUserWidget extends WP_Widget {
 
         $title = empty($options['widget_title']) ? __('Top Rated Posts','cbratingsystem') : $instance['widget_title'];
         $title 		= apply_filters( 'widget_title', $instance['title'] );
+
         echo $before_widget;
         echo $before_title . $title . $after_title;
         ?>
+
+
         <ul class="cbrp-top-rated-wpanel" style="">
             <?php if ( ! empty( $data ) ) : ?>
-                <?php //var_dump($data);?>
+
 
           <!--          <td style=""> <?php /*echo 'Name'; */?></td>
                     <td style=""> <?php /*echo 'Post '; */?></td>
@@ -394,7 +414,7 @@ class CBRatingSystemUserWidget extends WP_Widget {
         else{
             $form_id = 'form_id';
         }
-//$order
+
         if(array_key_exists( 'order' ,$instance)){
             $order = $instance['order'];
         }
@@ -423,7 +443,9 @@ class CBRatingSystemUserWidget extends WP_Widget {
             <label for="<?php echo $this->get_field_id( 'timelimit' ); ?>"><?php _e( "Display Last", 'cbratingsystem' ) ?>:</label>
             <select id="<?php echo $this->get_field_id( 'timelimit' ); ?>" name="<?php echo $this->get_field_name( 'timelimit' ); ?>" class="widefat" style="width:50%">
                 <?php
-                $no_of_days = array( 1 => '24 hours', 7 => 'Week', 15 => '15 Days', 30 => 'Month', 0 => 'All' );
+                //$no_of_days = array( 1 => '24 hours', 7 => 'Week', 15 => '15 Days', 30 => 'Month', 0 => 'All' );
+                $no_of_days = array( 1 => __('Last 24 hours', 'cbratingsystem'), 7 => __('Last 7 Days','cbratingsystem'), 15 => __('Last 15 Days','cbratingsystem'), 30 => __('Last 30 days','cbratingsystem'), 0 => __('All Time', 'cbratingsystem') );
+
                 foreach ( $no_of_days as $day => $day_label ) {
                     echo "<option value='$day'";
                     if ( $timelimit == $day ) {
@@ -434,6 +456,7 @@ class CBRatingSystemUserWidget extends WP_Widget {
                 ?>
             </select>
         </p>
+        <p><?php _e('Note: Based on Post creation date','cbratingsystem') ; ?></p>
         <!--result limit  -->
         <p>
             <label for="<?php echo $this->get_field_id( 'resultlimit' ); ?>">No. To Display:</label>

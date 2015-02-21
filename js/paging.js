@@ -1,3 +1,6 @@
+/*
+* GPLv2 or later
+* */
 function Pager(tableName, itemsPerPage) {
 	this.tableName = tableName;
 	this.itemsPerPage = itemsPerPage;
