@@ -1,4 +1,4 @@
-=== CodeBoxr Rating System ===
+=== CBX Rating System ===
 Contributors: manchumahara, codeboxr
 Donate link: http://codeboxr.com
 Tags: widget,shortcodes,rating,comment,reviews, multi criteria
@@ -8,7 +8,7 @@ Stable tag: 3.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
- CodeBoxr Multi Criteria Rating System
+ CBX Multi Criteria Rating System
 
 == Description ==
 
