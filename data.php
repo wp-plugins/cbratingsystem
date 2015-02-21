@@ -21,8 +21,7 @@ class CBRatingSystemData {
         require_once( ABSPATH . '/wp-admin/includes/upgrade.php' );
 
         $table_name = self::get_ratingForm_settings_table_name();
-		/*
-        $sql        = "CREATE TABLE IF NOT EXISTS $table_name  (
+        $sql        = "CREATE TABLE $table_name (
                         id mediumint(8) unsigned not null auto_increment,
                         name varchar(1000) not null,
                         is_active tinyint(1) not null,
@@ -59,113 +58,23 @@ class CBRatingSystemData {
                         include_with_edd INT( 1 ) NOT NULL DEFAULT  '0',
                         PRIMARY KEY  (id)
             ) $charset_collate;";
-		*/
-		/*
-	    $sql        = "CREATE TABLE IF NOT EXISTS $table_name  (
-                        id mediumint(8) unsigned not null auto_increment,
-                        name varchar(1000) not null,
-                        is_active tinyint(1) not null,
-                        post_types VARCHAR( 1000 ) NOT NULL,
-                        show_on_single INT( 1 ) NOT NULL DEFAULT  '1',
-                        show_on_home INT( 1 ) NOT NULL DEFAULT  '1',
-                        position varchar(100) not null,
-                        enable_shorttag tinyint(1) not null,
-                        logging_method varchar(100) not null,
-                        allowed_users varchar(200) not null,
-                        editor_group varchar(50) not null,
-                        custom_criteria longtext not null,
-                        enable_comment tinyint(1) not null,
-                        comment_limit INT( 10 ) NOT NULL DEFAULT  '0',
-                        enable_question INT( 1 ) NOT NULL,
-                        custom_question longtext not null,
-                        review varchar(1000) NOT NULL,
-                        show_on_arcv INT( 1 ) NOT NULL DEFAULT  '1',
-
-						show_editor_rating INT( 1 ) NOT NULL DEFAULT  '1',
-                        view_allowed_users varchar(200)not null,
-                        show_user_link_in_review INT( 1 ) NOT NULL DEFAULT  '1',
-                        show_user_avatar_in_review INT( 1 ) NOT NULL DEFAULT  '1',
-                        comment_view_allowed_users varchar(200) not null,
-                        comment_moderation_users varchar(200) not null,
-                        comment_required INT( 1 ) NOT NULL DEFAULT  '1',
-
-
-
-                        email_verify_guest INT( 1 ) NOT NULL DEFAULT  '1',
-                        buddypress_active INT( 1 ) NOT NULL DEFAULT  '1',
-                        buddypress_post INT( 1 ) NOT NULL DEFAULT  '1',
-                        replace_wc_tab INT( 1 ) NOT NULL DEFAULT  '0',
-                        include_with_wpec INT( 1 ) NOT NULL DEFAULT  '0',
-                        hide_all_user_name INT( 1 ) NOT NULL DEFAULT  '0',
-                        allow_user_to_hide INT( 1 ) NOT NULL DEFAULT  '0',
-                        show_chedit_to_codeboxr INT( 1 ) NOT NULL DEFAULT  '1',
-                        include_with_edd INT( 1 ) NOT NULL DEFAULT  '0',
-                        PRIMARY KEY  (id)
-            ) $charset_collate;";
-	    */
-		/*
-	    $sql        = "CREATE TABLE IF NOT EXISTS $table_name  (
-                        id mediumint(8) unsigned not null auto_increment,
-                        name varchar(1000) not null,
-                        is_active tinyint(1) not null,
-                        post_types VARCHAR( 1000 ) NOT NULL,
-                        show_on_single INT( 1 ) NOT NULL DEFAULT  '1',
-                        show_on_home INT( 1 ) NOT NULL DEFAULT  '1',
-                        show_on_arcv INT( 1 ) NOT NULL DEFAULT  '1',
-                        position varchar(100) not null,
-                        enable_shorttag tinyint(1) not null,
-                        logging_method varchar(100) not null,
-                        allowed_users varchar(200) not null,
-                        editor_group varchar(50) not null,
-                        custom_criteria longtext not null,
-                        enable_comment tinyint(1) not null,
-                        comment_limit INT( 10 ) NOT NULL DEFAULT  '0',
-                        enable_question INT( 1 ) NOT NULL,
-                        custom_question longtext not null,
-                        show_credit_to_codeboxr INT( 1 ) NOT NULL DEFAULT  '1',
-                        extrafields	TEXT NOT NULL  DEFAULT '',
-                        PRIMARY KEY  (id)
-            ) $charset_collate;";
-		*/
-	    $sql        = "CREATE TABLE IF NOT EXISTS $table_name  (
-                        id mediumint(8) unsigned not null auto_increment,
-                        name varchar(500) not null,
-                        is_active tinyint(1) not null,
-                        post_types VARCHAR( 1000 ) NOT NULL,
-                        show_on_single INT( 1 ) NOT NULL DEFAULT  '1',
-                        show_on_home INT( 1 ) NOT NULL DEFAULT  '1',
-                        show_on_arcv INT( 1 ) NOT NULL DEFAULT  '1',
-                        position varchar(100) not null,
-                        enable_shorttag tinyint(1) not null,
-                        logging_method varchar(100) not null,
-                        allowed_users varchar(200) not null,
-                        editor_group varchar(50) not null,
-                        custom_criteria longtext not null,
-                        enable_comment tinyint(1) not null,
-                        comment_limit INT( 10 ) NOT NULL DEFAULT  '0',
-                        enable_question INT( 1 ) NOT NULL,
-                        custom_question longtext not null,
-                        show_credit_to_codeboxr INT( 1 ) NOT NULL DEFAULT  '1',
-                        extrafields	longtext NOT NULL  DEFAULT '',
-                        PRIMARY KEY  (id)
-            ) $charset_collate;";
-
+        //here we nedd charset
         $wpdb->query( $sql );
         dbDelta( $sql ); //we take upgrade.php to get this method
 
-
+        //echo '<pre>'; print_r($sql); die();
 
         $table_name = self::get_user_ratings_table_name();
-        $sql        = "CREATE TABLE IF NOT EXISTS $table_name (
-                      id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-                      form_id int(10) NOT NULL,
-                      post_id int(10) NOT NULL,
+        $sql        = "CREATE TABLE $table_name (
+                      id mediumint(8) unsigned not null auto_increment,
+                      form_id int(10) not null COMMENT 'Rating form id',
+                      post_id int(10) not null,
                       post_type varchar(15),
-                      rating longtext NOT NULL,
+                      rating longtext not null,
                       question LONGTEXT NOT NULL,
                       comment LONGTEXT NOT NULL,
-                      comment_status VARCHAR(50) NOT NULL,
-                      comment_hash VARCHAR(32) NOT NULL,
+                      comment_status LONGTEXT NOT NULL,
+                      comment_hash LONGTEXT NOT NULL,
                       comment_limit INT( 10 ) NOT NULL DEFAULT '0',
                       average INT( 5 ) NOT NULL COMMENT  'value * 100',
                       user_id int(10),
@@ -173,8 +82,9 @@ class CBRatingSystemData {
                       user_email varchar(100) DEFAULT NULL,
                       user_session VARCHAR( 100 ),
                       user_ip VARCHAR( 16 ) NOT NULL,
-                      created int(20) NOT NULL,
+                      created int(20) not null,
                       allow_user_to_hide VARCHAR( 16 ) NOT NULL DEFAULT  'false',
+
                       PRIMARY KEY  (id)
             ) $charset_collate;";
         $wpdb->query( $sql );
@@ -183,15 +93,15 @@ class CBRatingSystemData {
         //echo '<pre>'; print_r($sql); die();
 
         $table_name = self::get_user_ratings_summury_table_name();
-        $sql        = "CREATE TABLE IF NOT EXISTS $table_name (
-                        id int(10) NOT NULL AUTO_INCREMENT,
-                        post_id int(10) NOT NULL,
-                        post_type VARCHAR( 25 ) NOT NULL,
-                        form_id int(10) NOT NULL,
-                        per_post_rating_count int(100) NOT NULL DEFAULT '0',
-                        per_post_rating_summary int(2) NOT NULL,
-                        custom_user_rating_summary longtext DEFAULT '' COLLATE utf8_unicode_ci NOT NULL,
-                        per_criteria_rating_summary longtext DEFAULT '' COLLATE utf8_unicode_ci NOT NULL,
+        $sql        = "CREATE TABLE $table_name (
+                        `id` int(10) NOT NULL AUTO_INCREMENT,
+                        `post_id` int(10) NOT NULL,
+                        `post_type` VARCHAR( 50 ) NOT NULL,
+                        `form_id` int(10) NOT NULL,
+                        `per_post_rating_count` int(100) NOT NULL DEFAULT '0',
+                        `per_post_rating_summary` int(2) NOT NULL,
+                        `custom_user_rating_summary` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
+                        `per_criteria_rating_summary` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
                         PRIMARY KEY  (id)
                 )$charset_collate;";
         $wpdb->query( $sql );
@@ -247,8 +157,7 @@ class CBRatingSystemData {
         $table_name[] = self::get_user_ratings_summury_table_name();
 
         $sql = "DROP TABLE IF EXISTS " . implode( ', ', $table_name );
-        $val = $wpdb->query($sql);
-
+        $wpdb->query($sql);
         //require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         //dbDelta( $sql );
 
@@ -264,6 +173,9 @@ class CBRatingSystemData {
         delete_option( "cbratingsystem_theme_key" );
         delete_option( "cbratingsystem_theme_settings" );
         delete_option( "cbratingsystem_deleteonuninstall" );
+
+        //delete plugin version name
+        //delete_site_option( 'cbratingsystem_plugin_version');
     }
 
     /**
@@ -272,9 +184,8 @@ class CBRatingSystemData {
      */
     public  static  function  delete_metakeys(){
         //delete meta keys
-        $meta_keys['_cbrating_enable_ratingForm']  = 'enable_ratingForm';
-        $meta_keys['_cbrating_listing_ratingForm'] = 'listing_ratingForm';
-
+        $meta_keys['_enable_ratingForm']  = 'enable_ratingForm';
+        $meta_keys['_listing_ratingForm'] = 'listing_ratingForm';
         foreach ( $meta_keys as $meta_key ) {
             delete_post_meta_by_key( $meta_key );
         }
@@ -287,15 +198,6 @@ class CBRatingSystemData {
      */
     public static function get_ratingForms( $is_object = false, array $action_option = array() ) {
         global $wpdb;
-	    //$postTypes          = CBRatingSystem::post_types();
-	    //$userRoles          = CBRatingSystem::user_roles();
-	    //$editorUserRoles    = CBRatingSystem::editor_user_roles();
-
-	    $form_default       = CBRatingSystem::form_default_fields();
-	    $form_question      = CBRatingSystem::form_default_question();
-	    $form_criteria      = CBRatingSystem::form_default_criteria();
-
-
         $table_name = self::get_ratingForm_settings_table_name();
         $action = '';
         if ( ! empty( $action_option ) and is_array( $action_option ) ) {
@@ -312,7 +214,7 @@ class CBRatingSystemData {
             $action = substr( $action, 0, - 3 );
         }
 
-        $sql = "SELECT * FROM $table_name $action ORDER BY name ASC";
+        $sql = $wpdb->prepare( "SELECT * FROM $table_name $action ORDER BY name ASC", null );
 
         if ( ! $is_object ) { //how i want rating forms like an array or an object
             $results = $wpdb->get_results( $sql, ARRAY_A );
@@ -324,7 +226,6 @@ class CBRatingSystemData {
             $count = sizeof( $results );
 
             for ( $i = 0; $i < $count; $i ++ ) {
-	            /*
                 $results[$i]["post_types"]                 = maybe_unserialize( $results[$i]["post_types"] );
                 $results[$i]["position"]                   = maybe_unserialize( $results[$i]["position"] );
                 $results[$i]["logging_method"]             = maybe_unserialize( $results[$i]["logging_method"] );
@@ -335,34 +236,6 @@ class CBRatingSystemData {
                 $results[$i]["custom_criteria"]            = maybe_unserialize( $results[$i]["custom_criteria"] );
                 $results[$i]["custom_question"]            = maybe_unserialize( $results[$i]["custom_question"] );
                 $results[$i]["review"]                     = maybe_unserialize( $results[$i]["review"] );
-
-	            */
-
-
-	            //var_dump($results[$i]["custom_criteria"]);
-
-	            $results[$i]["custom_criteria"]            = maybe_unserialize( $results[$i]["custom_criteria"] );
-
-	            //var_dump($results[$i]["custom_criteria"]);
-
-	            $results[$i]["custom_question"]            = maybe_unserialize( $results[$i]["custom_question"] );
-
-	            $result                               = $results[$i];
-	            $extrafields                          = maybe_unserialize($result['extrafields']);
-
-	            $extrafields                          = (array)$extrafields;
-
-
-	            $result                               = array_merge($result, $extrafields);
-
-	            foreach($form_default as $key => $field){
-		            if($field['type'] == 'multiselect'){
-			            $result[$key]                 = maybe_unserialize( $result[$key] );
-		            }
-	            }
-
-	            $results[$i]                          = $result;
-
             }
         } else {
             $results = $wpdb->get_results( $sql, OBJECT );
@@ -373,8 +246,6 @@ class CBRatingSystemData {
 
             $count = sizeof( $results );
             for ( $i = 0; $i < $count; $i ++ ) {
-
-	            /*
                 $results[$i]->post_types                 = maybe_unserialize( $results[$i]->post_types );
                 $results[$i]->position                   = maybe_unserialize( $results[$i]->position );
                 $results[$i]->logging_method             = maybe_unserialize( $results[$i]->logging_method );
@@ -385,25 +256,6 @@ class CBRatingSystemData {
                 $results[$i]->custom_criteria            = maybe_unserialize( $results[$i]->custom_criteria );
                 $results[$i]->custom_question            = maybe_unserialize( $results[$i]->custom_question );
                 $results[$i]->review                     = maybe_unserialize( $results[$i]->review );
-	            */
-
-	            $results[$i]->custom_criteria            = maybe_unserialize( $results[$i]->custom_criteria );
-	            $results[$i]->custom_question            = maybe_unserialize( $results[$i]->custom_question );
-
-	            $result                             = $results[$i];
-	            $extrafields                        = maybe_unserialize($result->extrafields);
-	            $extrafields                        = (array)$extrafields;
-
-	            $result = array_merge((array) $result, $extrafields);
-
-	            foreach($form_default as $key => $field){
-		            if($field['type'] == 'multiselect'){
-			            $result[$key] = maybe_unserialize($result[$key]);
-		            }
-	            }
-
-	            $results[$i] = (object)$result;
-
             }
         }
 
@@ -421,14 +273,7 @@ class CBRatingSystemData {
         $table_name = self::get_ratingForm_settings_table_name();
         $sql = $wpdb->prepare( "SELECT * FROM $table_name WHERE id=%d", $id );
 
-
-	    //$postTypes          = CBRatingSystem::post_types();
-	    //$userRoles          = CBRatingSystem::user_roles();
-	    //$editorUserRoles    = CBRatingSystem::editor_user_roles();
-
-	    $form_default       = CBRatingSystem::form_default_fields();
-	    $form_question      = CBRatingSystem::form_default_question();
-	    $form_criteria      = CBRatingSystem::form_default_criteria();
+        /*********************Editing This Part**************************/
 
         if ( ! $is_object ) {
             $results = $wpdb->get_results( $sql, ARRAY_A );
@@ -436,36 +281,8 @@ class CBRatingSystemData {
             if ( empty( $results ) ) {
                 return array();
             }
-	        //now we are fixing for array
-
-
 
             $result                               = $results[0];
-
-	        $result["custom_criteria"]            = maybe_unserialize( $result["custom_criteria"] );
-	        $result["custom_question"]            = maybe_unserialize( $result["custom_question"] );
-
-	        $extrafields                          = maybe_unserialize($result['extrafields']);
-
-	        $extrafields                          = (array)$extrafields;
-
-
-	        $result                               = array_merge($result, $extrafields);
-	        foreach($form_default as $key => $field){
-				if($field['type'] == 'multiselect'){
-					if(!isset($result[$key])) continue;
-					$result[$key]                 = maybe_unserialize( $result[$key] );
-				}
-	        }
-
-
-			/*
-	        echo '<pre>';
-	        print_r($result);
-	        echo '</pre>';
-			*/
-
-	        /*
             $result["post_types"]                 = maybe_unserialize( $result["post_types"] );
             $result["position"]                   = maybe_unserialize( $result["position"] );
             $result["logging_method"]             = maybe_unserialize( $result["logging_method"] );
@@ -476,37 +293,15 @@ class CBRatingSystemData {
             $result["custom_criteria"]            = maybe_unserialize( $result["custom_criteria"] );
             $result["custom_question"]            = maybe_unserialize( $result["custom_question"] );
             $result["review"]                     = maybe_unserialize( $result["review"] );
-	        */
             //echo "<pre>"; print_r($result); echo "</pre>";
         } else {
             $results = $wpdb->get_results( $sql, OBJECT );
 
             if ( empty( $results ) ) {
-                return new stdclass();
+                return array();
             }
 
-
             $result                             = $results[0];
-
-	        $result->custom_criteria            = maybe_unserialize( $result->custom_criteria );
-	        $result->custom_question            = maybe_unserialize( $result->custom_question );
-
-
-	        $extrafields                        = maybe_unserialize($result->extrafields);
-	        $extrafields                        = (array)$extrafields;
-
-	        $result = array_merge((array) $result, $extrafields);
-
-	        foreach($form_default as $key => $field){
-		        if($field['type'] == 'multiselect'){
-			        $result[$key] = maybe_unserialize($result[$key]);
-		        }
-	        }
-
-	        $result = (object)$result;
-
-
-	        /*
             $result->post_types                 = maybe_unserialize( $result->post_types );
             $result->position                   = maybe_unserialize( $result->position );
             $result->logging_method             = maybe_unserialize( $result->logging_method );
@@ -517,7 +312,6 @@ class CBRatingSystemData {
             $result->custom_criteria            = maybe_unserialize( $result->custom_criteria );
             $result->custom_question            = maybe_unserialize( $result->custom_question );
             $result->review                     = maybe_unserialize( $result->review );
-	        */
         }
 
         return $result;
@@ -538,7 +332,6 @@ class CBRatingSystemData {
         $active_clause .= ( ! empty( $user_id ) ) ? ( ( is_array( $user_id ) ? " AND ur.user_id IN(%s)" : " AND ur.user_id=%d" ) ) : "";
         $post_id = ( ( is_array( $post_id ) ? implode( ',', $post_id ) : $post_id ) );
         $user_id = ( ( is_array( $user_id ) ? implode( ',', $user_id ) : $user_id ) );
-
         $sql = $wpdb->prepare( "SELECT ur.* FROM $table_name1 ur WHERE ur.form_id=%d $active_clause", $form_id, $post_id, $user_id );
 
         if ( ! $is_object ) {
@@ -585,8 +378,6 @@ class CBRatingSystemData {
     public static function get_user_ratings_with_ratingForm( array $form_id = array(), array $post_id = array(), array $user_id = array(), $user_session = '', $sort = 'time', $sort_type = 'DESC', array $limit = array(), $is_object = false ) {
         global $wpdb;
 
-	    //var_dump('hereeee');
-
         $table_name1 = self::get_ratingForm_settings_table_name();
         $table_name2 = self::get_user_ratings_table_name();
         $table_name3 = $wpdb->posts;
@@ -595,11 +386,11 @@ class CBRatingSystemData {
         $post_id = array_filter( $post_id );
         $user_id = array_filter( $user_id );
 
-        $active_clause = ( ! empty( $form_id ) && is_array( $form_id ) ) ? " AND ur.form_id IN ('" . implode( ',', $form_id ) . "')" : "";
-        $active_clause .= ( ! empty( $post_id ) && is_array( $post_id ) ) ? " AND ur.post_id IN ('" . implode( ',', $post_id ) . "')" : "";
-        $active_clause .= ( ! empty( $user_id ) && is_array( $user_id ) ) ? " AND ur.user_id IN ('" . implode( ',', $user_id ) . "')" : "";
+        $active_clause = ( ! empty( $form_id ) and is_array( $form_id ) ) ? " AND ur.form_id IN ('" . implode( ',', $form_id ) . "')" : "";
+        $active_clause .= ( ! empty( $post_id ) and is_array( $post_id ) ) ? " AND ur.post_id IN ('" . implode( ',', $post_id ) . "')" : "";
+        $active_clause .= ( ! empty( $user_id ) and is_array( $user_id ) ) ? " AND ur.user_id IN ('" . implode( ',', $user_id ) . "')" : "";
 
-        $active_clause .= ( ( $user_session != '' ) ) ? " AND ur.user_session='".$user_session. "' ": "";
+        $active_clause .= ( ( $user_session != '' ) ) ? " AND ur.user_session=%s" : "";
 
         if ( ! empty( $sort ) and ! empty( $sort_type ) ) {
             if ( $sort == 'time' ) {
@@ -617,53 +408,24 @@ class CBRatingSystemData {
             $sortingOrder = '';
         }
 
-        $limitAction = '';
-
         if ( ! empty( $limit ) ) {
-	        //followed this simple pagination tutorial http://www.otallu.com/tutorials/simple-php-mysql-pagination/
+            $limitAction = "LIMIT";
+            $limitAction .= ( ( isset( $limit['start'] ) and is_numeric( $limit['start'] ) ) ? ' ' . $limit['start'] . ',' : '' );
+            $limitAction .= ( ( isset( $limit['offset'] ) and is_numeric( $limit['offset'] ) ) ? ' ' . $limit['offset'] : '' );
 
-
-	        if(isset($limit['perpage']) ||  isset($limit['page'])){
-		        $perpage =  isset($limit['perpage']) ? intval($limit['perpage']) : 10;
-		        $page =  isset($limit['page']) ? intval($limit['page']) : 1;
-
-		        $start_point = ($page * $perpage) - $perpage;
-
-		        $limitAction = "LIMIT";
-		        $limitAction .=  ' ' . $start_point . ',' ;
-		        $limitAction .= ' ' . $perpage ;
-
-	        }
+            if ( $limitAction == 'LIMIT' ) {
+                $limitAction = '';
+            }
         }
-		/*
-        var_dump("SELECT ur.*, p.post_title, p.post_type, rs.name, rs.custom_criteria, rs.custom_question FROM $table_name1 rs
-                INNER JOIN $table_name2 ur
-                INNER JOIN $table_name3 p ON p.ID = ur.post_id
-                WHERE rs.id = ur.form_id $active_clause $sortingOrder $limitAction");
-	    */
 
-       /* $sql = $wpdb->prepare(
+        $sql = $wpdb->prepare(
             "SELECT ur.*, p.post_title, p.post_type, rs.name, rs.custom_criteria, rs.custom_question FROM $table_name1 rs
                 INNER JOIN $table_name2 ur
                 INNER JOIN $table_name3 p ON p.ID = ur.post_id
                 WHERE rs.id = ur.form_id $active_clause $sortingOrder $limitAction", $form_id, $post_id, $user_id, $user_session
-        );*/
-
-	   /* $sql = $wpdb->prepare(
-            "SELECT ur.*, p.post_title, p.post_type, rs.name, rs.custom_criteria, rs.custom_question FROM $table_name1 rs
-                INNER JOIN $table_name2 ur
-                INNER JOIN $table_name3 p ON p.ID = ur.post_id
-                WHERE rs.id = ur.form_id $active_clause $sortingOrder $limitAction", $user_session
-        );*/
+        );
 
         //echo '<pre>'; print_r($sql); echo '</pre>'; //die();
-
-	    $sql = "SELECT ur.*, p.post_title, p.post_type, rs.name, rs.custom_criteria, rs.custom_question FROM $table_name1 rs
-                INNER JOIN $table_name2 ur
-                INNER JOIN $table_name3 p ON p.ID = ur.post_id
-                WHERE rs.id = ur.form_id $active_clause $sortingOrder $limitAction";
-
-	   //var_dump($sql);
 
         if ( ! $is_object ) {
             $results = $wpdb->get_results( $sql, ARRAY_A );
@@ -776,30 +538,22 @@ class CBRatingSystemData {
     /*
      *
      */
-    public static function get_ratings_summary( array $whereOptions = array(), $sort = 'form_id', $sort_type = 'ASC', $is_object = false, $limit = 10 ) {
+    public static function get_ratings_summary( array $whereOptions = array(), $sort = 'form_id', $sort_type = 'ASC', $is_object = false, $limit = '' ) {
         global $wpdb;
+        //var_dump($whereOptions);
+        $table_name1 = self::get_user_ratings_summury_table_name();
+        //var_dump($wpdb->posts);
+        $table_name2 = $wpdb->posts;
+        //var_dump($table_name2);
+        $table_name3 = self::get_ratingForm_settings_table_name();
 
-/*        echo '<pre>';
-        print_r($whereOptions);
-        echo '</pre>';*/
-
-	   // var_dump($limit);
-
-
-        $table_name1    = self::get_user_ratings_summury_table_name();
-        $table_name2    = $wpdb->posts;
-        $table_name3    = self::get_ratingForm_settings_table_name();
-
-        $active_clause  = '';
-        $sortingOrder   = '';
-	    //$limit          = '';
-        $userRoleSQL    = '';
+        $userRoleSQL = '';
 
         if ( ! empty( $whereOptions ) ) {
-            $active_clause = ( ! empty( $whereOptions['form_id'] ) && is_array( $whereOptions['form_id'] ) ) ? " AND rs.form_id IN ('" . implode( ',', $whereOptions['form_id'] ) . "')" : "";
-            $active_clause .= ( ! empty( $whereOptions['post_id'] ) && is_array( $whereOptions['post_id'] ) ) ? " AND rs.post_id IN ('" . implode( ',', $whereOptions['post_id'] ) . "')" : "";
-            $active_clause .= ( ! empty( $whereOptions['post_type'] ) && is_array( $whereOptions['post_type'] ) ) ? " AND rs.post_type IN ('" . implode( ',', $whereOptions['post_type'] ) . "')" : "";
-            $active_clause .= ( ! empty( $whereOptions['post_date'] ) && ! is_array( $whereOptions['post_date'] ) ) ? " AND p.post_date > '{$whereOptions['post_date']}'" : "";
+            $active_clause = ( ! empty( $whereOptions['form_id'] ) and is_array( $whereOptions['form_id'] ) ) ? " AND rs.form_id IN ('" . implode( ',', $whereOptions['form_id'] ) . "')" : "";
+            $active_clause .= ( ! empty( $whereOptions['post_id'] ) and is_array( $whereOptions['post_id'] ) ) ? " AND rs.post_id IN ('" . implode( ',', $whereOptions['post_id'] ) . "')" : "";
+            $active_clause .= ( ! empty( $whereOptions['post_type'] ) and is_array( $whereOptions['post_type'] ) ) ? " AND rs.post_type IN ('" . implode( ',', $whereOptions['post_type'] ) . "')" : "";
+            $active_clause .= ( ! empty( $whereOptions['post_date'] ) and ! is_array( $whereOptions['post_date'] ) ) ? " AND p.post_date > '{$whereOptions['post_date']}'" : "";
         }
 
 
@@ -813,43 +567,24 @@ class CBRatingSystemData {
             } elseif ( $sort === 'avg' ) {
                 $sortingOrder = 'ORDER BY rs.per_post_rating_summary ' . $sort_type;
             }
+        } else {
+            $sortingOrder = '';
         }
 
-	    //$limit = '';
         if ( ! empty( $limit ) ) {
             $limit = 'LIMIT ' . $limit;
         }
-
-	    $form_id = '';
+        $form_id = '';
         $post_id = '';
-	    /*
-	    var_dump("SELECT rs.*, p.post_title, p.post_type, r.name FROM $table_name1 rs
-             INNER JOIN $table_name2 p
-             INNER JOIN $table_name3 r
-             $userRoleSQL
-             WHERE p.ID=rs.post_id AND r.id=rs.form_id $active_clause $sortingOrder $limit");
-	    */
-
-       /* $sql = $wpdb->prepare(
+        $sql = $wpdb->prepare(
             "SELECT rs.*, p.post_title, p.post_type, r.name FROM $table_name1 rs
              INNER JOIN $table_name2 p
              INNER JOIN $table_name3 r
              $userRoleSQL
              WHERE p.ID=rs.post_id AND r.id=rs.form_id $active_clause $sortingOrder $limit", $form_id, $post_id
-        );*/
-		//on wpdb error was from here
-	    $sql =
-		    "SELECT rs.*, p.post_title, p.post_type, r.name FROM $table_name1 rs
-             INNER JOIN $table_name2 p
-             INNER JOIN $table_name3 r
-             $userRoleSQL
-             WHERE p.ID=rs.post_id AND r.id=rs.form_id $active_clause $sortingOrder $limit";
-
+        );
 
         //echo '<pre>'; print_r($sql); echo '</pre>'; die();
-
-
-		//var_dump($sql);
 
         if ( ! $is_object ) {
             $results = $wpdb->get_results( $sql, ARRAY_A );
@@ -894,10 +629,12 @@ class CBRatingSystemData {
         $table_name1 = self::get_user_ratings_summury_table_name();
         $table_name2 = self::get_ratingForm_settings_table_name();
 
-        $sql = "SELECT SUM(rs.per_post_rating_count) AS count, rs.*, r.* FROM $table_name2 r
+        $sql = $wpdb->prepare(
+            "SELECT SUM(rs.per_post_rating_count) AS count, rs.*, r.* FROM $table_name2 r
             LEFT JOIN $table_name1 rs ON r.id=rs.form_id
             GROUP BY r.id
-            ORDER BY rs.per_post_rating_count DESC";
+            ORDER BY rs.per_post_rating_count DESC", null
+        );
 
         //echo '<pre>'; print_r($sql); echo '</pre>'; //die();
 
@@ -925,8 +662,8 @@ class CBRatingSystemData {
 
             $count = sizeof( $results );
 
-
-
+            //var_dump($results);
+            //echo '<pre>'
             for ( $i = 0; $i < $count; $i ++ ) {
 
                 $results[$i]->per_criteria_rating_summary = maybe_unserialize( $results[$i]->per_criteria_rating_summary );
@@ -953,7 +690,7 @@ class CBRatingSystemData {
      */
     public static function update_ratingForm( $ratingForm ) {
         global $wpdb;
-
+        //echo '<pre>'; print_r($ratingForm); echo '</pre>'; //die();
         if ( ! empty( $ratingForm ) ) {
             $table_name = self::get_ratingForm_settings_table_name();
 
@@ -989,7 +726,7 @@ class CBRatingSystemData {
         return ( $success !== false ) ? $id : false;
     }
     // edit error msg
-    public static function cbrating_no_more_forms_error($error){
+    public function cbrating_no_more_forms_error($error){
         return __('No more forms for free version' , 'cbratingsystem');
     }
 
@@ -1101,8 +838,7 @@ class CBRatingSystemData {
 
         global $wpdb;
         $table_name = self::get_ratingForm_settings_table_name();
-        //$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id IN (" . implode( ',', $id ) . ")", null );
-        $sql = "DELETE FROM $table_name WHERE id IN (" . implode( ',', $id ) . ")";
+        $sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id IN (" . implode( ',', $id ) . ")", null );
         //echo '<pre>'; print_r($sql); echo '</pre>'; die();
         $wpdb->query( $sql );
     }
@@ -1115,7 +851,6 @@ class CBRatingSystemData {
         global $wpdb;
         $table_name1 = self::get_user_ratings_summury_table_name();
         $table_name = self::get_user_ratings_table_name();
-
         foreach($ids as $id){
             $sql = $wpdb->prepare( "SELECT post_id ,form_id FROM $table_name1 WHERE id=%d ", $id );
             $results = $wpdb->get_results( $sql,ARRAY_A);
@@ -1130,16 +865,14 @@ class CBRatingSystemData {
     /**
      * @param array $id
      */
-	/*
     public static function delete_ratingForm_symmary( array $id ) {
 
         global $wpdb;
         $table_name = self::get_user_ratings_summury_table_name();
-        $sql = "DELETE FROM $table_name WHERE id IN (" . implode( ',', $id ) . ")";
+        $sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id IN (" . implode( ',', $id ) . ")", null );
         $wpdb->query( $sql );
        // return 0;
     }
-	*/
 
     /**
      * @param array $id
@@ -1149,17 +882,12 @@ class CBRatingSystemData {
         global $wpdb;
         $table_name = self::get_ratingForm_settings_table_name();
 
-        $sql = "DELETE FROM $table_name WHERE id IN (" . implode( ',', $id ) . ")";
+        $sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id IN (" . implode( ',', $id ) . ")", null );
 
-        $return_value_1 = $wpdb->query( $sql );
+        $wpdb->query( $sql );
 
-
-
-        $return_value_2 = self::delete_ratingSummary( $id );
-        $return_value_3 = self::delete_ratings( array(), array(), $id );
-
-        //return array($return_value_1, $return_value_2, $return_value_3);
-        return $return_value_1;
+        self::delete_ratingSummary( $id );
+        self::delete_ratings( array(), array(), $id );
     }
 
     /**
@@ -1179,7 +907,7 @@ class CBRatingSystemData {
             $action = substr( $action, 0, - 3 );
         }
 
-        $return = $wpdb->query("DELETE FROM $table_name $action" );
+        $return = $wpdb->query( $wpdb->prepare( "DELETE FROM $table_name $action", null ) );
 
         return $return;
     }
@@ -1208,7 +936,7 @@ class CBRatingSystemData {
             $action = substr( $action, 0, - 3 );
         }
 
-        $sql = "DELETE FROM $table_name $action";
+        $sql = $wpdb->prepare( "DELETE FROM $table_name $action", null );
 
 
         $return = $wpdb->query( $sql );
@@ -1229,19 +957,16 @@ class CBRatingSystemData {
     /**
      *
      */
-    /*
     public static function drop_tables() {
         global $wpdb;
         $wpdb->query( "DROP TABLE IF EXISTS " . self::get_paymill_table_name() );
     }
-    */
 
     // get forms that are not assigned to feeds
     /**
      * @param string $active_form
      * @return array
      */
-    /*
     public static function get_available_forms( $active_form = '' ) {
 
         $forms           = RGFormsModel::get_forms();
@@ -1253,7 +978,6 @@ class CBRatingSystemData {
 
         return $available_forms;
     }
-    */
 
     /**
      * @param $array
@@ -1332,7 +1056,7 @@ class CBRatingSystemData {
      * get top rated post for widget and shortcode
      */
     public static function get_top_rated_post( array $whereOptions = array(), $is_object = false, $limit = '' ) {
-        global $wpdb;
+
 
         $firstorder = $whereOptions['firstorder'];
 
@@ -1343,7 +1067,7 @@ class CBRatingSystemData {
             $secondorder = 'post_count';
         }
 
-
+        global $wpdb;
         $active_clause = '';
 
         if($whereOptions ['post_filter'] == 'post_id'){
@@ -1379,7 +1103,6 @@ class CBRatingSystemData {
         else{
             $order_by = 'DESC';
         }
-
         if (  $limit != ''  ) {
             $limit = (int) (preg_replace("/[^0-9]/","",$limit) ) ;
             //var_dump($limit);
@@ -1391,10 +1114,7 @@ class CBRatingSystemData {
         $usertable     =  $wpdb->prefix . "users";
         $formtable     = self::get_ratingForm_settings_table_name();
 
-        //$sql     =   $wpdb->prepare( "SELECT SUM(summary.per_post_rating_summary)/count(summary.post_id) as rating, count(summary.post_id) as post_count,post.post_author  FROM $posttable as post  LEFT JOIN $summarytable as summary ON summary.post_id = post.ID  WHERE  post.post_status = 'publish' $active_clause GROUP BY post.post_author ORDER BY $firstorder $order_by ,$secondorder  $order_by $limit" , $limit) ;
-
-        $sql = "SELECT SUM(summary.per_post_rating_summary)/count(summary.post_id) as rating, count(summary.post_id) as post_count,post.post_author  FROM $posttable as post  LEFT JOIN $summarytable as summary ON summary.post_id = post.ID  WHERE  post.post_status = 'publish' $active_clause GROUP BY post.post_author ORDER BY $firstorder $order_by ,$secondorder  $order_by $limit";
-
+        $sql     =   $wpdb->prepare( "SELECT SUM(summary.per_post_rating_summary)/count(summary.post_id) as rating, count(summary.post_id) as post_count,post.post_author  FROM $posttable as post  LEFT JOIN $summarytable as summary ON summary.post_id = post.ID  WHERE  post.post_status = 'publish' $active_clause GROUP BY post.post_author ORDER BY $firstorder $order_by ,$secondorder  $order_by $limit" , $limit) ;
 
         if ( ! $is_object ) {
             $results = $wpdb->get_results( $sql, ARRAY_A );

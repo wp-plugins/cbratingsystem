@@ -4,7 +4,7 @@
  *
  * jQuery Raty is a plugin that generates a customizable star rating.
  *
- * Licensed under GPLv2 or later
+ * Licensed under The MIT License
  *
  * @version        2.5.2
  * @since          2010.06.11

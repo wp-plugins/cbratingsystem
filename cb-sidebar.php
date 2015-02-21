@@ -1,10 +1,10 @@
-
+<div id="side-info-column" class="inner-sidebar">
 
 	<div class="postbox">
 		<h3>Plugin Info</h3>
 
 		<div class="inside">
-			<p>Name : CodeBoxr Multi Criteria Rating System <?php echo 'v' . CB_RATINGSYSTEM_PLUGIN_VERSION; ?></p>
+			<p>Name : CodeBoxr Rating System <?php echo 'v' . CB_RATINGSYSTEM_PLUGIN_VERSION; ?></p>
 
 			<p>Author : Codeboxr Team</p>
 
@@ -56,4 +56,4 @@
         </div>
     </div>
 
-
+</div>

@@ -7,7 +7,7 @@ h3#cbratingfrom_reviews_title {
 }
 
 .add_left_margin {
-	margin-left: 5px;
+	margin-left: 20px;
 }
 
 .cbrp-switch-report {
@@ -26,8 +26,6 @@ h3#cbratingfrom_reviews_title {
 	padding: 10px;
 	position: relative;
 	width: 100%;
-    font-size: 14px;
-    line-height: 18px;
 }
 
 .cbrp-content-container #cbrp-report {
@@ -59,37 +57,34 @@ h3#cbratingfrom_reviews_title {
 	margin: 0 10px
 }
 
-.cbratingsystem-tabswitch {
+.switch-tab {
 	/* background-color: #E6E6E6;
 	background-image: -moz-linear-gradient(center top , #F4F4F4, #E6E6E6);
 	*/
 	background-repeat: repeat-x;
 	border: 1px solid #D2D2D2;
-
-    -webkit-border-radius: 3px;
+	-webkit-border-radius: 3px;
 	-webkit-border-top-right-radius: 0;
 	-moz-border-radius: 3px;
 	-moz-border-radius-topright: 0;
 	border-radius: 3px;
 	border-top-right-radius: 0;
 
-
-	/*box-shadow: 0 1px 2px rgba(64, 64, 64, 0.1);*/
-
+	box-shadow: 0 1px 2px rgba(64, 64, 64, 0.1);
 	color: #7C7C7C;
-
+	font-size: 0.785714rem;
 	font-weight: normal;
-    font-size: 14px;
-
+	line-height: 1.42857;
+	padding: 0.428571rem 0.714286rem;
+	color: #373737;
+	font: 15px "Helvetica Neue", Helvetica, Arial, sans-serif;
 	float: right;
 	cursor: pointer;
-
-    padding: 3px 10px;
 }
 
-.cbratingsystem-tabswitch:hover {
+.switch-tab:hover {
 	background-color: #EBEBEB;
-	/*background-image: -moz-linear-gradient(center top, #F9F9F9, #EBEBEB);*/
+	background-image: -moz-linear-gradient(center top, #F9F9F9, #EBEBEB);
 	background-repeat: repeat-x;
 	color: #5E5E5E;
 	cursor: pointer;
@@ -105,13 +100,11 @@ h3#cbratingfrom_reviews_title {
 	margin-bottom: 3px;
 }
 
-.cbratingsystem_comment_box {
+.comment_box {
 	margin-top: 8px;
 	margin-bottom: 8px;
 }
-.cbrs_comment_textarea{
-    font-size: 12px; line-height: 16px;
-}
+
 .item-question {
 	padding: 5px;
 }
@@ -139,8 +132,8 @@ h3#cbratingfrom_reviews_title {
 	margin: 2px;
 }
 
-.cbratingsystem-error {
-	border: 1px solid red;
+.error {
+	border: 2px solid red;
 }
 
 .comment_red_alert {
@@ -173,12 +166,11 @@ h3#cbratingfrom_reviews_title {
 	background-repeat: repeat-x;
 	border: 1px solid #D2D2D2;
 	border-radius: 3px 0 3px 3px;
-
-	/*box-shadow: 0 1px 2px rgba(64, 64, 64, 0.1);*/
-	/*color: #373737;*/
+	box-shadow: 0 1px 2px rgba(64, 64, 64, 0.1);
+	color: #373737;
 	cursor: pointer;
-	/*font: 15px "Helvetica Neue", Helvetica, Arial, sans-serif;*/
-
+	font: 15px "Helvetica Neue", Helvetica, Arial, sans-serif;
+	padding: 0.428571rem 0.714286rem;
 	margin-top: 10px;
 	float: left;
 }
@@ -188,9 +180,9 @@ h3#cbratingfrom_reviews_title {
 	background-repeat: no-repeat;
 	border: 1px solid;
 	margin: 6px 0;
-	padding:5px;
+	padding: 10px 10px 10px 50px;
 	border-color: #ED541D;
-	/*background-image: url(../images/message-24-error.png);*/
+	background-image: url(../images/message-24-error.png);
 }
 
 .cbrp_load_more_waiting_icon {
@@ -263,4 +255,3 @@ h3#cbratingfrom_reviews_title {
 .criteria-listings .user_info .user_email input[type="text"] {
 
 }
-

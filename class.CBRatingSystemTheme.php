@@ -20,9 +20,7 @@ class CBRatingSystemTheme {
      */
     public static function build_admin_ratingForm_theme_settings() {
 
-
-	    $error = true;
-	    $class = '';
+		$formPath = admin_url( 'admin.php?page=ratingformedit' );
 
 		if ( ! empty( $_POST ) && check_admin_referer( 'cbrp_theme_settings_form_nonce_action', 'cbrp_theme_settings_form_nonce_field' ) ) {
 
@@ -31,7 +29,7 @@ class CBRatingSystemTheme {
 			$settings = array();
 			$message  = array();
 
-			if ( is_string( $post['theme'] ) && ( ! empty( $post['theme'] ) ) ) {
+			if ( is_string( $post['theme'] ) and ( ! empty( $post['theme'] ) ) ) {
 				update_option( 'cbratingsystem_theme_key', $post['theme'] );
 			} else {
 				update_option( 'cbratingsystem_theme_key', 'basic' );
@@ -40,9 +38,9 @@ class CBRatingSystemTheme {
 			if ( ! empty( $post['theme_settings'] ) ) {
 				foreach ( $post['theme_settings'] as $theme_key_name => $theme_settings ) {
 					if ( ! empty( $theme_settings ) ) {
-
+						//echo '<pre>'; print_r($theme_settings); echo '</pre>'; die();
 						foreach ( $theme_settings as $settings_key => $settings_val ) {
-
+							//echo '<pre>'; var_dump(substr($settings_key, -6)); echo '</pre>'; //die();
 							if ( substr( $settings_key, - 6 ) == '_color' ) {
 								if ( ( strlen( $settings_val ) == 7 ) and ( $settings_val[0] == '#' ) ) {
 									$settings['theme_settings'][$theme_key_name][$settings_key] = $settings_val;
@@ -55,18 +53,18 @@ class CBRatingSystemTheme {
 						//die();
 					} else {
 						$error     = true;
-						$message[] = __( "Theme Submission Error!!", 'cbratingsystem' );
+						$message[] = __( "Theme Submission Error!!", 'cbratingsystem' ); //__('Something went wrong with the form CB_RATINGSYSTEM_PLUGIN_SLUG_NAMEGIN_SLUG_NAME);
 					}
 				}
 			} else {
 				$error     = true;
-				$message[] = __( "Theme Submission Error!!", 'cbratingsystem' );
+				$message[] = __( "Theme Submission Error!!", 'cbratingsystem' ); // __('Something went wrong wCB_RATINGSYSTEM_PLUGIN_SLUG_NAMEsion', CB_PLUGIN_SLUG_NAME);
 			}
 
 			if ( ( $error === false ) and ! empty( $settings ) ) {
 				update_option( 'cbratingsystem_theme_settings', maybe_serialize( $settings ) );
 
-				$message[] = __( "Theme Submitted successfully", 'successfully Saved', 'cbratingsystem');
+				$message[] = __( "Theme Submitted successfully", 'successfully Saved', cbratingsystem);
 			} elseif ( ( $error === true ) and empty( $message ) ) {
 				$message[] = __( "Theme Submission Error!!", 'cbratingsystem' ); //CB_RATINGSYSTEM_PLUGIN_SLUG_NAMEwrong with the form submission', CB_PLUGIN_SLUG_NAME);
 			}
@@ -74,137 +72,125 @@ class CBRatingSystemTheme {
 			//echo '<pre>'; print_r(implode('<br />', $message)); echo '</pre>'; die();
 		}
 		?>
-	    <div class="wrap">
 
-		    <div id="icon-options-general" class="icon32"></div>
-		    <h2><?php _e( "Codeboxr Rating System Theme Settings", 'cbratingsystem' ); ?></h2>
 
-		    <div id="poststuff">
+		<div class="wrap columns-2">
+			<div class="icon32 icon32_cbrp_admin icon32-cbrp-theme-settings" id="icon32-cbrp-theme-settings"><br></div>
+			<h2><?php _e( "Codeboxr Rating System Theme Settings", 'cbratingsystem' ); ?></h2>
 
-			    <div id="post-body" class="metabox-holder columns-2">
+			<div class="metabox-holder has-right-sidebar" id="poststuff">
 
-				    <!-- main content -->
-				    <div id="post-body-content">
+				<div class="messages <?php echo $class . ( ( $error === false ) ? ' status' : ' error' ); ?>"
+					<?php
+					if ( empty( $message ) ) {
+						echo "style=\"display:none\"";
+					}
+					?>>
+					<?php echo implode( '<br />', $message ); ?>
+				</div>
+				<div id="post-body" class="post-body">
+					<div id="post-body-content">
+						<div class="cbratingsystem-theme-settings cbratingsystem-admin-theme-settings" id="cbratingsystem-admin-theme-settings">
+							<!-- End of main Dashboard Div -->
+							<div class="postbox-container" id="postbox-container-1">
+								<div class="meta-box-sortables ui-sortable" id="normal-sortables">
+									<div class="postbox cbrarting_theme_settings" id="cbrarting_theme_settings">
+										<div title="Click to toggle" class="handlediv"><br></div>
+										<h3 class="hndle">
+											<span><?php _e( "Setting option", 'cbratingsystem' ); ?></span></h3>
 
-					    <div class="meta-box-sortables ui-sortable">
+										<div class="inside">
+											<div class="table table_content">
+												<div class="cbrp_theme_settings_form_wrapper" id="cbrp_theme_settings_form_wrapper">
+													<form name="cbrp_theme_settings_form" method="post" id="cbrp_theme_settings_form_wrapper">
+														<div class="">
+															<table>
+																<tr>
+																	<td style="width:20%;">
+																		<label for="ratingformthemeselection"><?php _e( "Choose Theme", 'cbratingsystem' ); ?></label>
+																	</td>
+																	<td>
+																		<div class="">
+																			<?php
+																			$themes = array(
+																				'0'        => __( "Choose Theme", 'cbratingsystem' ),
+																				'basic'    => __( "Basic Theme", 'cbratingsystem' ),
 
-						    <div class="postbox">
+																			);
+                                                                            $themes = apply_filters('cbratingsystem_theme_options',$themes);
 
-							    <h3><span><?php _e( "Theme Option", 'cbratingsystem' ); ?></span></h3>
-							    <div class="inside">
-								    <div class="messages <?php echo $class . ( ( $error === false ) ? ' status' : ' error' ); ?>"
-									    <?php
-									    if ( empty( $message ) ) {
-										    echo "style=\"display:none\"";
-									    }
-									    ?>>
-									    <?php echo implode( '<br />', $message ); ?>
-								    </div>
-								    <div class="table table_content">
-									    <div class="cbrp_theme_settings_form_wrapper" id="cbrp_theme_settings_form_wrapper">
-										    <form name="cbrp_theme_settings_form" method="post" id="cbrp_theme_settings_form_wrapper">
-											    <div class="">
-												    <table>
-													    <tr>
-														    <td style="width:20%;">
-															    <label for="ratingformthemeselection"><?php _e( "Choose Theme", 'cbratingsystem' ); ?></label>
-														    </td>
-														    <td>
-															    <div class="">
-																    <?php
-																    $themes = array(
-																	    '0'        => __( "Choose Theme", 'cbratingsystem' ),
-																	    'basic'    => __( "Basic Theme", 'cbratingsystem' ),
+																			$saved_theme_key = get_option( 'cbratingsystem_theme_key' );
+																			$saved_theme_settings = maybe_unserialize( get_option( 'cbratingsystem_theme_settings' ) );
 
-																    );
-																    $themes = apply_filters('cbratingsystem_theme_options',$themes);
+																			if ( ! is_string( $saved_theme_key ) ) {
+																				$saved_theme_key = 'basic';
+																			}
 
-																    $saved_theme_key = get_option( 'cbratingsystem_theme_key' );
-																    $saved_theme_settings = maybe_unserialize( get_option( 'cbratingsystem_theme_settings' ) );
+																			//echo '<pre>'; print_r($saved_theme_settings); echo '</pre>'; die();
 
-																    if ( ! is_string( $saved_theme_key ) ) {
-																	    $saved_theme_key = 'basic';
-																    }
+																			?>
+																			<select id="ratingformthemeselection" name="ratingFormTheme[theme]" class="">
+																				<?php
+																				foreach ( $themes as $theme_key => $theme_name ) :
+																					$selected = ( $theme_key == $saved_theme_key ) ? 'selected ' : '';
+																					?>
+																					<option <?php echo $selected; ?>value="<?php echo $theme_key; ?>"><?php echo $theme_name; ?></option>
+																				<?php
+																				endforeach;
+																				?>
+																			</select>
+																		</div>
+																	</td>
+																</tr>
+																<tr>
+																	<td style="width:20%;">
 
-																    //echo '<pre>'; print_r($saved_theme_settings); echo '</pre>'; die();
+																	</td>
+																	<td>
+                                                                        <?php
+                                                                            // added 29-9-14 for premium version codeboxr
+                                                                            $cb_post_theme_color =  isset($_POST['ratingFormTheme']) ?$post['theme_settings']['custom']['bg_color'] :'';
+                                                                            $cb_post_text_color  =  isset($_POST['ratingFormTheme']) ?$post['theme_settings']['custom']['text_color'] :'' ;
+                                                                            echo self::build_custom_themeoptions($cbthemesettings = array('saved_theme_settings' => $saved_theme_settings,'cb_post_theme_color' => $cb_post_theme_color,'cb_post_text_color' => $cb_post_text_color));
+                                                                            // no html here
+                                                                        ?>
 
-																    ?>
-																    <select id="ratingformthemeselection" name="ratingFormTheme[theme]" class="">
-																	    <?php
-																	    foreach ( $themes as $theme_key => $theme_name ) :
-																		    $selected = ( $theme_key == $saved_theme_key ) ? 'selected ' : '';
-																		    ?>
-																		    <option <?php echo $selected; ?>value="<?php echo $theme_key; ?>"><?php echo $theme_name; ?></option>
-																	    <?php
-																	    endforeach;
-																	    ?>
-																    </select>
-															    </div>
-														    </td>
-													    </tr>
-													    <tr>
-														    <td style="width:20%;">
+																	</td>
+																</tr>
+															</table>
 
-														    </td>
-														    <td>
-															    <?php
-															    // added 29-9-14 for premium version codeboxr
-															    $cb_post_theme_color =  isset($_POST['ratingFormTheme']) ?$post['theme_settings']['custom']['bg_color'] :'';
-															    $cb_post_text_color  =  isset($_POST['ratingFormTheme']) ?$post['theme_settings']['custom']['text_color'] :'' ;
-															    echo self::build_custom_themeoptions($cbthemesettings = array('saved_theme_settings' => $saved_theme_settings,'cb_post_theme_color' => $cb_post_theme_color,'cb_post_text_color' => $cb_post_text_color));
-															    // no html here
-															    ?>
+															<div class="description add_left_margin">If "<?php echo __( 'Choose Theme', 'cbratingsystem' ); ?>" is chosen, then automatically the "<?php echo __( 'Basic Theme', 'cbratingsystem' ); ?>" will be loaded.</div>
+														</div>
 
-														    </td>
-													    </tr>
-												    </table>
+														<div class="cbrp_theme_settings_submit">
+															<input class="button-primary" name="cbrp_theme_settings" type="submit" value="Save Theme Settings" />
+															<?php wp_nonce_field( 'cbrp_theme_settings_form_nonce_action', 'cbrp_theme_settings_form_nonce_field' ); ?>
+														</div>
+													</form>
+												</div>
 
-												    <div class="description add_left_margin">If "<?php echo __( 'Choose Theme', 'cbratingsystem' ); ?>" is chosen, then automatically the "<?php echo __( 'Basic Theme', 'cbratingsystem' ); ?>" will be loaded.</div>
-											    </div>
+											</div>
+											<br class="clear">
+										</div>
+									</div>
 
-											    <div class="cbrp_theme_settings_submit">
-												    <input class="button-primary" name="cbrp_theme_settings" type="submit" value="Save Theme Settings" />
-												    <?php wp_nonce_field( 'cbrp_theme_settings_form_nonce_action', 'cbrp_theme_settings_form_nonce_field' ); ?>
-											    </div>
-										    </form>
-									    </div>
+								</div>
+							</div>
 
-								    </div>
-							    </div> <!-- .inside -->
+							<div class="postbox-container" id="postbox-container-2">
 
-						    </div> <!-- .postbox -->
+							</div>
+							<!-- End of main Dashboard Div -->
+						</div>
+					</div>
+				</div>
 
-					    </div> <!-- .meta-box-sortables .ui-sortable -->
-
-				    </div> <!-- post-body-content -->
-
-				    <!-- sidebar -->
-				    <div id="postbox-container-1" class="postbox-container">
-
-					    <div class="meta-box-sortables">
-
-						    <div class="postbox">
-
-							    <h3><span><?php _e('Plugin Information','cbratingsystem'); ?></span></h3>
-							    <div class="inside">
-								    <?php
-								    define( 'CB_RATINGSYSTEM_SUPPORT_VIDEO_DISPLAY', true );
-								    require( CB_RATINGSYSTEM_PATH . '/cb-sidebar.php' );
-								    ?>
-							    </div> <!-- .inside -->
-
-						    </div> <!-- .postbox -->
-
-					    </div> <!-- .meta-box-sortables -->
-
-				    </div> <!-- #postbox-container-1 .postbox-container -->
-
-			    </div> <!-- #post-body .metabox-holder .columns-2 -->
-
-			    <br class="clear">
-		    </div> <!-- #poststuff -->
-
-	    </div> <!-- .wrap -->
+				<?php
+				define( 'CB_RATINGSYSTEM_SUPPORT_VIDEO_DISPLAY', true );
+				require( CB_RATINGSYSTEM_PATH . '/cb-sidebar.php' );
+				?>
+			</div>
+		</div>
 
 	<?php
 	}
@@ -247,10 +233,10 @@ class CBRatingSystemTheme {
                             .readonly_criteria_wrapper_' . $saved_theme_key . '_theme, .criteria_star_hint_' . $saved_theme_key . '_theme, .criteria_label_wrapper_' . $saved_theme_key . '_theme {
                                 color: ' . $saved_theme_settings['theme_settings']['custom']['text_color'] . ';
                             }
-                            .cbrp_container_' . $saved_theme_key . '_theme .cbratingsystem-tabswitch {
+                            .cbrp_container_' . $saved_theme_key . '_theme .switch-tab {
                                 color: ' . $saved_theme_settings['theme_settings']['custom']['text_color'] . ';
                             }
-                            .cbrp_container_' . $saved_theme_key . '_theme .cbratingsystem-tabswitch:hover {
+                            .cbrp_container_' . $saved_theme_key . '_theme .switch-tab:hover {
                                 color: #000000;
                             }
                             .cbrp_container_' . $saved_theme_key . '_theme .form-required {

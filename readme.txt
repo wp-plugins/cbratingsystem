@@ -3,8 +3,8 @@ Contributors: manchumahara, codeboxr
 Donate link: http://codeboxr.com
 Tags: widget,shortcodes,rating,comment,reviews, multi criteria
 Requires at least: 3.0
-Tested up to: 4.1
-Stable tag: 3.3
+Tested up to: 4.0
+Stable tag: 3.2.25
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,10 +44,6 @@ Main feature of pro versions:
 To buy the pro version please check here http://codeboxr.com/installation-multi-criteria-flexible-rating-system-for-wordpress.html
 
 == Installation ==
-
-Please note: if you are updating to 3.3 from any other version you need to reset the rating tables. Go to Rating System from
-left menu, then tools -> click reset all. It will give a fresh rating system that works. We needed to change the database tables for this plugin and changed a log
-and couldn't keep the previous data to move for any better future of this plugin.
 
 How to install the plugin and get it working.
 
@@ -110,12 +106,7 @@ Please visit our site for detail tutorial step by step http://codeboxr.com/insta
 
 
 == Changelog ==
-= 3.3.1 =
-* bug fix for  extra field not array
-= 3.3.0 =
-* 50% revamp of code, please go to tools of this plugin and reset
-= 3.2.26 =
-* Bug fix
+
 = 3.2.24 =
 * Maintenance Release
 

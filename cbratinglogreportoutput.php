@@ -18,14 +18,10 @@ class CBratinglogreportoutput extends CBRatingSystemAdmin {
      */
     public static function averageReportPageOutput() {
 
-        global $wpdb;
-
         $path   = admin_url( 'admin.php?page=rating_avg_reports' );
         $sort   = (isset($_GET['sort']) &&  $_GET['sort'] == 'asc' ) ? 'asc' : 'desc';
         $sortby = ( ! empty( $_GET['sortby'] ) and (  $sort ) ) ? $_GET['sortby'] : 'form_id';
         $summaryData = CBRatingSystemData::get_ratings_summary( array(), $sortby, $sort, true );
-
-
         ?>
         <div class="wrap columns-2">
             <div class="icon32 icon32_cbrp_admin icon32-cbrp-rating-avg" id="icon32-cbrp-rating-avg"><br></div>
@@ -54,35 +50,43 @@ class CBratinglogreportoutput extends CBRatingSystemAdmin {
 
                                             $userRoleLabels = CBRatingSystem::user_role_label();
 
+                                           /* if ( ! empty( $rows->custom_user_rating_summary ) ) {
+                                               // var_dump($rows->custom_user_rating_summary);
+                                                foreach ( $rows->custom_user_rating_summary as $userType => $avg ) {
+                                                 //  echo '<pre>'; print_r($userRoleLabels[$userType]); echo '</pre>'; die();
+                                                    $log_average .= '</br>' . $userRoleLabels[$userType] . ' : ';
+                                                    //var_dump($avg );
+                                                    $log_average .= ( ( (float) $avg > 0.0 ) ? "<strong>" . ( number_format( ( ( (float) $avg / 100 ) * 5 ), 2 ) ) . " out of 5</strong>" : '-' );
+                                                }
+                                            }*/
+
                                             $log_ratingCount = $rows->per_post_rating_count;
                                             $log_id          = $rows->id;
 
                                             $table   = CBRatingSystemData::get_user_ratings_table_name();
-
+                                            global $wpdb;
                                             $sql     = $wpdb->prepare( "SELECT id FROM $table WHERE post_id=%d AND form_id=%d ", $log_post_id,$log_form_id );
                                             $results = $wpdb->get_results( $sql,ARRAY_A);
                                             $results =(maybe_unserialize($results[0]['id']));
 
-                                            if ( ! empty( $rows->per_criteria_rating_summary ) ) {
-                                                $log_criteria_rating = '<ul>';
-                                                foreach ( $rows->per_criteria_rating_summary as $cId => $criteria ) {
-                                                    $log_criteria_rating .= "<li>" . $criteria['label'] . ": <strong>" . ( number_format( ( $criteria['value'] / 100 ) * count( $criteria['stars'] ), 2 ) ) . " out of " . count( $criteria['stars'] ) . "</strong>";
+                                                if ( ! empty( $rows->per_criteria_rating_summary ) ) {
+                                                    $log_criteria_rating = '<ul>';
+                                                    foreach ( $rows->per_criteria_rating_summary as $cId => $criteria ) {
+                                                        $log_criteria_rating .= "<li>" . $criteria['label'] . ": <strong>" . ( number_format( ( $criteria['value'] / 100 ) * count( $criteria['stars'] ), 2 ) ) . " out of " . count( $criteria['stars'] ) . "</strong>";
+                                                    }
+                                                    $log_criteria_rating .= '</ul>';
+
+                                                } else {
+                                                    $log_criteria_rating = '-';
                                                 }
-                                                $log_criteria_rating .= '</ul>';
-
-                                            } else {
-                                                $log_criteria_rating = '-';
-                                            }
-
-                                            array_push(CBratinglogreportoutput::$cb_avg_comment_log_data, array('id_user_table'=> $results,'id'=> $log_id, 'rating_count'=> $log_ratingCount,'criteria_rating'  => $log_criteria_rating, 'post'=> $log_post_id, 'posttitle'=> $log_post_title, 'formid'   =>$log_form_id,'avgrating' =>$log_average ));
 
                                             ?>
                                         <?php
                                         else : //echo "<td colspan='7' align='center'>No Results Found</td>";
                                         endif;
+                                        array_push(CBratinglogreportoutput::$cb_avg_comment_log_data,array('id_user_table'=>$results,'id'=>$log_id,'rating_count'=>$log_ratingCount,'criteria_rating'  =>$log_criteria_rating,'post'=>$log_post_id,'posttitle'=>$log_post_title, 'formid'   =>$log_form_id,'avgrating' =>$log_average
 
-
-
+                                        ));
                                     endforeach; ?>
                                     <?php else : //echo "<td colspan='7' align='center'>No Results Found</td>";
                                         ?>
@@ -96,8 +100,7 @@ class CBratinglogreportoutput extends CBRatingSystemAdmin {
 
             </div>
         </div>
-        <?php
-        $list_table = new Cbratingavglog();
+        <?php $list_table = new Cbratingavglog();
         $list_table->prepare_items();
         ?>
         <form id="movies-filter" method="get">
@@ -229,8 +232,7 @@ class Cbratingavglog extends WP_List_Table{
 
                     }
                     $table_name  = CBRatingSystemData::get_user_ratings_summury_table_name();
-
-                    $sql         = "DELETE FROM $table_name WHERE id IN (" . implode( ',', $avgid ) . ")";
+                    $sql         = $wpdb->prepare( "DELETE FROM $table_name WHERE id IN (" . implode( ',', $avgid ) . ")", null );
                     $wpdb->query( $sql );
                    // global $wpdb;
 

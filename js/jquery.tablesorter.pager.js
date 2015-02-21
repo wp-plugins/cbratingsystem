@@ -1,7 +1,6 @@
 /*
  * tablesorter pager plugin
  * updated 10/28/2011
- * GPLv2 or later
  */
 
 (function ($) {

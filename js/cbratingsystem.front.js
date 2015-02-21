@@ -32,7 +32,7 @@ jQuery(document).ready(function ($) {
 		 * Text area character limit.
 		 * http://www.yourinspirationweb.com/en/jquery-tips-tricks-how-to-limit-characters-inside-a-textarea/
 		 */
-		$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .cbratingsystem_comment_box textarea').each(function () {
+		jQuery('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .comment_box textarea').each(function () {
 			var characters = ratingFormOptions.limit;
 			var resultSelector = ".comment_limit_text_form_" + ratingFormID + "_post_" + postID;
 			//console.log(ratingFormOptions);
@@ -78,12 +78,12 @@ jQuery(document).ready(function ($) {
 			var qvalue = {};
 			var userName = '';
 			var userEmail = '';
-			var buttonObject = $(this).parents('.cbrp-content-container');
-			var mainParent = $(this).parents('.cbrp-content-container');
+			var buttonObject = jQuery(this).parents('.cbrp-content-container');
+			var mainParent = jQuery(this).parents('.cbrp-content-container');
 
 
-			$('.cbrp_load_more_waiting_icon_form-' + ratingFormID + '_post-' + postID).show();
-			$(this).attr('disabled', 'disabled').addClass('disabled_cbrp_button');
+			jQuery('.cbrp_load_more_waiting_icon_form-' + ratingFormID + '_post-' + postID).show();
+			jQuery(this).attr('disabled', 'disabled').addClass('disabled_cbrp_button');
 
 			$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .ratingFormStatus').removeClass('error_message');
 
@@ -105,16 +105,16 @@ jQuery(document).ready(function ($) {
 						values[label_id + '_actualValue'] = value;
 						valuesCount++;
 
-						$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .criteria-id-wrapper-' + label_id).removeClass('cbratingsystem-error');
+						$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .criteria-id-wrapper-' + label_id).removeClass('error');
 					}
 				} else {
-					$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .criteria-id-wrapper-' + label_id).addClass('cbratingsystem-error');
+					$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .criteria-id-wrapper-' + label_id).addClass('error');
 				}
 			});
-            var hide_this_user_name = $('#cbratingsystem_hide_name_checkbox_field_' + ratingFormID + '_post_' + postID ).prop("checked");
+            var hide_this_user_name = jQuery('#cbratingsystem_hide_name_checkbox_field_' + ratingFormID + '_post_' + postID ).prop("checked");
           //  console.log(hide_this_user_name);return false;
 
-			$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' input[name^="question["]').each(function () {
+			jQuery('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' input[name^="question["]').each(function () {
 				var q_id = $(this).attr('data-q-id');
 				var nameAttr = $(this).attr('name');
 				var inputType = $(this).attr('type');
@@ -154,23 +154,23 @@ jQuery(document).ready(function ($) {
 			});
 
 			var commentValue = $('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' textarea[name="comment[' + ratingFormID + ']"]').val();
-            var comment_r = $('.cbrs_comment_textarea').attr('data-required');
+            var comment_r = jQuery('.comment_textarea').attr('data-required');
             if(comment_r == '1'){
                 if(commentValue.length == 0){
-                    jQuery('.cbrs_comment_textarea').addClass('cbratingsystem-error');
+                    jQuery('.comment_textarea').addClass('error');
                     questionError = true;
                 }
                 else{
-                    jQuery('.cbrs_comment_textarea').removeClass('cbratingsystem-error');
+                    jQuery('.comment_textarea').removeClass('error');
                     questionError = false;
                 }
             }
 
 			jQuery('input.required').each(function () {
-				var id          = jQuery(this).attr('id');
-				var q_id        = jQuery(this).attr('data-q-id');
-				var nameAttr    = jQuery(this).attr('name');
-				var inputType   = $(this).attr('type');
+				var id = jQuery(this).attr('id');
+				var q_id = jQuery(this).attr('data-q-id');
+				var nameAttr = jQuery(this).attr('name');
+				var inputType = $(this).attr('type');
 				var count = 0;
 				var ansCount = 0;
 
@@ -185,11 +185,11 @@ jQuery(document).ready(function ($) {
                             }
                         });
                         if(question_Checked == false){
-                            jQuery('label[for="question-form-' + ratingFormID + '-q-' + q_id + '"]').addClass('cbratingsystem-error');
+                            jQuery('label[for="question-form-' + ratingFormID + '-q-' + q_id + '"]').addClass('error');
                             questionError = true;
                         }
                         else{
-                            jQuery('label[for="question-form-' + ratingFormID + '-q-' + q_id + '"]').removeClass('cbratingsystem-error');
+                            jQuery('label[for="question-form-' + ratingFormID + '-q-' + q_id + '"]').removeClass('error');
                           //  questionError = true;
                         }
 					} else {
@@ -197,10 +197,10 @@ jQuery(document).ready(function ($) {
 						var varible = question[ratingFormID][q_id][inputType + '-' + q_id];
 
 						if ((varible == '') || (varible == undefined) || (varible == null)) {
-							jQuery('label[for="question-form-' + ratingFormID + '-q-' + q_id + '"]').addClass('cbratingsystem-error');
+							jQuery('label[for="question-form-' + ratingFormID + '-q-' + q_id + '"]').addClass('error');
 							questionError = true;
 						} else {
-							jQuery('label[for="question-form-' + ratingFormID + '-q-' + q_id + '"]').removeClass('cbratingsystem-error');
+							jQuery('label[for="question-form-' + ratingFormID + '-q-' + q_id + '"]').removeClass('error');
 						}
 					}
 				}
@@ -214,10 +214,10 @@ jQuery(document).ready(function ($) {
 				var id = jQuery(this).attr('id');
 
 				if (val.length == 0) {
-					mainParent.find('#' + id).addClass('cbratingsystem-error');
+					mainParent.find('#' + id).addClass('error');
 					questionError = true;
 				} else {
-					mainParent.find('#' + id).removeClass('cbratingsystem-error');
+					mainParent.find('#' + id).removeClass('error');
 					userName = val;
 				}
 			});
@@ -229,14 +229,14 @@ jQuery(document).ready(function ($) {
 				var id = jQuery(this).attr('id');
 
 				if (val.length == 0) {
-					mainParent.find('#' + id).addClass('cbratingsystem-error');
+					mainParent.find('#' + id).addClass('error');
 					questionError = true;
 				} else {
 					if (checkEmailValidity(val)) {
-						mainParent.find('#' + id).removeClass('cbratingsystem-error');
+						mainParent.find('#' + id).removeClass('error');
 						userEmail = val;
 					} else {
-						mainParent.find('#' + id).addClass('cbratingsystem-error');
+						mainParent.find('#' + id).addClass('error');
 						questionError = true;
 					}
 				}
@@ -261,19 +261,19 @@ jQuery(document).ready(function ($) {
 				}
 			} else if ((valuesCount === criteria) && (questionError === false)) {
 
-				var cbRatingData                    = {};
-				cbRatingData['rp_id']               = rp_id;
-				cbRatingData['cbrp_nonce']          = nonce;
-				cbRatingData['values']              = values;
-				cbRatingData['criteriaCount']       = criteriaCount;
-				cbRatingData['question']            = question;
-				cbRatingData['comment']             = commentValue;
-				cbRatingData['comment_limit']       = ratingFormOptions.limit;
-				cbRatingData['user_name']           = userName;
-				cbRatingData['user_email']          = userEmail;
-                cbRatingData['comment_status']      = cb_this_comment_status;
-                cbRatingData['comment_hash']        = cb_this_hash;
-                cbRatingData['buddypress_post']     = cb_this_buddypress_post;
+				var cbRatingData                = {};
+				cbRatingData['rp_id']           = rp_id;
+				cbRatingData['cbrp_nonce']      = nonce;
+				cbRatingData['values']          = values;
+				cbRatingData['criteriaCount']   = criteriaCount;
+				cbRatingData['question']        = question;
+				cbRatingData['comment']         = commentValue;
+				cbRatingData['comment_limit']   = ratingFormOptions.limit;
+				cbRatingData['user_name']       = userName;
+				cbRatingData['user_email']      = userEmail;
+                cbRatingData['comment_status']  = cb_this_comment_status;
+                cbRatingData['comment_hash']    = cb_this_hash;
+                cbRatingData['buddypress_post'] = cb_this_buddypress_post;
                 cbRatingData['hide_this_user_name'] = hide_this_user_name;
 
 
@@ -312,7 +312,7 @@ jQuery(document).ready(function ($) {
 										$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .ratingFormStatus').addClass('error_message');
 										//console.log("already rated");
 									} else {
-										$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .ratingFormStatus').removeClass('error_message').removeClass('cbratingsystem-error');
+										$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .ratingFormStatus').removeClass('error_message').removeClass('error');
 										$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .ratingFormStatus').addClass('cbrp_status');
 										$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .ratingFormStatus').text(window[varRatingFormName].thanks_msg);
 
@@ -353,7 +353,7 @@ jQuery(document).ready(function ($) {
 										$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .ratingFormStatus').html(parsedData.errorMessage);
 										$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .ratingFormStatus').addClass('error_message');
 									} else {
-										$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .ratingFormStatus').removeClass('error_message').removeClass('cbratingsystem-error');
+										$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .ratingFormStatus').removeClass('error_message').removeClass('error');
 										$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .ratingFormStatus').addClass('cbrp_status');
 										$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .ratingFormStatus').text(window[varRatingFormName].thanks_msg);
 									}
@@ -397,13 +397,14 @@ jQuery(document).ready(function ($) {
 				});
 			}
 		});
-
 		if (countcbipcheck > 0) {
-
+			//$('.cbrp-content-wprapper-form-'+ratingFormID+'-post-'+postID).children().hide();
+			// $('#cbrp-report').css("display:none");
+			//$('#cbrp-form').css("display:none");
 			$('.cbrp-rating-buffer-form-' + ratingFormID).hide();
 			$('.cbrp-switch-report-form-' + ratingFormID).show();
 		}
-		$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .cbratingsystem-tabswitch').click(function () {
+		$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .switch-tab').click(function () {
 			var showing_div_selector = $(this).attr('data-show-div');
 
 			$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID).children().hide();

@@ -9,11 +9,11 @@
 	color: #FFFFFF;
 }
 
-.cbrp_container_blueish_theme .cbratingsystem-tabswitch {
+.cbrp_container_blueish_theme .switch-tab {
 	color: #FFFFFF;
 }
 
-.cbrp_container_blueish_theme .cbratingsystem-tabswitch:hover {
+.cbrp_container_blueish_theme .switch-tab:hover {
 	color: #000000;
 }
 
@@ -57,11 +57,11 @@
 	color: #FFFFFF;
 }
 
-.cbrp_container_greenish_theme .cbratingsystem-tabswitch {
+.cbrp_container_greenish_theme .switch-tab {
 	color: #FFFFFF;
 }
 
-.cbrp_container_greenish_theme .cbratingsystem-tabswitch:hover {
+.cbrp_container_greenish_theme .switch-tab:hover {
 	color: #000000;
 }
 
