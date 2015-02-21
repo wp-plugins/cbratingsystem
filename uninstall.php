@@ -8,7 +8,7 @@
  * @link      http://codeboxr.com
  * @copyright 2014 codeboxr
  */
-//var_dump('i am here');exit;
+
 // If uninstall not called from WordPress, then exit
 require_once(plugin_dir_path(__FILE__) . "data.php");
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
@@ -30,4 +30,4 @@ if ( $checkuninstall == 1 ) {
     CBRatingSystemData::delete_options();
     CBRatingSystemData::delete_metakeys();
 }
-// @TODO: Define uninstall functionality here
+

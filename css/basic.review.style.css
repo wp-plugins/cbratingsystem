@@ -84,17 +84,18 @@
 	margin-left: 10px;
 }
 
-.load_more_button {
+.cbratingload_more_button {
 	background-color: #EEE;
 	color: #333333;
-	font-weight: bold;
+
 	text-align: center;
-	padding: 10px 0;
+	padding: 5px 0;
 	cursor: pointer;
+    margin: 10px 0;
 }
 
-.load_more_waiting_icon {
-	margin-top: -20px;
+.cbrating_waiting_icon {
+
 }
 
 .all-criteria-wrapper {
