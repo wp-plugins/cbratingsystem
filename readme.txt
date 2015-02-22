@@ -43,6 +43,9 @@ Main feature of pro versions:
 4. Guest email verify
 To buy the pro version please check here http://codeboxr.com/installation-multi-criteria-flexible-rating-system-for-wordpress.html
 
+Plugin Backend
+[youtube http://www.youtube.com/watch?v=Xa6M2uJnKVw]
+
 == Installation ==
 
 Please note: if you are updating to 3.3 from any other version you need to reset the rating tables. Go to Rating System from
