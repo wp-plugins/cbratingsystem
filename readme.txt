@@ -113,6 +113,8 @@ Please visit our site for detail tutorial step by step http://codeboxr.com/insta
 
 
 == Changelog ==
+= 3.3.3 =
+* Fixed php warning for woocommerce tab replace
 = 3.3.2 =
 * Review shown login improved for who is allowed and if shown own review
 * Ajax security updated
