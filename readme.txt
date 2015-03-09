@@ -113,6 +113,8 @@ Please visit our site for detail tutorial step by step http://codeboxr.com/insta
 
 
 == Changelog ==
+= 3.4.4 =
+* \' type character is taken care in comment
 = 3.3.3 =
 * Fixed php warning for woocommerce tab replace
 = 3.3.2 =

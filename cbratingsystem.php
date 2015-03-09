@@ -3,14 +3,14 @@
   Plugin Name: CBX Multi Criteria Rating System
   Plugin URI: http://codeboxr.com/product/multi-criteria-flexible-rating-system-for-wordpress
   Description: Rating system for Posts and Pages from CodeBoxr.
-  Version: 3.3.3
+  Version: 3.3.4
   Author: Codeboxr
   Author URI: mailto:info@codeboxr.com
  */
 defined( 'ABSPATH' ) OR exit;
 
 //define the constants
-define( 'CB_RATINGSYSTEM_PLUGIN_VERSION', '3.3.3' ); //need for checking verson
+define( 'CB_RATINGSYSTEM_PLUGIN_VERSION', '3.3.4' ); //need for checking verson
 define( 'CB_RATINGSYSTEM_FILE', __FILE__ );
 define( 'CB_RATINGSYSTEM_PLUGIN_BASE_NAME', plugin_basename( __FILE__ ) );
 define( 'CB_RATINGSYSTEM_PATH', WP_PLUGIN_DIR . '/' . basename( dirname( CB_RATINGSYSTEM_FILE ) ) );

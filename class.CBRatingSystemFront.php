@@ -1764,7 +1764,7 @@ class CBRatingSystemFront {
 											'</p>
 		                                    <a href="#" class="js_read_link read_more"> ...More</a>';
 									} else {
-										$comment_output = '<p class="comment">' . $comment['summury'] . '</p>';
+										$comment_output = '<p class="comment">' . stripslashes($comment['summury']) . '</p>';
 									}
                                     if($reviewOptions['comment_status'] != 'approved'){
 

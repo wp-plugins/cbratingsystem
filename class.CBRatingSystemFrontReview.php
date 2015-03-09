@@ -472,7 +472,8 @@ class CBRatingSystemFrontReview extends CBRatingSystemFront {
 								$comment = $review->comment;
 
 
-								$comment_output = '<p class="comment">' . $comment. '</p>';
+								//$comment_output = '<p class="comment">' . htmlspecialchars($comment). '</p>';
+								$comment_output = '<p class="comment">' . stripslashes($comment). '</p>';
 
 								$mainContent .= '<div class="review_user_rating_comment_' . $theme_key . '_theme review_user_rating_comment">
                                            			 <strong>Comment : </strong> ' . $comment_output;
