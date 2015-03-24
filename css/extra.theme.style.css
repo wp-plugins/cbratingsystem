@@ -1,0 +1,95 @@
+/*  For "Blue-ish" Theme    */
+
+.cbrp_container_blueish_theme {
+	background: #363FB9;
+	color: #FFFFFF;
+}
+
+.readonly_criteria_wrapper_blueish_theme, .criteria_star_hint_blueish_theme, .criteria_label_wrapper_blueish_theme {
+	color: #FFFFFF;
+}
+
+.cbrp_container_blueish_theme .cbratingsystem-tabswitch {
+	color: #FFFFFF;
+}
+
+.cbrp_container_blueish_theme .cbratingsystem-tabswitch:hover {
+	color: #000000;
+}
+
+.cbrp_container_blueish_theme .form-required {
+	color: #FFFFFF;
+}
+
+.reviews_wrapper_blueish_theme {
+	background: #363FB9;
+	color: #FFFFFF;
+}
+
+.reviews_wrapper_blueish_theme .reviews_rating_blueish_theme:hover {
+	background: #363FB9;
+	color: #FFFFFF;
+}
+
+.reviews_wrapper_blueish_theme a, .reviews_wrapper_blueish_theme .cbrating_user_name a, .reviews_wrapper_blueish_theme .cbrating_user_name a .reviews_wrapper_blueish_theme .user_rate_time a {
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+.reviews_wrapper_blueish_theme a:hover, .reviews_wrapper_blueish_theme .cbrating_user_name a:hover, .reviews_wrapper_blueish_theme .user_rate_time a:hover {
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: underline;
+}
+
+.cbrp_container_blueish_theme .ratingFormStatus.error_message {
+	border-color: #FFFFFF;
+}
+
+/*  For "Green-ish" Theme    */
+
+.cbrp_container_greenish_theme {
+	background: #1F8A23;
+	color: #FFFFFF;
+}
+
+.readonly_criteria_wrapper_greenish_theme, .criteria_star_hint_greenish_theme, .criteria_label_wrapper_greenish_theme {
+	color: #FFFFFF;
+}
+
+.cbrp_container_greenish_theme .cbratingsystem-tabswitch {
+	color: #FFFFFF;
+}
+
+.cbrp_container_greenish_theme .cbratingsystem-tabswitch:hover {
+	color: #000000;
+}
+
+.cbrp_container_blueish_theme .form-required {
+	color: #FFFFFF;
+}
+
+.reviews_wrapper_greenish_theme {
+	background: #1F8A23;
+	color: #FFFFFF;
+}
+
+.reviews_wrapper_greenish_theme .reviews_rating_greenish_theme:hover {
+	background: #1F8A23;
+	color: #FFFFFF;
+}
+
+.reviews_wrapper_greenish_theme a, .reviews_wrapper_greenish_theme .cbrating_user_name a, .reviews_wrapper_greenish_theme .cbrating_user_name a .reviews_wrapper_greenish_theme .user_rate_time a {
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+.reviews_wrapper_greenish_theme a:hover, .reviews_wrapper_greenish_theme .cbrating_user_name a:hover, .reviews_wrapper_greenish_theme .user_rate_time a:hover {
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: underline;
+}
+
+.cbrp_container_greenish_theme .ratingFormStatus.error_message {
+	/*border-color: #FFFFFF;*/
+}

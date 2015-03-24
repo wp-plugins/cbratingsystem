@@ -1,0 +1,266 @@
+.cbrp_front_content {
+	width: 96%
+}
+
+h3#cbratingfrom_reviews_title {
+
+}
+
+.add_left_margin {
+	margin-left: 5px;
+}
+
+.cbrp-switch-report {
+	display: none;
+}
+
+.cbrp-average-report-message {
+	margin-bottom: 50px;
+}
+
+.cbrp-content-container {
+	border: 1px solid #CCCCCC;
+	display: inline-block;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	padding: 10px;
+	position: relative;
+	width: 100%;
+    font-size: 14px;
+    line-height: 18px;
+}
+
+.cbrp-content-container #cbrp-report {
+	position: absolute;
+	top: -1px;
+	right: -1px;
+}
+
+.cbrp-content-container #cbrp-form {
+	position: absolute;
+	top: -1px;
+	right: -1px;
+}
+
+.criteria-wrapper, .readonly-criteria-wrapper {
+	color: #7C7C7C;
+	float: left;
+	font-size: 14px;
+    height: 80px;
+
+	/*
+
+	margin-bottom: 10px;
+	margin-top: 15px;
+	margin: 0 0 10px 0;
+	width: 128px;
+	*/
+
+	margin: 0 10px
+}
+
+.cbratingsystem-tabswitch {
+	/* background-color: #E6E6E6;
+	background-image: -moz-linear-gradient(center top , #F4F4F4, #E6E6E6);
+	*/
+	background-repeat: repeat-x;
+	border: 1px solid #D2D2D2;
+
+    -webkit-border-radius: 3px;
+	-webkit-border-top-right-radius: 0;
+	-moz-border-radius: 3px;
+	-moz-border-radius-topright: 0;
+	border-radius: 3px;
+	border-top-right-radius: 0;
+
+
+	/*box-shadow: 0 1px 2px rgba(64, 64, 64, 0.1);*/
+
+	color: #7C7C7C;
+
+	font-weight: normal;
+    font-size: 14px;
+
+	float: right;
+	cursor: pointer;
+
+    padding: 3px 10px;
+}
+
+.cbratingsystem-tabswitch:hover {
+	background-color: #EBEBEB;
+	/*background-image: -moz-linear-gradient(center top, #F9F9F9, #EBEBEB);*/
+	background-repeat: repeat-x;
+	color: #5E5E5E;
+	cursor: pointer;
+	/*text-decoration: underline;*/
+}
+
+.readonly-criteria-average-label-form {
+	display: block;
+	margin-top: 20px;
+}
+
+.criteria-label-wrapper {
+	margin-bottom: 3px;
+}
+
+.cbratingsystem_comment_box {
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+.cbrs_comment_textarea{
+    font-size: 12px; line-height: 16px;
+}
+.item-question {
+	padding: 5px;
+}
+
+.question_box {
+	margin: 8px 2px 2px 2px;
+}
+
+.question_box label {
+	display: inline;
+}
+
+.question_box input[type="checkbox"],
+.question_box input[type="radio"] {
+	margin: 0px;
+}
+
+.question_box input[type="checkbox"].add_left_margin,
+.question_box input[type="radio"].add_left_margin {
+	margin-left: 20px;
+}
+
+.marker, .form-required {
+	color: red;
+	margin: 2px;
+}
+
+.cbratingsystem-error {
+	border: 1px solid red;
+}
+
+.comment_red_alert {
+	color: red;
+}
+
+.review_rating .criteria-wrapper {
+	overflow: auto;
+	width: 100%;
+}
+
+.review_rating .criteria-wrapper div {
+	float: left;
+	margin-right: 10px;
+}
+
+.criteria-star-wrapper {
+	display: inline;
+}
+
+.criteria-star-wrapper img {
+	display: inline;
+}
+
+.disable_field {
+	display: none;
+}
+
+.cbrp-button {
+	background-repeat: repeat-x;
+	border: 1px solid #D2D2D2;
+	border-radius: 3px 0 3px 3px;
+
+	/*box-shadow: 0 1px 2px rgba(64, 64, 64, 0.1);*/
+	/*color: #373737;*/
+	cursor: pointer;
+	/*font: 15px "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+
+	margin-top: 10px;
+	float: left;
+}
+
+.ratingFormStatus.error_message {
+	background-position: 8px 8px;
+	background-repeat: no-repeat;
+	border: 1px solid;
+	margin: 6px 0;
+	padding:5px;
+	border-color: #ED541D;
+	/*background-image: url(../images/message-24-error.png);*/
+}
+
+.cbrp_load_more_waiting_icon {
+	left: -7px;
+	margin-top: 10px;
+	padding: 7px 7px 8px;
+	position: absolute;
+	text-align: center;
+	width: 22%;
+}
+
+.submit_button_wrapper {
+	overflow: auto;
+}
+
+.disabled_cbrp_button {
+	color: #CCCCCC !important;
+}
+
+.ratingFormStatus {
+
+}
+
+.cbrp_status {
+	background: url(../images/message-24-ok.png);
+	border-color: #BE7;
+	background-position: 8px 8px;
+	background-repeat: no-repeat;
+	border: 1px solid;
+	margin: 6px 0;
+	padding: 10px 10px 10px 50px;
+}
+
+.criteria-listings .user_info {
+	margin: 10px 0;
+}
+
+.criteria-listings .user_info .user_name,
+.criteria-listings .user_info .user_email {
+
+	float: left;
+	width: 50%;
+}
+
+.criteria-listings .user_info .user_name input[type="text"],
+.criteria-listings .user_info .user_email input[type="text"] {
+
+	width: 90%;
+}
+
+.criteria-listings .user_info .user_name input[type="text"].error,
+.criteria-listings .user_info .user_email input[type="text"].error {
+
+	border: 1px solid #FF0000;
+	color: #FF0000;
+}
+
+.criteria-listings .user_info .user_name {
+
+}
+
+.criteria-listings .user_info .user_name input[type="text"] {
+
+}
+
+.criteria-listings .user_info .user_email {
+
+}
+
+.criteria-listings .user_info .user_email input[type="text"] {
+
+}
+
