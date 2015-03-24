@@ -1274,7 +1274,7 @@ class CBRatingSystemFront {
 						if ( strlen( $comment ) <= $returnedData['comment_limit'] ) {
 							$insertArray['comment'] = $comment;
 						} elseif ( strlen( $comment ) > $returnedData['comment_limit'] ) {
-							$insertArray['comment'] = substr( $comment, 0, - ( $returnedData['comment_limit'] ) );
+							$insertArray['comment'] = substr( $comment, 0,  intval($returnedData['comment_limit'])  );
 						}
 
 						if ( ! is_user_logged_in() ) {
@@ -1753,10 +1753,13 @@ class CBRatingSystemFront {
 						$mainContent .= '    </div>
                                         	<div class="clear" style="clear:both;"></div>';
 
-						            // Comment Display part
-									if ( ! empty( $review->comment ) and is_string( $review->comment ) ) {
-										$comment = CBRatingSystemFunctions :: text_summary_mapper( $review->comment );
-									if ( is_array( $comment ) and ! empty( $comment['summury'] ) and isset( $comment['rest'] ) ) {
+						        // Comment Display part
+								if ( ! empty( $review->comment ) and is_string( $review->comment ) ) {
+
+									$comment = CBRatingSystemFunctions :: text_summary_mapper( $review->comment );
+
+									/*
+									if ( is_array( $comment ) && ! empty( $comment['summury'] ) && isset( $comment['rest'] ) ) {
 										$comment_output = ' <p class="comment">
 		                                                    ' . stripslashes( $comment['summury'] ) .
 											( ! empty( $comment['rest'] ) ?
@@ -1766,6 +1769,12 @@ class CBRatingSystemFront {
 									} else {
 										$comment_output = '<p class="comment">' . stripslashes($comment['summury']) . '</p>';
 									}
+									*/
+
+									$comment_output = '<p class="comment">' . stripslashes($review->comment) . '</p>';
+
+
+
                                     if($reviewOptions['comment_status'] != 'approved'){
 
                                         if($reviewOptions['comment_status'] == 'unverified'){

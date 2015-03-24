@@ -107,6 +107,32 @@ jQuery(document).ready(function ($) {
 
 		$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .cbrp-button-form-' + ratingFormID).click(function (event) {
 
+            /*
+            //this is not used.
+            var entityMap = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': '&quot;',
+                "'": '&#39;',
+                "/": '&#x2F;'
+            };
+
+            function escapeHtml(string) {
+                return String(string).replace(/[&<>"'\/]/g, function (s) {
+                    return entityMap[s];
+                });
+            }
+             */
+
+            //var whiteRe = /\s*/;
+            //var spaceRe = /\s+/;
+            //var equalsRe = /\s*=/;
+            //var curlyRe = /\s*\}/;
+            //var tagRe = /#|\^|\/|>|\{|&|=|!/;
+
+
+
             event.preventDefault();
             var cb_this_comment_status = $(this).attr('data-comment-status');
             var cb_this_buddypress_post = $(this).attr('data-buddypress-post');
@@ -202,6 +228,10 @@ jQuery(document).ready(function ($) {
 			});
 
 			var commentValue = $('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' textarea[name="comment[' + ratingFormID + ']"]').val();
+
+            //console.log(commentValue);
+
+
             var comment_r = $('.cbrs_comment_textarea').attr('data-required');
             if(comment_r == '1'){
                 if(commentValue.length == 0){

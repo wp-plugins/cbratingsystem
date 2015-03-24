@@ -198,7 +198,7 @@ class CBRatingSystemAdminReport extends CBRatingSystemAdmin {
 								}
 
 								//$log_comment        = ( $rows->comment ) ? CBRatingSystemFunctions :: text_summary_mapper( $rows->comment ) : '-';
-								$log_comment        = ( $rows->comment ) ? $rows->comment : '-';
+								$log_comment        = ( $rows->comment ) ? stripslashes($rows->comment) : '-';
 								$log_comment_status = $rows->comment_status;
 
 								$log_date = date( 'M d, Y @ H:m', $rows->created );

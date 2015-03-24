@@ -4,7 +4,7 @@ Donate link: http://codeboxr.com
 Tags: widget,shortcodes,rating,comment,reviews, multi criteria
 Requires at least: 3.0
 Tested up to: 4.1.1
-Stable tag: 3.3.3
+Stable tag: 3.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -113,7 +113,11 @@ Please visit our site for detail tutorial step by step http://codeboxr.com/insta
 
 
 == Changelog ==
-= 3.4.4 =
+= 3.3.5 =
+* While submitting review if comment char limit crossed the allowed size then it was showing comment cut wrong
+* No more read more link in ajax comment preview
+* Added stripslashes for user rating logs in admin
+= 3.3.4 =
 * \' type character is taken care in comment
 = 3.3.3 =
 * Fixed php warning for woocommerce tab replace
