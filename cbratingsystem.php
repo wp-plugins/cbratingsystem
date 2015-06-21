@@ -1,16 +1,16 @@
 <?php
 /*
   Plugin Name: CBX Multi Criteria Rating System
-  Plugin URI: http://codeboxr.com/product/multi-criteria-flexible-rating-system-for-wordpress
-  Description: Rating system for Posts and Pages from CodeBoxr.
-  Version: 3.3.5
-  Author: Codeboxr
-  Author URI: mailto:info@codeboxr.com
+  Plugin URI: http://wpboxr.com/product/multi-criteria-flexible-rating-system-for-wordpress
+  Description: Rating system for Posts and Pages from WPBoxr.
+  Version: 3.3.7
+  Author: WPBoxr Team
+  Author URI: mailto:info@wpboxr.com
  */
 defined( 'ABSPATH' ) OR exit;
 
 //define the constants
-define( 'CB_RATINGSYSTEM_PLUGIN_VERSION', '3.3.5' ); //need for checking verson
+define( 'CB_RATINGSYSTEM_PLUGIN_VERSION', '3.3.7' ); //need for checking verson
 define( 'CB_RATINGSYSTEM_FILE', __FILE__ );
 define( 'CB_RATINGSYSTEM_PLUGIN_BASE_NAME', plugin_basename( __FILE__ ) );
 define( 'CB_RATINGSYSTEM_PATH', WP_PLUGIN_DIR . '/' . basename( dirname( CB_RATINGSYSTEM_FILE ) ) );
@@ -468,8 +468,8 @@ class CBRatingSystem {
 			array(
 				'post_ids'     => '',
 				'form_id'      => '',
-				'show_title'   => 0, // set the default theme
-				'show_form_id' => 0, //if post id missing then take from loop
+				'show_title'   => 0,
+				'show_form_id' => 0,
 				'show_text'    => 0,
 				'show_star'    => 1,
 				'show_single'  => 0,
@@ -477,14 +477,16 @@ class CBRatingSystem {
 			), $atts
 		);
 
-		if(intval($options['post_ids']) == 0 )
+
+
+	    if(intval($options['post_ids']) == 0 )
 			$options['post_ids'] = $post->ID;
 
 
 		if(intval($options['form_id']) == 0)
 			$options['form_id'] = self::get_default_ratingFormId();
 
-		//$options['form_id'] = apply_filters('rating_form_array', $options['form_id']);
+
 
 		$option = array( 'post_id' => explode( ",", $options['post_ids'] ), 'form_id' => array(intval($options['form_id'])));
 
@@ -925,7 +927,7 @@ class CBRatingSystem {
 		// 9 default extra fields  //note review field is now separeated
 		$default_extra_fields = array(
 			'view_allowed_users'            => array(
-				'label'                 => __('Allowed User Roles Who Can View Rating','cbratingsytem'),
+				'label'                 => __('Allowed User Roles Who Can View Rating','cbratingsystem'),
 				'desc'                  => __( 'Which user group can view rating', 'cbratingsystem' ),
 				'type'                  => 'multiselect',
 				'user_types'            => true,
@@ -939,7 +941,7 @@ class CBRatingSystem {
 			), //view allowed user
 
 			'comment_view_allowed_users'        => array(
-				'label'                 => __('Allowed User Roles Who Can View Rating Review','cbratingsytem'),
+				'label'                 => __('Allowed User Roles Who Can View Rating Review','cbratingsystem'),
 				'desc'                  => __( 'Which user group can view rating', 'cbratingsystem' ),
 				'type'                  => 'multiselect',
 				'user_types'            => true,
@@ -953,7 +955,7 @@ class CBRatingSystem {
 			),//review view allowed user
 
 			'comment_moderation_users'          => array(
-				'label'                 => __('Enable Rating Moderation for User Group','cbratingsytem'),
+				'label'                 => __('Enable Rating Moderation for User Group','cbratingsystem'),
 				'desc'                  => __( 'Which user groups comments will be reviewed.', 'cbratingsystem' ),
 				'type'                  => 'multiselect',
 				'user_types'            => true,
@@ -1101,7 +1103,7 @@ class CBRatingSystem {
 			),  // create the form but will be active or inactive
 
 			'post_types'        =>  array(
-				'label'                 => __('Post Type Selection','cbratingsytem'),
+				'label'                 => __('Post Type Selection','cbratingsystem'),
 				'desc'                  => __( 'This form will work for the selected post types', 'cbratingsystem' ),
 				'type'                  => 'multiselect',
 				'multiple'              => true,
@@ -1183,7 +1185,7 @@ class CBRatingSystem {
 				)
 			), //enable disable shortcode
 			'logging_method'    => array(
-										'label'                 => __('Loggin Method','cbratingsytem'),
+										'label'                 => __('Loggin Method','cbratingsystem'),
 										'desc'                  => __( 'Log user rating by ip or cookie or both to protect multiple rating, useful for guest rating', 'cardselectbox' ),
 										'type'                  => 'multiselect',
 										'multiple'              => 'yes',
@@ -1201,7 +1203,7 @@ class CBRatingSystem {
 										),  // Logging method
 
 			'allowed_users'     =>  array(
-				'label'                 => __('Allowed User Roles Who Can Rate','cbratingsytem'),
+				'label'                 => __('Allowed User Roles Who Can Rate','cbratingsystem'),
 				'desc'                  => __( 'Which user group can rate article with this Rating Form', 'cbratingsystem' ),
 				'type'                  => 'multiselect',
 				'user_types'            => true,
@@ -1214,7 +1216,7 @@ class CBRatingSystem {
 			),
 
 			'editor_group'      => array(
-				'label'                 => __('Rating Editor User Group','cbratingsytem'),
+				'label'                 => __('Rating Editor User Group','cbratingsystem'),
 				'desc'                  => __( 'Which group of user will be Rating Editor', 'cbratingsystem' ),
 				'type'                  => 'multiselect',
 				'user_types'            => true,
@@ -1552,22 +1554,35 @@ class CBRatingSystem {
 	 * @return string
 	 */
 	public  static function standalone_singlePost_rating_summary( $option, $show_title = 0, $show_form_id = 0, $show_text = 0, $show_star = 1, $show_single = 0 , $text_label = '') {
-//		echo '<pre>';
-//		print_r($option);
-//		echo '</pre>';
+
 
 		CBRatingSystem::load_scripts_and_styles();
 
 		if($option == NULL) return '';
 
+
+
 		$text_label    = ($text_label == '')? __('Rating: ','cbratingsystem') : $text_label;
 
-		$post_ids      = ( (empty( $option['post_id']  ) || !is_array($option['post_id']) || (sizeof($option['post_id']  > 0)  ) ) ? array(get_the_ID()) : $option['post_id'] );
-		$form_ids      = ( (empty( $option['form_id']  ) || !is_array($option['form_id']) || (sizeof($option['form_id']  > 0)  ) )? array(self::get_default_ratingFormId()) : $option['form_id'] );
+		$post_ids      = ( !isset( $option['post_id']) || !is_array($option['post_id']) || (sizeof($option['post_id'])  == 0)) ? array(get_the_ID()) : $option['post_id'];
+		$form_ids      = ( !isset( $option['form_id']) || !is_array($option['form_id']) || (sizeof($option['form_id'])  == 0))? array(self::get_default_ratingFormId()) : $option['form_id'];
+
+		//$post_ids        = is_array($post_ids)
 
 		$rating_smmary = array( 'post' => array() );
 		$show = '';
-		if ( $show_single == 1 ) {
+
+		/*echo '<pre>';
+		print_r($option);
+		echo '</pre>';*/
+
+		//var_dump($form_ids);
+
+
+		//var_dump($show_single);
+
+		if ( $show_single == 1 || sizeof($post_ids) == 1 ) {
+		//if ( $show_single == 1 ) {
 			//show only for first item
 			$option['post_id'] = array($post_ids[0]);
 			$option['form_id'] = array($form_ids[0]);
@@ -1641,11 +1656,11 @@ class CBRatingSystem {
 					$option['form_id']   	= $form_ids;
 					$option['post_id'] 		= array($post_id);
 
-//					echo '<pre>';
-//					print_r($option);
-//					echo '</pre>';
+
 
 					$average_rating = CBRatingSystemData::get_ratings_summary( $option );
+
+
 
 					if(!sizeof($average_rating)){
 						$average_rating['form_id'] 					= $form_ids[0];

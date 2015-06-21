@@ -298,10 +298,11 @@ class CBRatingSystemFront {
                                         }
                                             $display .='</div>';//end of <div class="criteria-container">
                                             $display .= '<div class="clear" style="clear:both"></div>
-                                                                <div class="rating-average-label-form-' . $ratingFormArray['id'] . '-postid-' . $post_id . ' readonly_criteria_average_label_form_' . $theme_key . '_theme readonly-criteria-average-label-form rating-average-label-form-' . $ratingFormArray['id'] . '">
+                                                                <div  class="rating-average-label-form-' . $ratingFormArray['id'] . '-postid-' . $post_id . ' readonly_criteria_average_label_form_' . $theme_key . '_theme readonly-criteria-average-label-form rating-average-label-form-' . $ratingFormArray['id'] . '" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
                                                                     <span>' . __( 'Total Avg Rating', 'cbratingsystem' ) . ': </span>
-                                                                    <span class="rating">' . ( number_format( ( $perPostAverageRating / 100 ) * 5, 2 ) ) . '/5' . '</span>
-                                                                    <span class="total_rates">  ' . __( 'based on', 'cbratingsystem' ) . ' <span class="total_rates_count">' . ( ! empty( $avgRatingData[0]['per_post_rating_count'] ) ? (integer) $avgRatingData[0]['per_post_rating_count'] : '0' ) . '</span> rating(s) </span>
+                                                                    <span class="rating" itemprop="ratingValue">'.( number_format( ( $perPostAverageRating / 100 ) * 5, 2 ) ).'</span> out of
+																    <span itemprop="bestRating">5</span> '.__('with','cbratingsystem').'
+                                                                    <span  class="total_rates">  ' . __( 'based on', 'cbratingsystem' ) . ' <span class="total_rates_count" itemprop="ratingCount">' . ( ! empty( $avgRatingData[0]['per_post_rating_count'] ) ? (integer) $avgRatingData[0]['per_post_rating_count'] : '0' ) . '</span> rating(s) </span>
                                                                 </div>';
 
                                     $display .='</div>';//end of  <div class="allUser_criteria user_criteria">
@@ -672,10 +673,14 @@ class CBRatingSystemFront {
 
 					                 $display.='</div>';// end of criteria-container
 					                 $display .= '<div class="clear" style="clear:both"></div>
-			                                <div class="rating-average-label-form-' . $ratingFormArray['id'] . '-postid-' . $post_id . ' readonly_criteria_average_label_form_' . $theme_key . '_theme readonly-criteria-average-label-form rating-average-label-form-' . $ratingFormArray['id'] . '">
+			                                <div class="rating-average-label-form-' . $ratingFormArray['id'] . '-postid-' . $post_id . ' readonly_criteria_average_label_form_' . $theme_key . '_theme readonly-criteria-average-label-form rating-average-label-form-' . $ratingFormArray['id'] . '" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
 			                                    <span>' . __( 'Total Avg Rating', 'cbratingsystem' ) . ': </span>
+                                                <span class="rating" itemprop="ratingValue">'.( number_format( ( $perPostAverageRating / 100 ) * 5, 2 ) ).'</span> out of
+											    <span itemprop="bestRating">5</span> '.__('with','cbratingsystem').'
+                                                <span  class="total_rates">  ' . __( 'based on', 'cbratingsystem' ) . ' <span class="total_rates_count" itemprop="ratingCount">' . ( ! empty( $avgRatingData[0]['per_post_rating_count'] ) ? (integer) $avgRatingData[0]['per_post_rating_count'] : '0' ) . '</span> rating(s) </span>
+			                                    <!--span>' . __( 'Total Avg Rating', 'cbratingsystem' ) . ': </span>
 			                                    <span class="rating">' . ( number_format( ( $perPostAverageRating / 100 ) * 5, 2 ) ) . '/5' . '</span>
-			                                    <span class="total_rates">  ' . __( 'based on', 'cbratingsystem' ) . ' <span class="total_rates_count">' . ( ! empty( $avgRatingData[0]['per_post_rating_count'] ) ? (integer) $avgRatingData[0]['per_post_rating_count'] : '0' ) . '</span> rating(s) </span>
+			                                    <span class="total_rates">  ' . __( 'based on', 'cbratingsystem' ) . ' <span class="total_rates_count">' . ( ! empty( $avgRatingData[0]['per_post_rating_count'] ) ? (integer) $avgRatingData[0]['per_post_rating_count'] : '0' ) . '</span> rating(s) </span-->
 			                                </div>';
 					                    
 					                    
@@ -744,10 +749,11 @@ class CBRatingSystemFront {
 				                        $display .= ' </div>';	//end of editor critaria_container
 
 
+					                    //editor rating
 										$display .= '
 
 				                                <div class="clear" style="clear:both"></div>
-				                                <div class="editor-rating-average-label-form-' . $ratingFormArray['id'] . '-postid-' . $post_id . ' readonly_criteria_average_label_form_' . $theme_key . '_theme readonly-criteria-average-label-form editor-rating-average-label-form-' . $ratingFormArray['id'] . '">
+				                                <div class="editor-rating-average-label-form-' . $ratingFormArray['id'] . '-postid-' . $post_id . ' readonly_criteria_average_label_form_' . $theme_key . '_theme readonly-criteria-average-label-form editor-rating-average-label-form-' . $ratingFormArray['id'] . '"  >
 				                                    <span>' . __( 'Total Avg Rating', 'cbratingsystem' ) . ': </span>
 				                                    <span class="rating">' . ( number_format( ( $customPerPostAverageRating['editor'] / 100 ) * 5, 2 ) ) . '/5' . '</span>
 				                                    <span class="total_rates"> ' . __( 'based on', 'cbratingsystem' ) . '<span class="total_rates_count">' . ( ! empty( $customPerPostRateCount['editor'] ) ? (integer) $customPerPostRateCount['editor'] : '0' ) . '</span> rating(s) </span>
@@ -1003,10 +1009,14 @@ class CBRatingSystemFront {
 				}
 
 				$display .= '</div><div class="clear" style="clear:both"></div>
-                                <div class="rating-average-label-form-' . $ratingFormArray['id'] . '-postid-' . $post_id . ' readonly_criteria_average_label_form_' . $theme_key . '_theme readonly-criteria-average-label-form rating-average-label-form-' . $ratingFormArray['id'] . '">
-                                    <span>' . __( 'Total Avg Rating', 'cbratingsystem' ) . ': </span>
+                                <div class="rating-average-label-form-' . $ratingFormArray['id'] . '-postid-' . $post_id . ' readonly_criteria_average_label_form_' . $theme_key . '_theme readonly-criteria-average-label-form rating-average-label-form-' . $ratingFormArray['id'] . '"  itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+                                    <!--span>' . __( 'Total Avg Rating', 'cbratingsystem' ) . ': </span>
                                     <span class="rating">' . ( number_format( ( $perPostAverageRating / 100 ) * 5, 2 ) ) . '/5' . '</span>
-                                    <span class="total_rates">  ' . __( 'based on', 'cbratingsystem' ) . ' <span class="total_rates_count">' . ( ! empty( $avgRatingData[0]['per_post_rating_count'] ) ? (integer) $avgRatingData[0]['per_post_rating_count'] : '0' ) . '</span> rating(s) </span>
+                                    <span class="total_rates">  ' . __( 'based on', 'cbratingsystem' ) . ' <span class="total_rates_count">' . ( ! empty( $avgRatingData[0]['per_post_rating_count'] ) ? (integer) $avgRatingData[0]['per_post_rating_count'] : '0' ) . '</span> rating(s) </span-->
+                                    <span>' . __( 'Total Avg Rating', 'cbratingsystem' ) . ': </span>
+                                    <span class="rating" itemprop="ratingValue">'.( number_format( ( $perPostAverageRating / 100 ) * 5, 2 ) ).'</span> out of
+								    <span itemprop="bestRating">5</span> '.__('with','cbratingsystem').'
+                                    <span  class="total_rates">  ' . __( 'based on', 'cbratingsystem' ) . ' <span class="total_rates_count" itemprop="ratingCount">' . ( ! empty( $avgRatingData[0]['per_post_rating_count'] ) ? (integer) $avgRatingData[0]['per_post_rating_count'] : '0' ) . '</span> rating(s) </span>
                                 </div></div>';
 
 
@@ -1073,13 +1083,15 @@ class CBRatingSystemFront {
 									}
 				}
 
+	                //editor rating
 				$display .= '
                            
                                 <div class="clear" style="clear:both"></div>
-                                <div class="editor-rating-average-label-form-' . $ratingFormArray['id'] . '-postid-' . $post_id . ' readonly_criteria_average_label_form_' . $theme_key . '_theme readonly-criteria-average-label-form editor-rating-average-label-form-' . $ratingFormArray['id'] . '">
+                                <div class="editor-rating-average-label-form-' . $ratingFormArray['id'] . '-postid-' . $post_id . ' readonly_criteria_average_label_form_' . $theme_key . '_theme readonly-criteria-average-label-form editor-rating-average-label-form-' . $ratingFormArray['id'] . '"  itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
                                     <span>' . __( 'Total Avg Rating ', 'cbratingsystem' ) . ': </span>
                                     <span class="rating">' . ( number_format( ( $customPerPostAverageRating['editor'] / 100 ) * 5, 2 ) ) . '/5' . '</span>
                                     <span class="total_rates">  ' . __( 'basedon', 'cbratingsystem' ) . ' <span class="total_rates_count">' . ( ! empty( $customPerPostRateCount['editor'] ) ? (integer) $customPerPostRateCount['editor'] : '0' ) . '</span> rating(s) </span>
+
                                 </div>
                                 </div>                                
                             </div>

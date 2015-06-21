@@ -1,10 +1,10 @@
 === CBX Rating System ===
-Contributors: manchumahara, codeboxr
-Donate link: http://codeboxr.com
-Tags: widget,shortcodes,rating,comment,reviews, multi criteria
+Contributors: manchumahara,codeboxr,wpboxr
+Donate link: http://wpboxr.com
+Tags: widget,shortcodes,rating,comment,reviews, multi criteria,ratingsystem
 Requires at least: 3.0
-Tested up to: 4.1.1
-Stable tag: 3.3.5
+Tested up to: 4.2.2
+Stable tag: 3.3.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
- CodeBoxr Rating System for wordpress is a versatile and complete rating solution for your wordpress site .
+ CBX Rating System for wordpress is a versatile and complete rating solution for your wordpress site .
  It helps you to get rating of your articles with additional customs question and comment option.
 
 Features:
@@ -29,19 +29,22 @@ Features:
 *   Language file support and easily customizable
 
 
-See more details and usages guide here http://codeboxr.com/product/multi-criteria-flexible-rating-system-for-wordpress
+See more details and usages guide here http://wpboxr.com/product/multi-criteria-flexible-rating-system-for-wordpress
 
-Details documentation and step by step guide is here http://codeboxr.com/installation-multi-criteria-flexible-rating-system-for-wordpress.html
+
 
 Pro Version:
 
-We have a pro version that gives more premium features beside the basic free version.
-Main feature of pro versions:
-1. Theming system
-2. Unlimited criteria
-3. Unlimited reasons/stars in each criteria
-4. Guest email verify
-To buy the pro version please check here http://codeboxr.com/installation-multi-criteria-flexible-rating-system-for-wordpress.html
+We have a pro version that gives more premium features beside the basic free version(Free version will be always free).
+
+Pro Version Features:
+
+*  Theme & Custom Style for rating presentation
+*  Unlimited criteria
+*  Unlimited reasons/stars in each criteria
+*  Guest email verify
+
+
 
 Plugin Backend
 [youtube http://www.youtube.com/watch?v=Xa6M2uJnKVw]
@@ -113,6 +116,9 @@ Please visit our site for detail tutorial step by step http://codeboxr.com/insta
 
 
 == Changelog ==
+= 3.3.7 =
+* Google Rating Schema or Rich Snippet Added
+* Bug fix for avg rating when form id is not default(we are sorry, it should not be)
 = 3.3.5 =
 * While submitting review if comment char limit crossed the allowed size then it was showing comment cut wrong
 * No more read more link in ajax comment preview

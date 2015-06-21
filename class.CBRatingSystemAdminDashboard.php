@@ -25,10 +25,11 @@ class CBRatingSystemAdminDashboard extends CBRatingSystemAdmin {
 
 		$defaultFormId  = get_option( 'cbratingsystem_defaultratingForm' );
 		?>
+		We are here
 		<div class="wrap">
 
 			<div id="icon-options-general" class="icon32"></div>
-			<h2><?php _e( "Codeboxr Multi Criteria Rating System Dashboard", 'cbratingsystem' ) ?></h2>
+			<h2><?php _e( "CBX Multi Criteria Rating System Dashboard", 'cbratingsystem' ) ?></h2>
 
 			<div id="poststuff">
 
@@ -79,7 +80,7 @@ class CBRatingSystemAdminDashboard extends CBRatingSystemAdmin {
 															<span><img title="Not Default Form" alt="Not Default Form" src="<?php echo plugins_url( '/images/star-off-big.png', __FILE__ ); ?>" /></span>
 														</td>
 														<td class="t pages">
-															<a href="<?php echo $link; ?>"><?php echo $title; ?></a>
+															<a href="<?php echo $link; ?>"><?php echo $title; ?> </a> - <?php _e('ID','cbratingsystem'); ?>: <?php echo $ratingForm->id; ?>
 														</td>
 														<td class="t pages">
 															<?php
@@ -101,7 +102,7 @@ class CBRatingSystemAdminDashboard extends CBRatingSystemAdmin {
 															<span><img title="Default Form" alt="Default Form" src="<?php echo plugins_url( '/images/star-on-big.png', __FILE__ ); ?>" /></span>
 														</td>
 														<td class="t pages">
-															<a href="<?php echo $link; ?>"><?php echo $title; ?></a>
+															<a href="<?php echo $link; ?>"><?php echo $title; ?></a> - <?php _e('ID','cbratingsystem'); ?>: <?php echo $ratingForm->id; ?>
 														</td>
 														<td class="t pages">
 															<?php

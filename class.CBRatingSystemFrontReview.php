@@ -294,7 +294,13 @@ class CBRatingSystemFrontReview extends CBRatingSystemFront {
 
 				//var_dump('manchu man');
 
+				//review loop
 				foreach ( $reviews as $reviewKey => $review ) {
+
+					/*echo '<pre>';
+					print_r($review);
+					echo '</pre>';*/
+
                     $comment_status = self::check_cpmment_status($review->comment_status , $review->user_session, $review->user_ip );
 
                     $show_reviews_user = self::check_permission( $ratingFormArray['comment_view_allowed_users'], $review->user_session, $review->user_ip );
@@ -302,7 +308,7 @@ class CBRatingSystemFrontReview extends CBRatingSystemFront {
 					if ( $show_reviews_user &&  $comment_status) {
 
                         //$output .= '<a name="cbrating-'.$form_id.'-review-'.$review->id.'" id="cbrating-'.$form_id.'-review-'.$review->id.'"></a>';
-						$mainContent .= '<div id="cbrating-' . $form_id . '-review-' . $review->id . '" data-review-id="' . $review->id . '" data-post-id="' . $postID . '" data-form-id="' . $form_id . '" class="reviews_wrapper_' . $theme_key . '_theme review_wrapper review_wrapper_post-' . $postID . '_form-' . $form_id . ' review_wrapper_post-' . $postID . '_form-' . $form_id . '_review-' . $review->id . '">';
+						$mainContent .= '<div itemprop="review" itemscope itemtype="http://schema.org/Review" id="cbrating-' . $form_id . '-review-' . $review->id . '" data-review-id="' . $review->id . '" data-post-id="' . $postID . '" data-form-id="' . $form_id . '" class="reviews_wrapper_' . $theme_key . '_theme review_wrapper review_wrapper_post-' . $postID . '_form-' . $form_id . ' review_wrapper_post-' . $postID . '_form-' . $form_id . '_review-' . $review->id . '">';
 						$mainContent .= '    <div class="reviews_rating_' . $theme_key . '_theme review_rating review_rating_review-' . $review->id . '">';
 
 						if ( ! empty( $review->rating ) and is_array( $review->rating ) ) {
@@ -325,7 +331,10 @@ class CBRatingSystemFrontReview extends CBRatingSystemFront {
                                     $name        = apply_filters('cbrating_edit_review_user_link' , $name ,  $review->user_id);
                                     $gravatar    = apply_filters('cbrating_edit_review_user_avatar' , $gravatar ,   $review->user_id);
 
-                                    $user_html ='  <p class="cbrating_user_name">' . ( ! empty( $user_url ) ? '<span class="user_gravatar">' . $gravatar . $name. '</span>' : '<span class="user_gravatar">' . $gravatar . $name . '</span>' ) . '</p>';
+
+
+                                    $user_html = ! empty( $user_url ) ? '<span itemprop="author" itemscope itemtype="http://schema.org/Person" class="user_gravatar">' . $gravatar .'<span itemprop="name">'. $name.'</span>'. '</span>' : '<span itemprop="author" itemscope itemtype="http://schema.org/Person" class="user_gravatar">' . $gravatar .'<span itemprop="name">'. $name .'</span>'. '</span>';
+
 
                                     if(isset($ratingFormArray['buddypress_active']) && intval($ratingFormArray['buddypress_active'])){
                                         if(function_exists('bp_is_active')){
@@ -336,7 +345,7 @@ class CBRatingSystemFrontReview extends CBRatingSystemFront {
                                     }
                                 } else {
                                     $user_url  = '';
-                                    $name      = ( ! empty( $review->user_name  ) ? $review->user_name : 'Anonymous' );
+                                    $name      = ( ! empty( $review->user_name  ) ? $review->user_name : __('Anonymous','cbratingsystem') );
                                     if($ratingFormArray ['show_user_avatar_in_review']  == '1'){
                                         $gravatar  = get_avatar( 0, 36, 'gravatar_default' );
                                     }
@@ -344,7 +353,8 @@ class CBRatingSystemFrontReview extends CBRatingSystemFront {
                                         $gravatar = '';
                                     }
 
-                                    $user_html ='  <p class="cbrating_user_name">' . (!empty( $user_url ) ? '<span class="user_gravatar">' . $gravatar . $name . '</span>' : '<span class="user_gravatar">' . $gravatar . $name . '</span>' ) . '</p>';
+
+                                    $user_html =!empty( $user_url ) ? '<span class="user_gravatar">' . $gravatar . $name . '</span>' : '<span class="user_gravatar">' . $gravatar . $name . '</span>' ;
                                 }
 
                             $modified_review = (array) $review;
@@ -352,11 +362,18 @@ class CBRatingSystemFrontReview extends CBRatingSystemFront {
                             $user_html =  apply_filters('cbrating_edit_review_user_info' , $user_html ,  $review->user_id , $ratingFormArray ,$modified_review, $review );
 							
                                     $mainContent .= '    <div class="reviews_user_details_' . $theme_key . '_theme review_user_details">
-                                                           '.$user_html.'
-                                                            <span class="user_rate_time"><a title="' . date( 'l, F d, Y \a\t j:ia', $review->created ) . '" href="' . get_permalink( $postID ) . '#cbrating-' . $form_id . '-review-' . $review->id . '">' . CBRatingSystemFunctions :: codeboxr_time_elapsed_string( $review->created ) . '</a></span>
+                                                           <p class="cbrating_user_name">'.$user_html
+                                                           .'<span class="user_rate_value" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating" title="'. sprintf( __( 'Rated %s out of 5', 'cbratingsystem' ), ( ( $review->average / 100 ) * 5 ) ) .'">
+														         ( <span itemprop="ratingValue">'.( ( $review->average / 100 ) * 5 ).'</span> '.__('out of','cbratingsystem').'  <span itemprop="bestRating">5</span> )
+														    </span>'
+	                                                        .'</p>'
+                                                            .'<span class="user_rate_time"><a title="' . date( 'l, F d, Y \a\t j:ia', $review->created ) . '" href="' . get_permalink( $postID ) . '#cbrating-' . $form_id . '-review-' . $review->id . '">' . CBRatingSystemFunctions :: codeboxr_time_elapsed_string( $review->created ) . '</a></span>
                                                         </div>
                                                         <div class="clear" style="clear:both;"></div> ';
-                                   $mainContent .= '    <div data-form-id="' . $form_id . '" class="all-criteria-wrapper all_criteria_warpper_' . $theme_key . '_theme  all-criteria-wrapper-form-' . $form_id . ' all-criteria-wrapper-form-' . $form_id . $theme_key . '_theme">';
+									/*$mainContent .='<div itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating" class="star-rating" title="'. sprintf( __( 'Rated %s out of 5', 'cbratingsystem' ), ( ( $review->average / 100 ) * 5 ) ) .'">
+																	<span ><strong itemprop="ratingValue">'.( ( $review->average / 100 ) * 5 ).'</strong> '. __( 'out of 5', 'cbratingsystem' ) .'</span>
+												</div>';*/
+                                    $mainContent .= '    <div data-form-id="' . $form_id . '" class="all-criteria-wrapper all_criteria_warpper_' . $theme_key . '_theme  all-criteria-wrapper-form-' . $form_id . ' all-criteria-wrapper-form-' . $form_id . $theme_key . '_theme">';
 
 
 		                            foreach ( $review->rating as $criteriId => $value ) {
@@ -473,7 +490,7 @@ class CBRatingSystemFrontReview extends CBRatingSystemFront {
 
 
 								//$comment_output = '<p class="comment">' . htmlspecialchars($comment). '</p>';
-								$comment_output = '<p class="comment">' . stripslashes($comment). '</p>';
+								$comment_output = '<p itemprop="reviewBody" class="comment">' . stripslashes($comment). '</p>';
 
 								$mainContent .= '<div class="review_user_rating_comment_' . $theme_key . '_theme review_user_rating_comment">
                                            			 <strong>Comment : </strong> ' . $comment_output;

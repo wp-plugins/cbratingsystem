@@ -91,6 +91,7 @@ class CBRatingSystemAdminReport extends CBRatingSystemAdmin {
 
 		?>
 
+
 		<div class="wrap columns-2">
 		<div class="icon32 icon32_cbrp_admin icon32-cbrp-user-ratings" id="icon32-cbrp-user-ratings"><br></div>
 		<h2><?php _e( 'Codeboxr Rating System User Rating Logs', 'cbratingsystem' ) ?></h2>
