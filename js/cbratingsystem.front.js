@@ -107,33 +107,8 @@ jQuery(document).ready(function ($) {
 
 		$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .cbrp-button-form-' + ratingFormID).click(function (event) {
 
-            /*
-            //this is not used.
-            var entityMap = {
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': '&quot;',
-                "'": '&#39;',
-                "/": '&#x2F;'
-            };
-
-            function escapeHtml(string) {
-                return String(string).replace(/[&<>"'\/]/g, function (s) {
-                    return entityMap[s];
-                });
-            }
-             */
-
-            //var whiteRe = /\s*/;
-            //var spaceRe = /\s+/;
-            //var equalsRe = /\s*=/;
-            //var curlyRe = /\s*\}/;
-            //var tagRe = /#|\^|\/|>|\{|&|=|!/;
-
-
-
             event.preventDefault();
+
             var cb_this_comment_status = $(this).attr('data-comment-status');
             var cb_this_buddypress_post = $(this).attr('data-buddypress-post');
             var cb_this_hash = $(this).attr('data-hash');
@@ -320,6 +295,7 @@ jQuery(document).ready(function ($) {
 				}
 			});
 
+
 			if ((valuesCount != criteria) || (questionError === true)) {
 				jQuery('.cbrp_load_more_waiting_icon_form-' + ratingFormID + '_post-' + postID).hide();
 				$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .cbrp-button-form-' + ratingFormID).removeAttr('disabled').removeClass('disabled_cbrp_button');
@@ -337,6 +313,7 @@ jQuery(document).ready(function ($) {
 					$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .ratingFormStatus').html(errTxt);
 					$('.cbrp-content-wprapper-form-' + ratingFormID + '-post-' + postID + ' .ratingFormStatus').addClass('error_message');
 				}
+
 			} else if ((valuesCount === criteria) && (questionError === false)) {
 
 				var cbRatingData                    = {};

@@ -3,8 +3,8 @@ Contributors: manchumahara,codeboxr,wpboxr
 Donate link: http://wpboxr.com
 Tags: widget,shortcodes,rating,comment,reviews, multi criteria,ratingsystem
 Requires at least: 3.0
-Tested up to: 4.2.2
-Stable tag: 3.3.7
+Tested up to: 4.3
+Stable tag: 3.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -116,6 +116,9 @@ Please visit our site for detail tutorial step by step http://codeboxr.com/insta
 
 
 == Changelog ==
+= 3.4.0
+* php5 style widget constructor as per wordpress 4.3 requirement
+* Fix "Top Rated Posts" widget, form was not saving properly.
 = 3.3.7 =
 * Google Rating Schema or Rich Snippet Added
 * Bug fix for avg rating when form id is not default(we are sorry, it should not be)

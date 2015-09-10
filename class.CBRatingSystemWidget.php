@@ -6,8 +6,8 @@
  */
 class CBRatingSystemWidget extends WP_Widget {
 
-	function CBRatingSystemWidget() {
-		parent::WP_Widget( 'cbrp_top_rated', __('Rating: Top Rated Posts','cbratingsystem'), array( 'description' => __('A widget to display top rated posts, pages or custom post types.','cbratingsystem') ) );
+	function __construct() {
+		parent::__construct( 'cbrp_top_rated', __('Rating: Top Rated Posts','cbratingsystem'), array( 'description' => __('A widget to display top rated posts, pages or custom post types.','cbratingsystem') ) );
 	}
 
     /**
@@ -66,7 +66,7 @@ class CBRatingSystemWidget extends WP_Widget {
 					<li>
 						<script>
 							jQuery(document).ready(function ($) {
-								$('#cbrp-top-rated<?php echo $newdata->post_id; ?>').raty({
+								$('#cbrp-top-rated<?php echo $newdata->post_id.$form_id; ?>').raty({
 									half    : true,
 									path    : '<?php echo CB_RATINGSYSTEM_PLUGIN_DIR_IMG; ?>',
 									score   : <?php echo ( ($newdata->per_post_rating_summary/100) * 5); ?>,
@@ -75,7 +75,7 @@ class CBRatingSystemWidget extends WP_Widget {
 								});
 							});
 						</script>
-						<div id="cbrp-top-rated<?php echo $newdata->post_id; ?>" style="margin: 0;"></div>
+						<div id="cbrp-top-rated<?php echo $newdata->post_id.$form_id; ?>" style="margin: 0;"></div>
 						<?php echo "<strong>" . ( ( $newdata->per_post_rating_summary / 100 ) * 5 ) . "/5</strong> "; ?>
 						<a href="<?php echo get_permalink( $newdata->post_id ); ?>"><?php echo $newdata->post_title; ?></a>
 					</li>
@@ -95,9 +95,20 @@ class CBRatingSystemWidget extends WP_Widget {
      */
     function form( $instance ) {
 
-        $instance = wp_parse_args( (array) $instance, array( 'title' => __('Top Rated Posts','cbratingsystem'),'order' => 'DESC', 'day' => 7, 'todisplay' => 10, 'type' => 'post' ) );
+		$default            = CBRatingSystem::get_default_ratingFormId();
+
+		/*echo '<pre>';
+		print_r($instance);
+		echo '</pre>';*/
 
 
+
+		$instance = wp_parse_args( (array) $instance, array( 'title' => __('Top Rated Posts','cbratingsystem'),'order' => 'DESC', 'day' => 7, 'todisplay' => 10, 'type' => 'post', 'form_id' => $default ) );
+
+
+		/*echo '<pre>';
+		print_r($instance);
+		echo '</pre>';*/
 
 		if ( $instance ) {
 			$title = esc_attr( $instance['title'] );
@@ -182,18 +193,30 @@ class CBRatingSystemWidget extends WP_Widget {
 
 
 
-		<p>
-			<label for="<?php echo $this->get_field_id( 'form_id' ); ?>"><?php _e( "Form", 'cbratingsystem' ) ?>:</label>
-			<select id="<?php echo $this->get_field_id( 'form_id' ); ?>" name="<?php echo $this->get_field_name( 'form_id' ); ?>" class="widefat" style="width: 55%">
-				<?php
+		<?php
 				$action      = array(
 					'is_active'     => true,
 					//'post_type' => $object->post_type,
-                    'post_type'     => $instance['type']
+					'post_type'     => $instance['type']
 				);
+
 				$ratingForms 		= CBRatingSystemData::get_ratingForms( true, $action );
-				$ratingFormToShow 	= intval($this->get_field_id( 'form_id' ));
-				$default                  = CBRatingSystem::get_default_ratingFormId();
+
+				/*echo '<pre>';
+				print_r($ratingForms);
+				echo '</pre>';*/
+
+				//$ratingFormToShow 	= intval($this->get_field_id( 'form_id' ));
+				$ratingFormToShow 	= intval($instance['form_id']);
+
+				//var_dump($ratingFormToShow);
+		?>
+
+		<p>
+			<label for="<?php echo $this->get_field_id( 'form_id' ); ?>"><?php _e( "Form", 'cbratingsystem' ) ?>:</label>
+			<select id="<?php echo $this->get_field_id( 'form_id' ); ?>" name="<?php echo $this->get_field_name( 'form_id' ); ?>" class="widefat" style="width: 55%">
+
+				<?php
 
 				if ( ! empty( $ratingForms ) ) {
 					foreach ( $ratingForms as $ratingForm ) {
@@ -227,12 +250,12 @@ class CBRatingSystemWidget extends WP_Widget {
      */
     function update( $new_instance, $old_instance ) {
 		$instance              = $old_instance;
-		$instance['title']     = strip_tags( $new_instance['title'] );
-		$instance['day']       = strip_tags( $new_instance['day'] );
-		$instance['todisplay'] = strip_tags( $new_instance['todisplay'] );
-		$instance['type']      = strip_tags( $new_instance['type'] );
-		$instance['form_id']   = strip_tags( $new_instance['form_id'] );
-        $instance['order']     = strip_tags( $new_instance['order'] );
+		$instance['title']     = sanitize_text_field( $new_instance['title'] );
+		$instance['day']       = intval( $new_instance['day'] );
+		$instance['todisplay'] = intval( $new_instance['todisplay'] );
+		$instance['type']      =  $new_instance['type'];
+		$instance['form_id']   = intval( $new_instance['form_id'] );
+        $instance['order']     =  $new_instance['order'];
 
 		return $instance;
 	}
@@ -256,8 +279,9 @@ class CBRatingSystemWidget extends WP_Widget {
  */
 class CBRatingSystemUserWidget extends WP_Widget {
 
-    function CBRatingSystemUserWidget() {
-        parent::WP_Widget( 'cbrp_top_rated_user', __('Rating: Top Rated User','cbratingsystem'), array( 'description' => __('A widget to display top rated user.','cbratingsystem') ) );
+    function __construct() {
+        //parent::WP_Widget( 'cbrp_top_rated_user', __('Rating: Top Rated User','cbratingsystem'), array( 'description' => __('A widget to display top rated user.','cbratingsystem') ) );
+		parent::__construct( 'cbrp_top_rated_user', __('Rating: Top Rated User','cbratingsystem'), array( 'description' => __('A widget to display top rated user.','cbratingsystem') ) );
     }
 
     /**

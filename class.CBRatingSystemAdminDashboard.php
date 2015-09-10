@@ -25,7 +25,7 @@ class CBRatingSystemAdminDashboard extends CBRatingSystemAdmin {
 
 		$defaultFormId  = get_option( 'cbratingsystem_defaultratingForm' );
 		?>
-		We are here
+
 		<div class="wrap">
 
 			<div id="icon-options-general" class="icon32"></div>
