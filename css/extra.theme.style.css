@@ -93,3 +93,7 @@
 .cbrp_container_greenish_theme .ratingFormStatus.error_message {
 	/*border-color: #FFFFFF;*/
 }
+
+.readonly_criteria_average_label_greenish_theme{
+    color: #fff;
+}

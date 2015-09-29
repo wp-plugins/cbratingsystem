@@ -3,14 +3,14 @@
   Plugin Name: CBX Multi Criteria Rating System
   Plugin URI: http://wpboxr.com/product/multi-criteria-flexible-rating-system-for-wordpress
   Description: Rating system for Posts and Pages from WPBoxr.
-  Version: 3.4.0
+  Version: 3.4.2
   Author: WPBoxr Team
   Author URI: wpboxr.com
  */
 defined( 'ABSPATH' ) OR exit;
 
 //define the constants
-define( 'CB_RATINGSYSTEM_PLUGIN_VERSION', '3.4.0' ); //need for checking verson
+define( 'CB_RATINGSYSTEM_PLUGIN_VERSION', '3.4.2' ); //need for checking verson
 define( 'CB_RATINGSYSTEM_FILE', __FILE__ );
 define( 'CB_RATINGSYSTEM_PLUGIN_BASE_NAME', plugin_basename( __FILE__ ) );
 define( 'CB_RATINGSYSTEM_PATH', WP_PLUGIN_DIR . '/' . basename( dirname( CB_RATINGSYSTEM_FILE ) ) );
@@ -1076,7 +1076,7 @@ class CBRatingSystem {
 									) ,
 			'name'              => array(
 				'label'         => __('Form Title', 'cbratingsystem'),
-				'desc'          => __( 'Write form name', 'cardselectbox' ),
+				'desc'          => __( 'Write form name', 'cbratingsystem' ),
 				'type'          => 'text',
 				'default'       => __('Example Rating Form', 'cbratingsystem'),
 				'tooltip'       => __('Form Name','cbratingsystem'),
@@ -1146,7 +1146,7 @@ class CBRatingSystem {
 			), //show on home or frontpage
 			'show_on_arcv'          => array(
 				'label'         => __('Show on Archives', 'cbratingsystem'),
-				'desc'          => __( 'Enable disable for archive pages', 'cardselectbox' ),
+				'desc'          => __( 'Enable disable for archive pages', 'cbratingsystem' ),
 				'type'          => 'radio',
 				'default'       => 1,
 				'tooltip'       => __('Enabled by default','cbratingsystem'),
@@ -1186,7 +1186,7 @@ class CBRatingSystem {
 			), //enable disable shortcode
 			'logging_method'    => array(
 										'label'                 => __('Loggin Method','cbratingsystem'),
-										'desc'                  => __( 'Log user rating by ip or cookie or both to protect multiple rating, useful for guest rating', 'cardselectbox' ),
+										'desc'                  => __( 'Log user rating by ip or cookie or both to protect multiple rating, useful for guest rating', 'cbratingsystem' ),
 										'type'                  => 'multiselect',
 										'multiple'              => 'yes',
 
@@ -1243,7 +1243,7 @@ class CBRatingSystem {
 			),  //enable comment box
 			'comment_limit'         => array(
 				'label'         => __('Comment Limit Length', 'cbratingsystem'),
-				'desc'          => __( 'Comment limit length prevents user from submitting long comment', 'cardselectbox' ),
+				'desc'          => __( 'Comment limit length prevents user from submitting long comment', 'cbratingsystem' ),
 				'type'          => 'text',
 				'default'       => 200,
 				'numeric'       => true,
@@ -1268,7 +1268,7 @@ class CBRatingSystem {
 			), // Enable Questions
 			'show_credit_to_codeboxr'   => array(
 				'label'         => __('Show Credit', 'cbratingsystem'),
-				'desc'          => __( 'This will show a small link under rating form to codeboxr.com', 'cardselectbox' ),
+				'desc'          => __( 'This will show a small link under rating form to codeboxr.com', 'cbratingsystem' ),
 				'type'          => 'radio',
 				'default'       => 1,
 				'tooltip'       => __('Enabled by default','cbratingsystem'),

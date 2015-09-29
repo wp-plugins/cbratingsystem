@@ -50,10 +50,12 @@ jQuery(document).ready(function ($) {
     //question js starts
 
     //question, show x number of radio or checkbox for question
-    //ok
-    // $('.select_count').each(function () {
+
     $('.edit-custom-question-fields-wrapper').on('change','select.select_count',function() {
         // $(this).change(function () {
+
+
+
         var $this   = $(this);
         var q_id    = $this.attr('data-q-id');
         var val     = $('.question_field_type_q_id-' + q_id).val();
@@ -70,12 +72,14 @@ jQuery(document).ready(function ($) {
         for (var i = 0; selectInputVal > i; i++) {
             $('.field_display_' + val + '_div_q_id-' + q_id + '_field_id-' + i).show();
         }
-        //});
-    });
-    //ok
 
-    //ok
+    });
+
+
+    //question type change between textbox, radio and checkbox
     $('.edit-custom-question-fields-wrapper').on('change','select.question_field_type',function(){
+
+        //console.log('field type change');
 
         var fieldtype = $(this).val();  //variable name 'fieldtype' is better than 'val'
         var q_id = $(this).attr('data-q-id');
@@ -102,41 +106,14 @@ jQuery(document).ready(function ($) {
     //ok
 
 
-    //question-label label-q-0 option mouse_normal
-    //edit-custom-question-text-q edit-custom-question-text-q-0 disable_field
-        //edit-custom-question-text-q-0
-
-    //question-field-label question-field-radio-label label-q-0-radio-0 option mouse_normal
-    //form-text edit_field_display_input_label disable_field edit-custom-question-field-radio-q-id-0 edit-custom-question-field-radio-0-label-text-q-0
-        //edit-custom-question-checkbox-field-text-0-q-0
-
-
-    //click label.question-label
-    //blue input.edit-custom-question-text-q
-
-    //click label.question-field-label
-    //blur input.edit_field_display_input_label
-
-    //ok
-	//make the label editable for first column
-	//$('div.form-item-custom-question .question-label').each(function (e) {
-    //$('.edit-custom-criteria-fields-wrapper').on('click','label.form-item-custom-question-label',function() {
-
+    //edit question title
     $('.edit-custom-question-fields-wrapper').on('click','label.question-label',function() {
 
-        //$(this).click(function () {
-
-        //console.log('clicked');
-
-
-            var q_id = $(this).attr('data-q-id');
-            //console.log(q_id);
-			$(this).hide();
-
-			$('input#edit-custom-question-text-q-' + q_id).show();
-			$('input#edit-custom-question-text-q-' + q_id).focus();
-			//jQuery('#edit-custom-criteria-enable-star-'+star_id).attr('checked','checked');
-		//});
+        var q_id = $(this).attr('data-q-id');
+        $(this).hide();
+        //console.log($(this));
+        $('input#edit-custom-question-text-q-' + q_id).show();
+        $('input#edit-custom-question-text-q-' + q_id).focus();
 	});
 
     //make the label editable for first column
@@ -152,25 +129,24 @@ jQuery(document).ready(function ($) {
 
 
 
-        var q_id = jQuery(this).attr('data-q-id');
+        var q_id = $(this).attr('data-q-id');
         if ($(this).hasClass('error')) {
             $(this).removeClass('error');
         }
+
         var val = $(this).val(); //get the inline edit input field value
 
+        //console.log(val);
+
         if (val.length != 0) {
-            //$('label.label-q-' + q_id).text(val); //show the edit text from input field back to label
-            //$('label.label-q-' + q_id).show();
-
             $(this).hide();
-
 
             $('#question-label-' + q_id).text(val); //show the edit text from input field back to label
             $('#question-label-' + q_id).show();
 
+            //$('.question-label').hide();
+            //$('.edit-custom-question-text-q').show();
 
-            //$('input#edit-custom-question-enable-q-' + q_id).attr('checked', 'checked');
-            //$('div.form-item-custom-question-required-q-id-' + q_id).removeClass('disable_field');
         } else {
             $(this).addClass('error');
         }
@@ -182,6 +158,7 @@ jQuery(document).ready(function ($) {
     //question: Clicking on the "Question Field Title Label", allowing user/admin to edit the "Question Field Title".
     //$('.question-field-label').each(function (e) {
 
+     //click to edit labels of multiple options for radio or checkbox
     $('.edit-custom-question-fields-wrapper').on('click','label.question-field-label',function() {
         var $this = $(this);
 
@@ -190,6 +167,8 @@ jQuery(document).ready(function ($) {
         var field_type      = $('.question_field_type_q_id-' + q_id).val();
         var field_id        = $this.attr('data-' + field_type + '-field-text-id');
         var labelEditable   = $this.attr('labeleditable');
+
+        //console.log(labelEditable);
 
 
         if ((field_type == 'checkbox') || (field_type == 'radio')) {
@@ -255,7 +234,7 @@ jQuery(document).ready(function ($) {
 
     $('.edit-custom-question-fields-wrapper').on('change','input.seperated_checkbox_input',function() {
     //$('.seperated_checkbox_input').each(function () {
-        //console.log('hi');
+        console.log('hi');
        //console.log($(this).val());
 
 
@@ -267,17 +246,11 @@ jQuery(document).ready(function ($) {
 
         //main question label
         var questionLabel       = $('input#edit-custom-question-text-q-' + q_id).val().substring(0, 10);
-
-        //var seperated           = $('.seperated_checkbox_input_q_id-' + q_id).val();
-        var seperated           = $(this).val()
-        //var totalFieldCount     = ($('.select_' + field_type + '_count_q_id-' + q_id + ' option:last-child').val());
+        var seperated           = $(this).val();
         var totalFieldCount     = $('.select_' + field_type + '_count_q_id-' + q_id + ' option').length;
+        var curentFieldVal      = $('.select_' + field_type + '_count_q_id-' + q_id + '  :selected').val();
 
-        //console.log(totalFieldCount);
 
-        var curentFieldVal    = $('.select_' + field_type + '_count_q_id-' + q_id + '  :selected').val();
-
-        //console.log(curentFieldVal);
 
 
 
@@ -299,13 +272,14 @@ jQuery(document).ready(function ($) {
             $('.field_display_' + field_type + '_div_q_id-' + q_id + '_field_id-0').show();
             $('.field_display_' + field_type + '_div_q_id-' + q_id + '_field_id-0 label').show();
             //$('.field_display_' + field_type + '_div_q_id-' + q_id + '_field_id-0 input#edit-custom-question-' + field_type + '-field-text-0-q-' + q_id).hide();
+
+            $('label.label-q-' + q_id + '-' + field_type + '-0').attr('labeleditable', '0');
+            $('label.label-q-' + q_id + '-' + field_type + '-0').attr('title', click_note);
             $('input#edit-custom-question-' + field_type + '-field-text-' + 0 + '-q-' + q_id).attr('labeleditable', '0');
 
-            //$('label.label-q-' + q_id + '-' + val + '-' + field_id).attr('labeleditable', '0');
-            //$('label.label-q-' + q_id + '-' + val + '-' + field_id).attr('title', '');
-            //$('label.label-q-' + q_id + '-' + val + '-' + field_id).empty().text(questionLabel + '...');
+            //$('input#edit-custom-question-' + field_type + '-field-text-' + j + '-q-' + q_id).attr('labeleditable', '1');
 
-            //$('input#edit-custom-question-' + val + '-field-text-' + field_id + '-q-' + q_id).attr('labeleditable', '0');
+
 
         } else if ($(this).val() == 1) {
             //multiple mode
@@ -330,16 +304,12 @@ jQuery(document).ready(function ($) {
                 $('label.label-q-' + q_id + '-' + field_type + '-' + j).attr('title', click_note);
 
                 $('input#edit-custom-question-' + field_type + '-field-text-' + j + '-q-' + q_id).attr('labeleditable', '1');
+
                 var seperatedQLabel = $('input#edit-custom-question-' + field_type + '-field-text-' + j + '-q-' + q_id).val();
-                //console.log(seperatedQLabel);
+
                 $('label.label-q-' + q_id + '-' + field_type + '-' + j).empty().text(seperatedQLabel);
             }
 
-
-            //id="edit-custom-question-checkbox-field-text-0-q-0"  class="form-text edit_field_display_input_label disable_field edit-custom-question-field-checkbox-q-id-0 edit-custom-question-field-checkbox-0-label-text-q-0">
-            //$('input#edit-custom-question-' + field_type + '-field-text-' + field_id + '-q-' + q_id).attr('labeleditable', '1');
-            //var seperatedQLabel = $('input#edit-custom-question-' + field_type + '-field-text-' + field_id + '-q-' + q_id).val();
-           // $('label.label-q-' + q_id + '-' + field_type + '-' + field_id).empty().text(seperatedQLabel);
         }
 
     });
@@ -425,131 +395,8 @@ jQuery(document).ready(function ($) {
 
 
 
-    //$('.form-item-custom-criteria-label').each(function (e) {
-        /*
-        var label_id = $(this).attr('data-label-id');
-
-        // If this is not the first criteria textfield, let's make it hidden.
-        if (label_id != 0) {
-            $(this).hide();
-            $('.custom-criteria-wrapper-label-id-' + label_id).hide();
-
-        }
-        */
 
 
-        // And hiding all the "star" divs. Will show them onKeyPress to the corresponding criteria textfield.
-
-        //$('.label-star-id-' + label_id).hide();
-
-        /*
-         * Just as said above. Showing the "star" div.
-         * Checkout this great solution for browser autocomplete
-         * issue: http://stackoverflow.com/a/6112637/1337075
-         */
-        /*
-        $('#edit-custom-criteria-label-' + label_id).bind('input', function (e) {
-            $('.label-star-id-' + label_id).show();
-            if ($(this).hasClass('error')) {
-                $(this).removeClass('error');
-            }
-        });
-        */
-
-        // this part is reproduced
-        /*
-        // Clicking on the "Star Title Label", allowing user/admin to edit the "Title".
-        $('.label-' + label_id + '-option-star').each(function (e) {
-            $(this).click(function () {
-                var star_id = jQuery(this).attr('data-star-id');
-                $(this).hide();
-                $('.edit-custom-criteria-label-text-' + label_id + '-star-' + star_id).show();
-                $('.edit-custom-criteria-label-text-' + label_id + '-star-' + star_id).focus();
-                //jQuery('#edit-custom-criteria-enable-star-'+star_id).attr('checked','checked');
-            });
-        }); //need to enable again
-        */
-        // end this part is reproduced
-
-        //criteria label edit input blur event, fires when user completes edit and click anywhere else in the
-        /*
-         * After completion of editing when user will click outside of the editing textbox,
-         * hiding the field and showing the "Star Title Label".
-         */
-        /*
-        $('.edit-custom-criteria-label-text-' + label_id + '-star').each(function (e) {
-            $(this).blur(function () {
-                if ($('.edit-custom-criteria-label-text-' + label_id + '-star-' + star_id).hasClass('error')) {
-                    $('.edit-custom-criteria-label-text-' + label_id + '-star-' + star_id).removeClass('error');
-                }
-                var star_id = $(this).attr('data-star-id');
-                var val = $(this).val();
-
-                if (val.length != 0) {
-                    if ($('.edit-custom-criteria-label-hidden-' + label_id + '-star-' + star_id)) {
-                        $('.edit-custom-criteria-label-hidden-' + label_id + '-star-' + star_id).remove();
-                    }
-                    var hiddenTitle = '<input data-label-id="' + label_id + '" data-star-id="' + star_id + '" type="hidden" id="edit-custom-criteria-hidden-star-' + star_id + '" name="ratingForm[custom_criteria][' + label_id + '][stars][' + star_id + '][titleHidden]" value="' + val + '" class="form-text disable_field edit-custom-criteria-label-hidden-' + label_id + '-star edit-custom-criteria-label-hidden-' + label_id + '-star-' + star_id + '">';
-                    $(this).parent().append(hiddenTitle);
-                    $(this).hide();
-                    $('.label-' + label_id + '-option-star-' + star_id).text(val);
-                    $('.label-' + label_id + '-option-star-' + star_id).show();
-                    $('#edit-custom-criteria-enable-label-' + label_id + '-star-' + star_id).attr('checked', 'checked');
-                } else {
-                    $('.edit-custom-criteria-label-text-' + label_id + '-star-' + star_id).addClass('error');
-                }
-            });
-        });
-        */
-         //need to enable again
-
-    //});
-
-    //add more criteria
-    //add-new-criteria-total cb-add-new-link button  // this code is unused
-    /*
-    $('.add_more_criteria_link').click(function (e) {
-
-        console.log('from core');
-
-		var showing_label_id        = $(this).attr('data-showing-label-id');
-		var label_id = (showing_label_id - 1);
-		var label_text_field_selctor = '#edit-custom-criteria-label-' + label_id;
-		var label_text_field_value = $(label_text_field_selctor).val();
-
-		var starChecked = 0;
-        $('.label-star-id-' + label_id + ' input[type="checkbox"]').each(function () {
-			if ($(this).is(':checked')) {
-				starChecked++;
-			}
-		});
-
-		if ((starChecked < 1)) {
-			if ((label_text_field_value.length == 0)) {
-                $(label_text_field_selctor).addClass('error');
-			}
-			if ($('.label-star-id-' + label_id).is(':visible')) {
-                $('.label-star-id-' + label_id).addClass('error');
-                $('.label-star-id-' + label_id).attr('title', starSelectionErrorMessage);
-			}
-		} else {
-			if ($(label_text_field_selctor).hasClass('error')) {
-                $(label_text_field_selctor).removeClass('error');
-			}
-			if ($('.label-star-id-' + label_id).hasClass('error')) {
-                $('.label-star-id-' + label_id).removeClass('error');
-
-				if ($('.label-star-id-' + label_id).attr('title') == starSelectionErrorMessage) {
-                    $('.label-star-id-' + label_id).attr('title', '');
-				}
-			}
-
-            $('.custom-criteria-wrapper-label-id-' + showing_label_id).show();
-            $('.label-id-' + showing_label_id).show();
-            $(this).hide();
-		}
-	});
-    */
 
     $('.display_item').show();
 

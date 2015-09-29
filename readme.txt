@@ -116,6 +116,9 @@ Please visit our site for detail tutorial step by step http://codeboxr.com/insta
 
 
 == Changelog ==
+= 3.4.2
+* Backend js added as per the menu or screen
+* Fixed question edit issues
 = 3.4.0
 * php5 style widget constructor as per wordpress 4.3 requirement
 * Fix "Top Rated Posts" widget, form was not saving properly.

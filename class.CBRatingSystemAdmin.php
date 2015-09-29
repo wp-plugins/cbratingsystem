@@ -1139,11 +1139,13 @@ class CBRatingSystemAdmin {
 						//$displayItem = ( isset($postCustomCriteria[$label_id]['label'])? ( !empty($postCustomCriteria[$label_id]['label'])? ' display_item':'') : (!empty($customCriteria[$label_id]['label']) ? ' display_item' : '') );
 						$displayItem = ' display_item';
 
+						$enable_disable_cri_value = isset($customCriteria[$label_id]['enabled']) ? $customCriteria[$label_id]['enabled'] : 0;
+
 						$output .=
 							'<div class="custom-criteria-wrapper custom-criteris-wrapper-' . $class . ' custom-criteria-wrapper-label-id-' . $label_id . $displayItem . '">
 			                    <!--input type="hidden" name="ratingForm[custom_criteria][' . $label_id . '][enabled]" value="0" /-->
 			                    <input type="checkbox" name="ratingForm[custom_criteria][' . $label_id . '][enabled]" value="1" class="custom-criteria-enable-checkbox edit-custom-criteria-enable-checkbox-label-' . $label_id . '"
-			                         ' . checked( $customCriteria[$label_id]['enabled'] , '1', false ) . ' />
+			                         ' . checked( $enable_disable_cri_value , '1', false ) . ' />
 			                    <div data-label-id="' . $label_id . '" class="add_left_margin form-type-textfield form-item-custom-criteria-label label-id-' . $label_id . ' ' . $class . $displayItem . '">
 			                        <input type="text" id="edit-custom-criteria-label-' . $label_id . '"
 			                            name="ratingForm[custom_criteria][' . $label_id . '][label]" ' . ( isset( $customCriteria[$label_id]['label'] ) ? 'value="' . stripslashes( $customCriteria[$label_id]['label'] ) . '" class="form-text display_item" ' : 'value="Criteria ' . ( $label_id + 1 ) . '" class="form-text"' )  . '>

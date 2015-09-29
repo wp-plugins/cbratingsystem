@@ -14,7 +14,7 @@
 
 			<p>Email : <a href="mailto:info@wpboxr.com" target="_blank">info@wpboxr.com</a></p>
 
-			<p>Contact : <a href="http://wpboxr.com/contact-us.html" target="_blank">Contact Us</a></p>
+			<p>Contact : <a href="http://wpboxr.com/contact-us" target="_blank">Contact Us</a></p>
 		</div>
 	</div>
 
@@ -30,7 +30,7 @@
 				<p>
 					<a target="_blank" href="http://www.youtube.com/playlist?list=PLwKEWsEWkI_zY8W5wQT0vPdJnDhnCO6Gq">Video Tutorial Series of
 						<strong>Multi Criteria Flexible Rating</strong> System for Wordpress</a> from
-					<a target="_blank" href="https://www.youtube.com/user/codeboxr">Codeboxr</a>.</p>
+					<a target="_blank" href="https://www.youtube.com/user/codeboxr">WPboxr</a>.</p>
 			</div>
 		</div>
 	<?php
@@ -57,11 +57,11 @@
     </div>
 	<div class="postbox">
 		<div class="inside">
-			<h3><?php _e('Codeboxr Networks','wpfixedverticalfeedbackbutton') ?></h3>
-			<p><?php _e('Html, Wordpress & Joomla Themes','wpfixedverticalfeedbackbutton') ?></p>
+			<h3><?php _e('Codeboxr Networks','cbratingsystem') ?></h3>
+			<p><?php _e('Html, Wordpress & Joomla Themes','cbratingsystem') ?></p>
 			<a target="_blank" href="http://themeboxr.com"><img src="http://themeboxr.com/wp-content/themes/themeboxr/images/themeboxr-logo-rect.png" style="max-width: 100%;" alt="themeboxr" title="Themeboxr - useful themes"  /></a>
 			<br/>
-			<p><?php _e('Wordpress Plugins','wpfixedverticalfeedbackbutton') ?></p>
+			<p><?php _e('Wordpress Plugins','cbratingsystem') ?></p>
 			<a target="_blank" href="http://wpboxr.com"><img src="http://wpboxr.com/wp-content/themes/themeboxr/images/wpboxr-logo-rect.png" style="max-width: 100%;" alt="wpboxr" title="WPBoxr - Wordpress Extracts"  /></a>
 			<br/><br/>
 			<p>Joomla Extensions</p>
