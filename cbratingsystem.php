@@ -3,14 +3,14 @@
   Plugin Name: CBX Multi Criteria Rating System
   Plugin URI: http://wpboxr.com/product/multi-criteria-flexible-rating-system-for-wordpress
   Description: Rating system for Posts and Pages from WPBoxr.
-  Version: 3.4.2
+  Version: 3.4.3
   Author: WPBoxr Team
   Author URI: wpboxr.com
  */
 defined( 'ABSPATH' ) OR exit;
 
 //define the constants
-define( 'CB_RATINGSYSTEM_PLUGIN_VERSION', '3.4.2' ); //need for checking verson
+define( 'CB_RATINGSYSTEM_PLUGIN_VERSION', '3.4.3' ); //need for checking verson
 define( 'CB_RATINGSYSTEM_FILE', __FILE__ );
 define( 'CB_RATINGSYSTEM_PLUGIN_BASE_NAME', plugin_basename( __FILE__ ) );
 define( 'CB_RATINGSYSTEM_PATH', WP_PLUGIN_DIR . '/' . basename( dirname( CB_RATINGSYSTEM_FILE ) ) );
@@ -697,18 +697,19 @@ class CBRatingSystem {
 		return $output;
 	}//end  main_content_with_rating_form
 
-	/**
-	 * Standalone Rating Form
-	 *
-	 * @param        $form_id
-	 * @param        $post_id
-	 * @param string $theme_key
-	 *
-	 * @return string
-	 */
-	public static function standalonePostingRatingSystemForm( $form_id, $post_id, $theme_key = '', $showreview = true ) {
+    /**
+     * Standalone Rating Form
+     *
+     * @param $form_id
+     * @param $post_id
+     * @param string $theme_key
+     * @param bool $showreview
+     *
+     * @return string
+     */
+    public static function standalonePostingRatingSystemForm( $form_id, $post_id, $theme_key = '', $showreview = true ) {
 
-		//$id = get_the_ID();
+
 		$form   = '';
 		$review = '';
 		$output = '';
@@ -725,16 +726,16 @@ class CBRatingSystem {
 			$ratingFormArray['post_id'] = $post_id;
 
 			if ( class_exists( 'CBRatingSystemFront' ) and ( $ratingFormArray['is_active'] == 1 ) ) {
-				//$theme_key = get_option('cbratingsystem_theme_key');
+
 
 				$ratingFormArray['theme_key'] = $theme_key;
                 $ratingFormArray = apply_filters('cbratingsystem_change_options' ,$ratingFormArray );
 
 
+                CBRatingSystemTheme::build_custom_theme_css();
+
 				$form .= CBRatingSystemFront::add_ratingForm_to_content( $ratingFormArray );
 
-
-				CBRatingSystemTheme::build_custom_theme_css();
 				CBRatingSystem::load_scripts_and_styles();
 
 				$output = $form;
@@ -759,6 +760,63 @@ class CBRatingSystem {
 		return $output;
 
 	}
+
+    /**
+     * Standalone Rating Form
+     *
+     * @param        $form_id
+     * @param        $post_id
+     * @param string $theme_key
+     *
+     * @return string
+     */
+    public static function cbrating_standalone_review( $form_id, $post_id, $theme_key = '') {
+
+
+        $form   = '';
+        $review = '';
+        $output = '';
+
+        $theme_key = ( $theme_key == '' ) ? get_option( 'cbratingsystem_theme_key' ) : $theme_key;
+
+        $form_id = apply_filters( 'rating_form_array', $form_id );
+
+
+        if ( is_int( $form_id ) || is_numeric( $form_id ) ) {
+            $ratingFormArray = CBRatingSystemData::get_ratingForm( $form_id );
+
+            $ratingFormArray['form_id'] = $form_id;
+            $ratingFormArray['post_id'] = $post_id;
+
+
+
+
+            $ratingFormArray['theme_key'] = $theme_key;
+            $ratingFormArray = apply_filters('cbratingsystem_change_options', $ratingFormArray );
+
+
+            CBRatingSystemTheme::build_custom_theme_css();
+            CBRatingSystem::load_scripts_and_styles();
+
+
+            //var_dump($ratingFormArray);
+            if ( class_exists( 'CBRatingSystemFrontReview' ) && ( $ratingFormArray['review_enabled'] == 1 ) ) {
+                //if(is_single() || is_page()){
+                if ( is_singular() ) {
+                    $review .= CBRatingSystemFrontReview::rating_reviews_shorttag( $ratingFormArray, $post_id, 0 );
+
+                    if ( ! empty( $review ) ) {
+
+
+                        $output = $output . $review;
+                    }
+                }
+            }
+        }
+
+        return $output;
+
+    }
 
 	//end standalonePostingRatingSystemForm
     /**

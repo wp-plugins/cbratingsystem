@@ -46,11 +46,11 @@ class CBRatingSystemFrontReview extends CBRatingSystemFront {
 
 
 	/**
-	 * [rating_reviews_shorttag description]
+	 * rating_reviews_shorttag description
 	 *
 	 * @param  array   $ratingFormArray
 	 * @param  integer $postid
-	 * @param  integer $start
+	 * @param  integer $page
 	 *
 	 * @return string
 	 */
@@ -229,6 +229,7 @@ class CBRatingSystemFrontReview extends CBRatingSystemFront {
 			$defaultFormId = get_option( 'cbratingsystem_defaultratingForm' );
 			$form_id       = apply_filters( 'rating_form_array', $defaultFormId );
 		}
+
 	    $form_id = (int)$form_id;
 
 
@@ -255,7 +256,9 @@ class CBRatingSystemFrontReview extends CBRatingSystemFront {
 
 
 
-		$totalLimit = $wpdb->get_var( "SELECT per_post_rating_count AS count FROM " . $wpdb->prefix . "cbratingsystem_ratings_summary WHERE form_id='$form_id' AND post_id='$postID'" );
+		//$totalLimit = $wpdb->get_var( "SELECT per_post_rating_count AS count FROM " . $wpdb->prefix . "cbratingsystem_ratings_summary WHERE form_id='$form_id' AND post_id='$postID'" );
+		//$totalLimit = $wpdb->get_var( $wpdb->prepare("SELECT count(id) FROM " . $wpdb->prefix . "cbratingsystem_user_ratings WHERE form_id='%d' AND comment_status='approved' AND post_id='%d'", $form_id, $postID ));
+		$totalLimit = $wpdb->get_var( $wpdb->prepare("SELECT count(id) FROM " . $wpdb->prefix . "cbratingsystem_user_ratings WHERE form_id='%d' AND post_id='%d'", $form_id, $postID ));
 
 
 
@@ -264,11 +267,9 @@ class CBRatingSystemFrontReview extends CBRatingSystemFront {
 		if ( $totalLimit > $perpage ) {
 
 			$showLoadMoreButton = true;
-
 			$reviews = CBRatingSystemData::get_user_ratings_with_ratingForm( array( $form_id ), array( $postID ), array(), '', 'time', 'DESC', $reviewOptions['limit'], true );
 		} else {
 			$showLoadMoreButton = false;
-
 			$reviews = CBRatingSystemData::get_user_ratings_with_ratingForm( array( $form_id ), array( $postID ), array(), '', 'time', 'DESC', array(), true );
 		}
 

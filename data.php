@@ -571,6 +571,8 @@ class CBRatingSystemData {
     }
 
     /**
+	 * Ger user rating with rating form
+	 *
      * @param array $form_id
      * @param array $post_id
      * @param array $user_id
@@ -579,6 +581,8 @@ class CBRatingSystemData {
      * @param string $sort_type
      * @param array $limit
      * @param bool $is_object
+	 *
+	 *
      * @return array
      */
 

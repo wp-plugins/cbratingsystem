@@ -35,9 +35,9 @@ class CBRatingSystemMetaBox extends CBRatingSystemAdmin {
 		//echo '<pre>'; print_r($_POST); echo '</pre>'; die();
 
 		/* Get the posted data and sanitize it for use as an HTML class. */
-		$new_meta_enable_value             = ( ( isset( $_POST['enable_ratingForm'] ) and ( $_POST['enable_ratingForm'] == 1 ) ) ? ( $_POST['enable_ratingForm'] ) : '0' );
-		$new_meta_default_ratingForm_value = ( ( isset( $_POST['is_default_ratingForm'] ) and ( $_POST['is_default_ratingForm'] == 1 ) ) ? ( $_POST['is_default_ratingForm'] ) : '0' );
-		$new_meta_listing_value            = ( ( isset( $_POST['listing_ratingForm'] ) and ( $_POST['listing_ratingForm'] != '#NONE#' ) ) ? sanitize_html_class( $_POST['listing_ratingForm'] ) : '' );
+		$new_meta_enable_value             = ( ( isset( $_POST['enable_ratingForm'] ) && ( $_POST['enable_ratingForm'] == 1 ) ) ? ( $_POST['enable_ratingForm'] ) : '0' );
+		$new_meta_default_ratingForm_value = ( ( isset( $_POST['is_default_ratingForm'] ) && ( $_POST['is_default_ratingForm'] == 1 ) ) ? ( $_POST['is_default_ratingForm'] ) : '0' );
+		$new_meta_listing_value            = ( ( isset( $_POST['listing_ratingForm'] ) && ( $_POST['listing_ratingForm'] != '#NONE#' ) ) ? sanitize_html_class( $_POST['listing_ratingForm'] ) : '' );
 
 		/* Get the meta key. */
 		$meta_keys['_cbrating_enable_ratingForm']     = $new_meta_enable_value;
@@ -65,7 +65,7 @@ class CBRatingSystemMetaBox extends CBRatingSystemAdmin {
 
 
 
-		$ratingFormToShow = ( ! empty( $ratingFormToShow ) and is_numeric( $ratingFormToShow ) ) ? $ratingFormToShow : ( ( is_numeric( $default ) and ! empty( $default ) ) ? $default : '#NONE#' );
+		$ratingFormToShow = ( ! empty( $ratingFormToShow ) && is_numeric( $ratingFormToShow ) ) ? $ratingFormToShow : ( ( is_numeric( $default ) && ! empty( $default ) ) ? $default : '#NONE#' );
 
 		$action      = array(
 			'is_active' => true,
