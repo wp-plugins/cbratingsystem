@@ -1,0 +1,23 @@
+.chosen-container-multi .chosen-choices li.search-field input[type="text"] {
+	height: auto !important;
+}
+
+div.checker {
+	margin-right: 0px;
+}
+.comment_status_inline {
+    display :inline-block;
+}
+.codeboxr_rating_credit{
+    font-size: xx-small!important;
+    float: right;
+}
+table.cbrp-top-rated-wpanel tr td{
+    padding: 4px;
+}
+.cbrap-top-user-rating li{
+    display: inline!important;
+}
+.cbrp-top-rated-userlist{
+    list-style: none;
+}
